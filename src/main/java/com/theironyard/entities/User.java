@@ -1,18 +1,20 @@
 package com.theironyard.entities;
 
+import com.theironyard.archive.Item;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
 @Table(name = "users")
-public class User {
+public class User{
     @Id
     @GeneratedValue
     private int id;
 
     @Column(nullable = false)
-    private LocalDateTime createdAt;
+    private LocalDateTime createdAt = LocalDateTime.now();
 
     @Column(nullable = false)
     private LocalDateTime updatedAt;
@@ -24,17 +26,17 @@ public class User {
     private String password;
 
     @Column
-    private String privilege;
+    private String privileges;
 
     private enum privileges {
         SUBSCRIBER, ADMINISTRATOR
     }
 
     @ManyToMany
-    private List<Artwork> following;
+    private List<Artist> following;
 
     @ManyToMany
-    private List<Artwork> notInterested;
+    private List<Artist> notInterested;
 
     @ManyToMany
     private List<Item> liked;
@@ -42,4 +44,86 @@ public class User {
     @ManyToMany
     private List<Item> disliked;
 
+    public User() {
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getPrivileges() {
+        return privileges;
+    }
+
+    public void setPrivileges(String privileges) {
+        this.privileges = privileges;
+    }
+
+    public List<Artist> getFollowing() {
+        return following;
+    }
+
+    public void setFollowing(List<Artist> following) {
+        this.following = following;
+    }
+
+    public List<Artist> getNotInterested() {
+        return notInterested;
+    }
+
+    public void setNotInterested(List<Artist> notInterested) {
+        this.notInterested = notInterested;
+    }
+
+    public List<Item> getLiked() {
+        return liked;
+    }
+
+    public void setLiked(List<Item> liked) {
+        this.liked = liked;
+    }
+
+    public List<Item> getDisliked() {
+        return disliked;
+    }
+
+    public void setDisliked(List<Item> disliked) {
+        this.disliked = disliked;
+    }
 }

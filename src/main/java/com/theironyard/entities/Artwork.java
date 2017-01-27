@@ -1,27 +1,37 @@
 package com.theironyard.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @Entity
 @Table(name = "artworks")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Artwork{
     @Id
     @GeneratedValue
+    @JsonIgnore
     private int id;
 
     @Column(nullable = false)
+    @JsonIgnore
     private LocalDateTime createdAt = LocalDateTime.now();
 
     @Column(nullable = false)
+    @JsonIgnore
     private LocalDateTime updatedAt;
 
     @Column(unique = true)
+    @JsonProperty("id")
     private String artsyArtworkId;
 
     @Column
-    private String name;
+    private String title;
 
     @Column
     private String category;
@@ -32,20 +42,30 @@ public class Artwork{
     @Column
     private String date;
 
-    @Column
-    private String dimensions;
+    @Transient
+    @JsonProperty("dimensions")
+    private Map rawDims;
 
     @Column
+    private String size;
+
+    @Column
+    @JsonProperty("collecting_institution")
     private String collectingInstitution;
+
+    @Transient
+    @JsonProperty("_links")
+    private Map links;
 
     @Column
     private String imgBaseUrl;
 
     @Column
+    @JsonProperty("image_rights")
     private String imgRights;
 
     @ManyToMany
-    private List<Artist> artist;
+    private List<Artist> artists;
 
     @ManyToMany(mappedBy = "liked")
     private List<User> likedBy;
@@ -88,12 +108,12 @@ public class Artwork{
         this.artsyArtworkId = artsyArtworkId;
     }
 
-    public String getName() {
-        return name;
+    public String getTitle() {
+        return title;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getCategory() {
@@ -120,12 +140,12 @@ public class Artwork{
         this.date = date;
     }
 
-    public String getDimensions() {
-        return dimensions;
+    public String getSize() {
+        return size;
     }
 
-    public void setDimensions(String dimensions) {
-        this.dimensions = dimensions;
+    public void setSize(String size) {
+        this.size = size;
     }
 
     public String getCollectingInstitution() {
@@ -152,12 +172,12 @@ public class Artwork{
         this.imgRights = imgRights;
     }
 
-    public List<Artist> getArtist() {
-        return artist;
+    public List<Artist> getArtists() {
+        return artists;
     }
 
-    public void setArtist(List<Artist> artist) {
-        this.artist = artist;
+    public void setArtists(List<Artist> artists) {
+        this.artists = artists;
     }
 
     public List<User> getLikedBy() {
@@ -174,5 +194,44 @@ public class Artwork{
 
     public void setDislikedBy(List<User> dislikedBy) {
         this.dislikedBy = dislikedBy;
+    }
+
+    public Map getRawDims() {
+        return rawDims;
+    }
+
+    public void setRawDims(Map rawDims) {
+        this.rawDims = rawDims;
+    }
+
+    public Map getLinks() {
+        return links;
+    }
+
+    public void setLinks(Map links) {
+        this.links = links;
+    }
+
+    @Override
+    public String toString() {
+        return "Artwork{" +
+                "id=" + id +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                ", artsyArtworkId='" + artsyArtworkId + '\'' +
+                ", title='" + title + '\'' +
+                ", category='" + category + '\'' +
+                ", medium='" + medium + '\'' +
+                ", date='" + date + '\'' +
+                ", rawDims=" + rawDims +
+                ", size='" + size + '\'' +
+                ", collectingInstitution='" + collectingInstitution + '\'' +
+                ", links=" + links +
+                ", imgBaseUrl='" + imgBaseUrl + '\'' +
+                ", imgRights='" + imgRights + '\'' +
+                ", artists=" + artists +
+                ", likedBy=" + likedBy +
+                ", dislikedBy=" + dislikedBy +
+                '}';
     }
 }

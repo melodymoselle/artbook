@@ -1,5 +1,10 @@
 package com.theironyard.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.theironyard.services.ArtsyService;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -7,23 +12,32 @@ import java.util.List;
 @Entity
 @Table(name = "artists")
 public class Artist{
+    @Autowired
+    @Transient
+    ArtsyService artsy;
+
     @Id
     @GeneratedValue
+    @JsonIgnore
     private int id;
 
     @Column(nullable = false)
+    @JsonIgnore
     private LocalDateTime createdAt = LocalDateTime.now();
 
     @Column(nullable = false)
+    @JsonIgnore
     private LocalDateTime updatedAt;
 
     @Column(unique = true)
+    @JsonProperty("id")
     private String artsyArtistId;
 
     @Column(nullable = false)
     private String name;
 
     @Column
+    @JsonProperty("sortable_name")
     private String sortableName;
 
     @Column
@@ -42,21 +56,47 @@ public class Artist{
     private String nationality;
 
     @Column
+    @JsonIgnore
     private String imgBaseUrl;
 
-    @ManyToMany(mappedBy = "artist")
+    @ManyToMany(mappedBy = "artists")
+    @JsonIgnore
     private List<Artwork> artworks;
 
 //    @ManyToMany(mappedBy = "similarArtists")
 //    private List<Artist> similarArtists;
 
     @ManyToMany(mappedBy = "following")
+    @JsonIgnore
     private List<User> followedBy;
 
     @ManyToMany(mappedBy = "notInterested")
+    @JsonIgnore
     private List<User> notInterestedBy;
 
+
     public Artist() {
+    }
+
+    @Override
+    public String toString() {
+        return "Artist{" +
+                "id=" + id +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                ", artsyArtistId='" + artsyArtistId + '\'' +
+                ", name='" + name + '\'' +
+                ", sortableName='" + sortableName + '\'' +
+                ", gender='" + gender + '\'' +
+                ", birthday='" + birthday + '\'' +
+                ", hometown='" + hometown + '\'' +
+                ", location='" + location + '\'' +
+                ", nationality='" + nationality + '\'' +
+                ", imgBaseUrl='" + imgBaseUrl + '\'' +
+                ", artworks=" + artworks +
+                ", followedBy=" + followedBy +
+                ", notInterestedBy=" + notInterestedBy +
+                '}';
     }
 
     public int getId() {
@@ -161,6 +201,18 @@ public class Artist{
 
     public void setArtworks(List<Artwork> artworks) {
         this.artworks = artworks;
+    }
+
+    public void addArtwork(Artwork artwork){
+        this.artworks.add(artwork);
+    }
+
+    public void addArtwork(String artsyArtworkId){
+        Artwork artwork = artsy.getArtworkById(artsyArtworkId);
+    }
+
+    public void deleteArtwork(Artwork artwork){
+        this.artworks.remove(artwork);
     }
 
 //    public List<Artist> getSimilarArtists() {

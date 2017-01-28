@@ -20,6 +20,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.flash;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
@@ -56,7 +57,7 @@ public class FartControllerTests {
                 MockMvcRequestBuilders.post("/add-artist")
                         .param("artsyArtistId", artsyArtistId)
         ).andExpect(MockMvcResultMatchers.status().is3xxRedirection()
-        ).andExpect(model().attribute("artworksCount", "6")
+        ).andExpect(flash().attribute("artworksCount", 6)
         ).andExpect(view().name("redirect:/add-artist"));
 
         Artist artist = artistRepo.findByArtsyArtistId(artsyArtistId);
@@ -66,6 +67,6 @@ public class FartControllerTests {
         assertEquals("Error setting Artist name", "Gustav Klimt", artist.getName());
         assertEquals("Number of artworks is incorrect", 6, artist.getArtworks().size());
         assertEquals("First Artwork is not correct", "4d8b92eb4eb68a1b2c000968", artist.getArtworks().get(0).getArtsyArtworkId());
-        assertEquals("Artwork not saved correctly", "Gustav Klimt", artwork.getArtists().get(0).getName());System.out.println(artwork.getArtists().get(0));
+        assertEquals("Artwork not saved correctly", "Gustav Klimt", artwork.getArtists().get(0).getName());
     }
 }

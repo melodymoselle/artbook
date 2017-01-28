@@ -8,13 +8,13 @@
 {{#artist}}
 <h1>{{name}}</h1>
 <p>{{nationality}} b. {{birthday}} in {{hometown}}</p>
-<p>works/ed in {{location}}</p>
+<p>works/ed in </p>
 {{/artist}}
 
 <h2>Artworks</h2>
-{{#artworks}}
-<h3><a href="/artwork?id={{id}}">{{title}}</a>, {{date}}</h3>
-{{/artworks}}
+{{#artist.artworks}}
+<h3><a href="/artwork?artworkId={{id}}">{{title}}</a>, {{date}}</h3>
+{{/artist.artworks}}
 
 </body>
 </html>

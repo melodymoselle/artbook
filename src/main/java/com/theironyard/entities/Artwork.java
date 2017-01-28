@@ -65,7 +65,7 @@ public class Artwork{
     @JsonProperty("image_rights")
     private String imgRights;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
     private List<Artist> artists = new ArrayList<>();
 
     @ManyToMany(mappedBy = "liked")

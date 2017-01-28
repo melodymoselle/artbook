@@ -4,4 +4,5 @@ import com.theironyard.entities.Artist;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ArtistRepository extends JpaRepository<Artist, Integer> {
+    Artist findByArtsyArtistId(String artsyArtistId);
 }

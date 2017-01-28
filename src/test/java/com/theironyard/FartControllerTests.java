@@ -1,5 +1,9 @@
 package com.theironyard;
 
+import com.theironyard.entities.Artist;
+import com.theironyard.entities.Artwork;
+import com.theironyard.repositories.ArtistRepository;
+import com.theironyard.repositories.ArtworkRepository;
 import com.theironyard.utilities.PasswordStorage;
 import org.junit.After;
 import org.junit.Before;
@@ -14,12 +18,20 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class FartControllerTests {
+
+    @Autowired
+    ArtistRepository artistRepo;
+
+    @Autowired
+    ArtworkRepository artworkRepo;
 
     @Autowired
     WebApplicationContext wap;
@@ -39,12 +51,21 @@ public class FartControllerTests {
     @Test
     public void addArtistToDB() throws Exception {
         String artsyArtistId = "4d8b92b64eb68a1b2c000414";
-//
-//        mockMvc.perform(
-//                MockMvcRequestBuilders.get("/")
-//                        .param("artsyArtistId", artsyArtistId)
-//        ).andExpect(MockMvcResultMatchers.status().is3xxRedirection()
-//        ).andExpect(model().attribute("entries", hasSize(2))
-//        ).andExpect(view().name("index"));
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.post("/add-artist")
+                        .param("artsyArtistId", artsyArtistId)
+        ).andExpect(MockMvcResultMatchers.status().is3xxRedirection()
+        ).andExpect(model().attribute("artworksCount", "6")
+        ).andExpect(view().name("redirect:/add-artist"));
+
+        Artist artist = artistRepo.findByArtsyArtistId(artsyArtistId);
+        Artwork artwork = artworkRepo.findByArtsyArtworkId("4d8b92eb4eb68a1b2c000968");
+
+        assertNotNull("Error saving Artist to database", artist);
+        assertEquals("Error setting Artist name", "Gustav Klimt", artist.getName());
+        assertEquals("Number of artworks is incorrect", 6, artist.getArtworks().size());
+        assertEquals("First Artwork is not correct", "4d8b92eb4eb68a1b2c000968", artist.getArtworks().get(0).getArtsyArtworkId());
+        assertEquals("Artwork not saved correctly", "Gustav Klimt", artwork.getArtists().get(0).getName());System.out.println(artwork.getArtists().get(0));
     }
 }

@@ -37,8 +37,8 @@ public class fartController {
 //        artworks.forEach(art -> artworkRepo.save(art));
         artist.setArtworks(artworks);
         artistRepo.save(artist);
-        redAtt.addAttribute("artist", artist);
-        redAtt.addAttribute("artworksCount", artworks.size());
+        redAtt.addFlashAttribute("artist", artist);
+        redAtt.addFlashAttribute("artworksCount", artworks.size());
         return "redirect:/add-artist";
     }
 }

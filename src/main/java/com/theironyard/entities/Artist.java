@@ -59,7 +59,7 @@ public class Artist{
     @JsonIgnore
     private String imgBaseUrl;
 
-    @ManyToMany(mappedBy = "artists")
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "artists", cascade=CascadeType.ALL)
     @JsonIgnore
     private List<Artwork> artworks;
 

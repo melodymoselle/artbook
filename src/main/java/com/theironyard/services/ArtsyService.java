@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PostConstruct;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -73,6 +72,7 @@ public class ArtsyService {
         Artwork artwork;
         for (HashMap art : rawArtworks){
             artwork = mapper.convertValue(art, Artwork.class);
+            artwork.addArtist(artist);
             artworks.add(artwork);
         }
         return artworks;

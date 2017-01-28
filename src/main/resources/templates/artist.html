@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Artist Page</title>
+</head>
+<body>
+{{#artist}}
+<h1>{{name}}</h1>
+<p>{{nationality}} b. {{birthday}} in {{hometown}}</p>
+<p>works/ed in {{location}}</p>
+{{/artist}}
+
+<h2>Artworks</h2>
+{{#artworks}}
+<h3><a href="/artwork?id={{id}}">{{title}}</a>, {{date}}</h3>
+{{/artworks}}
+
+</body>
+</html>

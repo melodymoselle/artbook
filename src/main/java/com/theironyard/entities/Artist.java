@@ -25,7 +25,7 @@ public class Artist{
     @JsonIgnore
     private LocalDateTime createdAt = LocalDateTime.now();
 
-    @Column(nullable = false)
+    @Column()
     @JsonIgnore
     private LocalDateTime updatedAt;
 
@@ -92,10 +92,6 @@ public class Artist{
                 ", hometown='" + hometown + '\'' +
                 ", location='" + location + '\'' +
                 ", nationality='" + nationality + '\'' +
-                ", imgBaseUrl='" + imgBaseUrl + '\'' +
-                ", artworks=" + artworks +
-                ", followedBy=" + followedBy +
-                ", notInterestedBy=" + notInterestedBy +
                 '}';
     }
 

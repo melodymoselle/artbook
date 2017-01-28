@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Artwork Page</title>
+</head>
+<body>
+{{#artwork}}
+<h1>{{title}}, {{date}}</h1>
+<ul style="display: inline">
+    {{#artists}}by
+    <li>{{name}},</li>
+    {{/artists}}
+</ul>
+
+<p>category: {{category}}</p>
+<p>medium: {{medium}}</p>
+
+{{/artwork}}
+</body>
+</html>

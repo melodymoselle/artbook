@@ -5,7 +5,6 @@ import com.theironyard.entities.Artwork;
 import com.theironyard.models.Token;
 import com.theironyard.services.ArtsyService;
 import com.theironyard.utilities.PasswordStorage;
-import org.hibernate.annotations.SourceType;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -82,7 +81,7 @@ public class ArtsyServiceTest {
         assertEquals("Error setting Artwork Location", medium, artwork.getMedium());
     }
 
-    @Test
+    @Test //add testing of adding Artist to artwork
     public void getArtworksByArtist(){
         Artist artist = new Artist();
         artist.setArtsyArtistId("4d8b92b64eb68a1b2c000414");
@@ -92,6 +91,7 @@ public class ArtsyServiceTest {
         assertNotNull("Error creating List of artworks",artworks);
         assertEquals("List size is incorrect", 6, artworks.size());
         assertEquals("First artwork was not set correctly", "4d8b92eb4eb68a1b2c000968", artworks.get(0).getArtsyArtworkId());
+        assertEquals("Error setting Artist to Artwork", "4d8b92b64eb68a1b2c000414", artworks.get(0).getArtists().get(0).getArtsyArtistId());
     }
 
 }

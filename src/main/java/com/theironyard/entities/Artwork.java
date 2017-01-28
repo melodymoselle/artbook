@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -22,7 +23,7 @@ public class Artwork{
     @JsonIgnore
     private LocalDateTime createdAt = LocalDateTime.now();
 
-    @Column(nullable = false)
+    @Column()
     @JsonIgnore
     private LocalDateTime updatedAt;
 
@@ -65,7 +66,7 @@ public class Artwork{
     private String imgRights;
 
     @ManyToMany
-    private List<Artist> artists;
+    private List<Artist> artists = new ArrayList<>();
 
     @ManyToMany(mappedBy = "liked")
     private List<User> likedBy;
@@ -180,6 +181,14 @@ public class Artwork{
         this.artists = artists;
     }
 
+    public void addArtist(Artist artist){
+        this.artists.add(artist);
+    }
+
+    public void deleteArtist(Artist artist){
+        this.artists.remove(artist);
+    }
+
     public List<User> getLikedBy() {
         return likedBy;
     }
@@ -224,14 +233,9 @@ public class Artwork{
                 ", medium='" + medium + '\'' +
                 ", date='" + date + '\'' +
                 ", rawDims=" + rawDims +
-                ", size='" + size + '\'' +
                 ", collectingInstitution='" + collectingInstitution + '\'' +
                 ", links=" + links +
-                ", imgBaseUrl='" + imgBaseUrl + '\'' +
                 ", imgRights='" + imgRights + '\'' +
-                ", artists=" + artists +
-                ", likedBy=" + likedBy +
-                ", dislikedBy=" + dislikedBy +
                 '}';
     }
 }

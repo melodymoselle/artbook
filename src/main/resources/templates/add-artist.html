@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Artist</title>
+</head>
+<body>
+<form action="/add-artist" method="post">
+    <label>Artsy Artist Id</label>
+    <input type="text" name="artsyArtistId"/>
+    <button type="submit">Add Artist</button>
+</form>
+
+
+{{#artist}}
+<p>The artist <a href="/artist?id={{id}}">{{name}}</a> [{{artworksCount}}] was add to the database.</p>
+{{/artist}}
+
+
+</body>
+</html>

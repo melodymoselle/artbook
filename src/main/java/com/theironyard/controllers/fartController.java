@@ -1,6 +1,5 @@
 package com.theironyard.controllers;
 
-import com.sun.org.apache.xpath.internal.operations.Mod;
 import com.theironyard.entities.Artist;
 import com.theironyard.entities.Artwork;
 import com.theironyard.entities.User;
@@ -37,13 +36,26 @@ public class fartController {
     @RequestMapping(path = "/", method = RequestMethod.GET)
     public String getHome(HttpSession session, Model model){
         if (session.getAttribute(SESSION_USER) != null){
-            return "home";
+            User user = userRepo.findByUsername(SESSION_USER);
+            List<Artist> artists = artistRepo.findByFollowedBy(user);
+            model.addAttribute("artists", artists);
+            return "user-home";
         }
         List<Artist> artists = artistRepo.findByLoadedAndPopulated(true, true);
         model.addAttribute("artists", artists);
-        return "index";
+        return "no-user-home";
     }
 
+    @RequestMapping(path = "/discover", method = RequestMethod.GET)
+    public String getDiscoverPage(HttpSession session, Model model){
+        if (session.getAttribute(SESSION_USER) == null){
+            return "/";
+        }
+
+        List<Artist> artists = artistRepo.findByLoadedAndPopulated(true, true);
+        model.addAttribute("artists", artists);
+        return "discover";
+    }
 
     @RequestMapping(path = "/add-artist", method = RequestMethod.GET)
     public String getAddArtistPage(Model model){
@@ -62,7 +74,11 @@ public class fartController {
     }
 
     @RequestMapping(path = "/artist", method = RequestMethod.GET)
-    public String getArtistPage(Model model, int artistId){
+    public String getArtistPage(HttpSession session, Model model, int artistId){
+        if (session.getAttribute(SESSION_USER) != null){
+            User user = userRepo.findByUsername(session.getAttribute(SESSION_USER).toString());
+            model.addAttribute(SESSION_USER, user.getUsername());
+        }
         Artist artist = artistRepo.findOne(artistId);
         model.addAttribute("artist", artist);
         return "artist";

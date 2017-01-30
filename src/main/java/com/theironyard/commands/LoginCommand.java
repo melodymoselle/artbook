@@ -7,6 +7,11 @@ public class LoginCommand {
     public LoginCommand() {
     }
 
+    public LoginCommand(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
     public String getUsername() {
         return username;
     }

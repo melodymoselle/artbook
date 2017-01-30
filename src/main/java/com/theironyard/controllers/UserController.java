@@ -6,7 +6,7 @@ import com.theironyard.entities.Artist;
 import com.theironyard.entities.User;
 import com.theironyard.repositories.ArtistRepository;
 import com.theironyard.repositories.UserRepository;
-import com.theironyard.utilities.PasswordStorage;
+import com.theironyard.utitilties.PasswordStorage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,9 +28,9 @@ public class UserController {
     @RequestMapping(path = "/login", method = RequestMethod.POST)
     public String login(HttpSession session, LoginCommand command, RedirectAttributes redAtt) throws PasswordStorage.InvalidHashException, PasswordStorage.CannotPerformOperationException {
         User user = userRepo.findByUsername(command.getUsername());
-        if (user == null || PasswordStorage.verifyPassword(command.getPassword(), user.getPassword())){
+        if (user == null || !PasswordStorage.verifyPassword(command.getPassword(), user.getPassword())){
             redAtt.addFlashAttribute("message", "Invalid Username/Password");
-            return "redirect:/login";
+            return "redirect:/";
         }
         session.setAttribute(SESSION_USER, user.getUsername());
         return "redirect:/";
@@ -40,12 +40,13 @@ public class UserController {
     public String register(HttpSession session, RegisterCommand command, RedirectAttributes redAtt) throws PasswordStorage.CannotPerformOperationException {
         User user = userRepo.findByUsername(command.getUsername());
         if (user != null){
-            redAtt.addFlashAttribute("message", "That username is taken");
-            return "redirect:/register";
+            redAtt.addFlashAttribute("message", "That username is taken.");
+            return "redirect:/";
         }
         user = new User(command.getUsername(), PasswordStorage.createHash(command.getPassword()));
+        userRepo.save(user);
         session.setAttribute(SESSION_USER, user.getUsername());
-        return "redirect:/";
+        return "redirect:/discover";
     }
 
     @RequestMapping(path = "/logout", method = RequestMethod.POST)
@@ -59,7 +60,7 @@ public class UserController {
         if (session.getAttribute(SESSION_USER) == null){
             return "/";
         }
-        User user = userRepo.findByUsername(SESSION_USER);
+        User user = userRepo.findByUsername(session.getAttribute(SESSION_USER).toString());
         Artist artist = artistRepo.findOne(artistId);
         user.addFollowing(artist);
         userRepo.save(user);
@@ -71,7 +72,7 @@ public class UserController {
         if (session.getAttribute(SESSION_USER) == null){
             return "/";
         }
-        User user = userRepo.findByUsername(SESSION_USER);
+        User user = userRepo.findByUsername(session.getAttribute(SESSION_USER).toString());
         Artist artist = artistRepo.findOne(artistId);
         user.deleteFollowing(artist);
         userRepo.save(user);

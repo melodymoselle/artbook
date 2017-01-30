@@ -6,7 +6,6 @@ import com.theironyard.models.Token;
 import com.theironyard.repositories.ArtistRepository;
 import com.theironyard.repositories.ArtworkRepository;
 import com.theironyard.services.ArtsyService;
-import com.theironyard.utilities.PasswordStorage;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -44,7 +43,7 @@ public class ArtsyServiceTest {
     MockMvc mockMvc;
 
     @Before
-    public void before() throws PasswordStorage.CannotPerformOperationException {
+    public void before() {
         mockMvc = MockMvcBuilders.webAppContextSetup(wap).build();
     }
 
@@ -69,6 +68,7 @@ public class ArtsyServiceTest {
         String location = "Vienna, Austria";
 
         Artist artist = artsy.getSaveArtistById(artsyArtistId);
+
         assertNotNull("Error setting Artist object", artist);
         assertEquals("Error setting Artist Name", name, artist.getName());
         assertEquals("Error setting Artist Location", location, artist.getLocation());

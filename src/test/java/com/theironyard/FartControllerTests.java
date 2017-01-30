@@ -4,7 +4,6 @@ import com.theironyard.entities.Artist;
 import com.theironyard.entities.Artwork;
 import com.theironyard.repositories.ArtistRepository;
 import com.theironyard.repositories.ArtworkRepository;
-import com.theironyard.utilities.PasswordStorage;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,7 +20,6 @@ import org.springframework.web.context.WebApplicationContext;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.flash;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 @RunWith(SpringRunner.class)
@@ -40,7 +38,7 @@ public class FartControllerTests {
     MockMvc mockMvc;
 
     @Before
-    public void before() throws PasswordStorage.CannotPerformOperationException {
+    public void before() {
         mockMvc = MockMvcBuilders.webAppContextSetup(wap).build();
     }
 

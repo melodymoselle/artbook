@@ -139,4 +139,13 @@ public class User{
     public void setDisliked(List<Item> disliked) {
         this.disliked = disliked;
     }
+
+    public boolean isFollowing(Artist artist){
+     if (this.following.contains(artist)){
+         return true;
+     }
+     else {
+         return false;
+     }
+    }
 }

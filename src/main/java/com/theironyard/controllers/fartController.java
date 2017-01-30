@@ -75,11 +75,14 @@ public class fartController {
 
     @RequestMapping(path = "/artist", method = RequestMethod.GET)
     public String getArtistPage(HttpSession session, Model model, int artistId){
+        Artist artist = artistRepo.findOne(artistId);
         if (session.getAttribute(SESSION_USER) != null){
             User user = userRepo.findByUsername(session.getAttribute(SESSION_USER).toString());
             model.addAttribute(SESSION_USER, user.getUsername());
+            if (user.isFollowing(artist)){
+                model.addAttribute("following", true);
+            }
         }
-        Artist artist = artistRepo.findOne(artistId);
         model.addAttribute("artist", artist);
         return "artist";
     }

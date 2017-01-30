@@ -7,14 +7,25 @@
 <body>
 {{#artist}}
 <h1>{{name}}</h1>
-<p>{{nationality}} b. {{birthday}} in {{hometown}}</p>
-<p>works/ed in </p>
+<p>{{#nationality}}{{.}}{{/nationality}} b. {{#birthday}}{{.}}{{/birthday}} in {{#hometown}}{{.}}{{/hometown}}</p>
+<p>works/ed in {{#location}}{{.}}{{/location}}</p>
+<img src="{{imgFourThirds}}"/>
+<a href="/get-artworks?artistId={{id}}">Get Artworks</a>
+<a href="/get-similar-artists?artistId={{id}}">Get Similar Artists</a>
 {{/artist}}
+
 
 <h2>Artworks</h2>
 {{#artist.artworks}}
-<h3><a href="/artwork?artworkId={{id}}">{{title}}</a>, {{date}}</h3>
+<p><a href="/artwork?artworkId={{id}}">{{title}}</a>, {{date}}</p>
 {{/artist.artworks}}
+
+
+
+<h2>Similar Artists</h2>
+{{#artist.similarTo}}
+<p><a href="/artist?artistId={{id}}">{{name}}</a></p>
+{{/artist.similarTo}}
 
 </body>
 </html>

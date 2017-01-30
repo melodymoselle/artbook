@@ -16,7 +16,7 @@ public class User{
     @Column(nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
-    @Column(nullable = false)
+    @Column()
     private LocalDateTime updatedAt;
 
     @Column(nullable = false, unique = true)
@@ -25,10 +25,10 @@ public class User{
     @Column(nullable = false)
     private String password;
 
-    @Column
-    private String privileges;
+    @Column(nullable = false)
+    private rights privileges = rights.SUBSCRIBER;
 
-    private enum privileges {
+    private enum rights {
         SUBSCRIBER, ADMINISTRATOR
     }
 
@@ -45,6 +45,11 @@ public class User{
     private List<Item> disliked;
 
     public User() {
+    }
+
+    public User(String username, String password) {
+        this.username = username;
+        this.password = password;
     }
 
     public int getId() {
@@ -87,11 +92,11 @@ public class User{
         this.password = password;
     }
 
-    public String getPrivileges() {
+    public rights getPrivileges() {
         return privileges;
     }
 
-    public void setPrivileges(String privileges) {
+    public void setPrivileges(rights privileges) {
         this.privileges = privileges;
     }
 

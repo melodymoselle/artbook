@@ -1,31 +1,36 @@
 package com.theironyard.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.theironyard.services.ArtsyService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+import org.springframework.stereotype.Controller;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Entity
 @Table(name = "artists")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Artist{
-    @Autowired
-    @Transient
-    ArtsyService artsy;
 
     @Id
     @GeneratedValue
     @JsonIgnore
     private int id;
 
+    @Column
+    boolean populated = false;
+
     @Column(nullable = false)
     @JsonIgnore
     private LocalDateTime createdAt = LocalDateTime.now();
 
-    @Column()
+    @Column
     @JsonIgnore
     private LocalDateTime updatedAt;
 
@@ -55,16 +60,29 @@ public class Artist{
     @Column
     private String nationality;
 
+    @Transient
+    @JsonProperty("_links")
+    private Map<String, Map> links;
+
     @Column
     @JsonIgnore
     private String imgBaseUrl;
 
-    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "artists", cascade=CascadeType.ALL)
-    @JsonIgnore
-    private List<Artwork> artworks;
+    private String imgFourThirds;
+    private String imgLarge;
+    private String imgSquare;
+    private String imgTall;
 
-//    @ManyToMany(mappedBy = "similarArtists")
-//    private List<Artist> similarArtists;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @Fetch(value = FetchMode.SELECT)
+    private List<Artwork> artworks = new ArrayList<>();
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @Fetch(value = FetchMode.SELECT)
+    private List<Artist> similarTo = new ArrayList<>();
+
+    @ManyToMany(mappedBy = "similarTo")
+    private List<Artist> similarFrom = new ArrayList<>();
 
     @ManyToMany(mappedBy = "following")
     @JsonIgnore
@@ -200,24 +218,38 @@ public class Artist{
     }
 
     public void addArtwork(Artwork artwork){
-        this.artworks.add(artwork);
-    }
-
-    public void addArtwork(String artsyArtworkId){
-        Artwork artwork = artsy.getArtworkById(artsyArtworkId);
+        if (!this.artworks.contains(artwork)) {
+            this.artworks.add(artwork);
+        }
     }
 
     public void deleteArtwork(Artwork artwork){
         this.artworks.remove(artwork);
     }
 
-//    public List<Artist> getSimilarArtists() {
-//        return similarArtists;
-//    }
-//
-//    public void setSimilarArtists(List<Artist> similarArtists) {
-//        this.similarArtists = similarArtists;
-//    }
+    public void addSimilarArtist(Artist artist){
+        this.similarTo.add(artist);
+    }
+
+    public void deleteSimilarArtist(Artist artist){
+        this.similarTo.remove(artist);
+    }
+
+    public List<Artist> getSimilarTo() {
+        return similarTo;
+    }
+
+    public void setSimilarTo(List<Artist> similarTo) {
+        this.similarTo = similarTo;
+    }
+
+    public List<Artist> getSimilarFrom() {
+        return similarFrom;
+    }
+
+    public void setSimilarFrom(List<Artist> similarFrom) {
+        this.similarFrom = similarFrom;
+    }
 
     public List<User> getFollowedBy() {
         return followedBy;
@@ -233,5 +265,23 @@ public class Artist{
 
     public void setNotInterestedBy(List<User> notInterestedBy) {
         this.notInterestedBy = notInterestedBy;
+    }
+
+    public Map<String, Map> getLinks() {
+        return links;
+    }
+
+    public void setLinks(Map<String, Map> links) {
+        this.links = links;
+        this.imgBaseUrl = links.get("image").get("href").toString();
+        this.imgFourThirds = this.imgBaseUrl.replace("{image_version}", "four_thirds");
+    }
+
+    public boolean isPopulated() {
+        return populated;
+    }
+
+    public void setPopulated(boolean populated) {
+        this.populated = populated;
     }
 }

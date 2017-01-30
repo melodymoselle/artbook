@@ -16,6 +16,12 @@
 <p>The artist <a href="/artist?artistId={{id}}">{{name}}</a> [{{artworksCount}}] was add to the database.</p>
 {{/artist}}
 
+{{#artists}}
+<ul>
+    <li><a href="/artist?artistId={{id}}">{{name}}</a> has [{{artworks.size}}] of artworks and [{{similarTo.size}}] similar artists.</li>
+</ul>
+{{/artists}}
+
 
 </body>
 </html>

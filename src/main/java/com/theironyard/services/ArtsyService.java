@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.theironyard.entities.Artist;
 import com.theironyard.entities.Artwork;
 import com.theironyard.models.Token;
+import com.theironyard.repositories.ArtistRepository;
+import com.theironyard.repositories.ArtworkRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -31,33 +33,37 @@ public class ArtsyService {
 
     private Token token;
 
-
     @Autowired
     RestTemplate restTemplate;
 
+    @Autowired
+    ArtworkRepository artworkRepo;
+
+    @Autowired
+    ArtistRepository artistRepo;
 
     @PostConstruct
     public void init(){
         token = getAccessToken();
     }
 
-    public Artist getArtistById(String artist_id){
+    public Artist getSaveArtistById(String artist_id){
         String url = BASE_URL + "/artists/" + artist_id;
         HttpEntity request = getRequest();
-        HttpEntity<Artist> response = restTemplate.exchange(url, HttpMethod.GET, request, Artist.class);
-
-        return response.getBody();
+        Artist artist = restTemplate.exchange(url, HttpMethod.GET, request, Artist.class).getBody();
+        artistRepo.save(artist);
+        return artist;
     }
 
-    public Artwork getArtworkById(String artwork_id){
+    public Artwork getSaveArtworkById(String artwork_id){
         String url = BASE_URL + "/artworks/" + artwork_id;
         HttpEntity request = getRequest();
-        HttpEntity<Artwork> response = restTemplate.exchange(url, HttpMethod.GET, request, Artwork.class);
-
-        return response.getBody();
+        Artwork artwork = restTemplate.exchange(url, HttpMethod.GET, request, Artwork.class).getBody();
+        artworkRepo.save(artwork);
+        return artwork;
     }
 
-    public List<Artwork> getArtworksByArtist(Artist artist){
+    public Artist getSaveArtworksByArtist(Artist artist){
         //Gets total artwork count
         String url = BASE_URL + "/artworks?total_count=1&size=1&artist_id=" + artist.getArtsyArtistId();
         HttpEntity request = getRequest();
@@ -67,15 +73,38 @@ public class ArtsyService {
         url = BASE_URL + "/artworks?size="+count+"&artist_id=" + artist.getArtsyArtistId();
         HashMap embedded = (HashMap)restTemplate.exchange(url, HttpMethod.GET, request, HashMap.class).getBody().get("_embedded");
         List<HashMap> rawArtworks = (List)embedded.get("artworks");
-        List<Artwork> artworks = new ArrayList<>();
-        ObjectMapper mapper = new ObjectMapper();
-        Artwork artwork;
-        for (HashMap art : rawArtworks){
-            artwork = mapper.convertValue(art, Artwork.class);
-            artwork.addArtist(artist);
-            artworks.add(artwork);
+        if (rawArtworks.size()>0) {
+            ObjectMapper mapper = new ObjectMapper();
+            for (HashMap art : rawArtworks) {
+                Artwork artwork = artworkRepo.findByArtsyArtworkId(art.get("id").toString());
+                if (artwork == null) {
+                    artwork = mapper.convertValue(art, Artwork.class);
+                }
+                artworkRepo.save(artwork);
+                artist.addArtwork(artwork);
+            }
+            artist.setPopulated(true);
+            artistRepo.save(artist);
         }
-        return artworks;
+        return artist;
+    }
+
+    public Artist getSaveSimilarToByArtist(Artist artist){
+        String url = BASE_URL + "/artists?similar_to_artist_id=" + artist.getArtsyArtistId();
+        HttpEntity request = getRequest();
+        HashMap<String, HashMap<String, List<HashMap>>> response = restTemplate.exchange(url, HttpMethod.GET, request, HashMap.class).getBody();
+        List<HashMap> rawArtists = response.get("_embedded").get("artists");
+        ObjectMapper mapper = new ObjectMapper();
+        for (HashMap rawArtist : rawArtists){
+            Artist similarArtist = artistRepo.findByArtsyArtistId(rawArtist.get("id").toString());
+            if (similarArtist == null){
+                similarArtist = mapper.convertValue(rawArtist, Artist.class);
+            }
+            artistRepo.save(similarArtist);
+            artist.addSimilarArtist(similarArtist);
+        }
+        artistRepo.save(artist);
+        return artist;
     }
 
 

@@ -3,6 +3,8 @@ package com.theironyard;
 import com.theironyard.entities.Artist;
 import com.theironyard.entities.Artwork;
 import com.theironyard.models.Token;
+import com.theironyard.repositories.ArtistRepository;
+import com.theironyard.repositories.ArtworkRepository;
 import com.theironyard.services.ArtsyService;
 import com.theironyard.utilities.PasswordStorage;
 import org.junit.After;
@@ -27,6 +29,11 @@ public class ArtsyServiceTest {
     private static final String BASE_URL = "https://api.artsy.net/api";
     private static final String HEAD_AUTH = "X-Xapp-Token";
 
+    @Autowired
+    ArtistRepository artistRepo;
+
+    @Autowired
+    ArtworkRepository artworkRepo;
 
     @Autowired
     ArtsyService artsy;
@@ -61,37 +68,54 @@ public class ArtsyServiceTest {
         String name = "Gustav Klimt";
         String location = "Vienna, Austria";
 
-        Artist artist = artsy.getArtistById(artsyArtistId);
-
+        Artist artist = artsy.getSaveArtistById(artsyArtistId);
         assertNotNull("Error setting Artist object", artist);
         assertEquals("Error setting Artist Name", name, artist.getName());
         assertEquals("Error setting Artist Location", location, artist.getLocation());
     }
 
     @Test
-    public void getArtworkById(){
+    public void getSaveArtworkById(){
         String artsyArtworkId = "4d8b92eb4eb68a1b2c000968";
         String title = "Der Kuss (The Kiss)";
         String medium = "Oil and gold leaf on canvas";
 
-        Artwork artwork = artsy.getArtworkById(artsyArtworkId);
-        
+        Artwork artwork = artsy.getSaveArtworkById(artsyArtworkId);
+
         assertNotNull("Error setting Artwork object", artwork);
         assertEquals("Error setting Artwork Title", title, artwork.getTitle());
         assertEquals("Error setting Artwork Location", medium, artwork.getMedium());
     }
 
-    @Test //add testing of adding Artist to artwork
-    public void getArtworksByArtist(){
+    @Test
+    public void getSaveArtworksByArtist(){
         Artist artist = new Artist();
         artist.setArtsyArtistId("4d8b92b64eb68a1b2c000414");
+        artist.setName("Gustav Klimt");
 
-        List<Artwork> artworks = artsy.getArtworksByArtist(artist);
+        artsy.getSaveArtworksByArtist(artist);
+        List<Artwork> artworks = artworkRepo.findByArtists(artist);
 
         assertNotNull("Error creating List of artworks",artworks);
         assertEquals("List size is incorrect", 6, artworks.size());
         assertEquals("First artwork was not set correctly", "4d8b92eb4eb68a1b2c000968", artworks.get(0).getArtsyArtworkId());
         assertEquals("Error setting Artist to Artwork", "4d8b92b64eb68a1b2c000414", artworks.get(0).getArtists().get(0).getArtsyArtistId());
+    }
+
+    @Test
+    public void getSaveSimilarToByArtist(){
+        Artist artist = new Artist();
+        artist.setArtsyArtistId("4d8b92b64eb68a1b2c000414");
+        artist.setName("Gustav Klimt");
+
+        artist = artsy.getSaveSimilarToByArtist(artist);
+        List<Artist> similarTo = artist.getSimilarTo();
+
+        assertNotNull("Error setting list of similar artists", similarTo);
+        assertEquals("Size of list of similar artist in incorrect", 18, similarTo.size());
+        assertEquals("First artist was not set correctly", "4ee776e9d87cf50001000425", similarTo.get(0).getArtsyArtistId());
+
+
     }
 
 }

@@ -3,6 +3,8 @@ package com.theironyard.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -45,7 +47,7 @@ public class Artwork{
 
     @Transient
     @JsonProperty("dimensions")
-    private Map rawDims;
+    private Map<String, Map<String, Object>> rawDims;
 
     @Column
     private String size;
@@ -56,16 +58,21 @@ public class Artwork{
 
     @Transient
     @JsonProperty("_links")
-    private Map links;
+    private Map<String, Map> links;
 
     @Column
     private String imgBaseUrl;
+
+    private String imgLarge;
+    private String imgMedium;
+    private String imgSmall;
 
     @Column
     @JsonProperty("image_rights")
     private String imgRights;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "artworks")
+    @Fetch(value = FetchMode.SELECT)
     private List<Artist> artists = new ArrayList<>();
 
     @ManyToMany(mappedBy = "liked")
@@ -205,21 +212,31 @@ public class Artwork{
         this.dislikedBy = dislikedBy;
     }
 
-    public Map getRawDims() {
+    public Map<String, Map<String, Object>> getRawDims() {
         return rawDims;
     }
 
-    public void setRawDims(Map rawDims) {
+    public void setRawDims(Map<String, Map<String, Object>> rawDims) {
         this.rawDims = rawDims;
+        if (rawDims == null){
+            this.size = null;
+        }
+        else {
+            this.size = rawDims.get("in").get("text").toString();
+        }
     }
 
-    public Map getLinks() {
+    public Map<String, Map> getLinks() {
         return links;
     }
 
-    public void setLinks(Map links) {
+    public void setLinks(Map<String, Map> links) {
         this.links = links;
+        this.imgBaseUrl = links.get("image").get("href").toString();
+        this.imgLarge = this.imgBaseUrl.replace("{image_version}", "large");
+
     }
+
 
     @Override
     public String toString() {

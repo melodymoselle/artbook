@@ -100,6 +100,14 @@ public class User{
         this.privileges = privileges;
     }
 
+    public void addFollowing(Artist artist){
+        this.following.add(artist);
+    }
+
+    public void deleteFollowing(Artist artist){
+        this.following.remove(artist);
+    }
+
     public List<Artist> getFollowing() {
         return following;
     }

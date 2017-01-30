@@ -2,7 +2,9 @@ package com.theironyard.controllers;
 
 import com.theironyard.commands.LoginCommand;
 import com.theironyard.commands.RegisterCommand;
+import com.theironyard.entities.Artist;
 import com.theironyard.entities.User;
+import com.theironyard.repositories.ArtistRepository;
 import com.theironyard.repositories.UserRepository;
 import com.theironyard.utilities.PasswordStorage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,9 @@ public class UserController {
 
     @Autowired
     UserRepository userRepo;
+
+    @Autowired
+    ArtistRepository artistRepo;
 
     @RequestMapping(path = "/login", method = RequestMethod.POST)
     public String login(HttpSession session, LoginCommand command, RedirectAttributes redAtt) throws PasswordStorage.InvalidHashException, PasswordStorage.CannotPerformOperationException {
@@ -49,4 +54,27 @@ public class UserController {
         return "redirect:/";
     }
 
+    @RequestMapping(path = "/follow", method = RequestMethod.GET)
+    public String followArtist(HttpSession session, int artistId){
+        if (session.getAttribute(SESSION_USER) == null){
+            return "/";
+        }
+        User user = userRepo.findByUsername(SESSION_USER);
+        Artist artist = artistRepo.findOne(artistId);
+        user.addFollowing(artist);
+        userRepo.save(user);
+        return "redirect:/artist?artistId="+artistId;
+    }
+
+    @RequestMapping(path = "/unfollow", method = RequestMethod.GET)
+    public String unfollowArtist(HttpSession session, int artistId){
+        if (session.getAttribute(SESSION_USER) == null){
+            return "/";
+        }
+        User user = userRepo.findByUsername(SESSION_USER);
+        Artist artist = artistRepo.findOne(artistId);
+        user.deleteFollowing(artist);
+        userRepo.save(user);
+        return "redirect:/artist?artistId="+artistId;
+    }
 }

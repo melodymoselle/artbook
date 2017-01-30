@@ -36,8 +36,8 @@ public class fartController {
     @RequestMapping(path = "/", method = RequestMethod.GET)
     public String getHome(HttpSession session, Model model){
         if (session.getAttribute(SESSION_USER) != null){
-            User user = userRepo.findByUsername(SESSION_USER);
-            List<Artist> artists = artistRepo.findByFollowedBy(user);
+            User user = userRepo.findByUsername(session.getAttribute(SESSION_USER).toString());
+            List<Artist> artists = user.getFollowing();
             model.addAttribute("artists", artists);
             return "user-home";
         }

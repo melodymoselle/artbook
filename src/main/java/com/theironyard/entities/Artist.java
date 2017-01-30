@@ -87,7 +87,6 @@ public class Artist{
     private List<Artist> similarFrom = new ArrayList<>();
 
     @ManyToMany(mappedBy = "following")
-    @JsonIgnore
     private List<User> followedBy;
 
     @ManyToMany(mappedBy = "notInterested")

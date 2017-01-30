@@ -73,19 +73,20 @@ public class ArtsyService {
         url = BASE_URL + "/artworks?size="+count+"&artist_id=" + artist.getArtsyArtistId();
         HashMap embedded = (HashMap)restTemplate.exchange(url, HttpMethod.GET, request, HashMap.class).getBody().get("_embedded");
         List<HashMap> rawArtworks = (List)embedded.get("artworks");
-        if (rawArtworks.size()>0) {
-            ObjectMapper mapper = new ObjectMapper();
-            for (HashMap art : rawArtworks) {
-                Artwork artwork = artworkRepo.findByArtsyArtworkId(art.get("id").toString());
-                if (artwork == null) {
-                    artwork = mapper.convertValue(art, Artwork.class);
-                }
-                artworkRepo.save(artwork);
-                artist.addArtwork(artwork);
+        ObjectMapper mapper = new ObjectMapper();
+        for (HashMap art : rawArtworks) {
+            Artwork artwork = artworkRepo.findByArtsyArtworkId(art.get("id").toString());
+            if (artwork == null) {
+                artwork = mapper.convertValue(art, Artwork.class);
             }
-            artist.setPopulated(true);
-            artistRepo.save(artist);
+            artworkRepo.save(artwork);
+            artist.addArtwork(artwork);
         }
+        artist.setLoaded(true);
+        if (rawArtworks.size()>0){
+            artist.setPopulated(true);
+        }
+        artistRepo.save(artist);
         return artist;
     }
 

@@ -58,7 +58,6 @@ public class fartController {
         artist = artsy.getSaveArtworksByArtist(artist);
         artist = artsy.getSaveSimilarToByArtist(artist);
         redAtt.addFlashAttribute("artist", artist);
-        redAtt.addFlashAttribute("artworksCount", artist.getArtworks().size());
         return "redirect:/add-artist";
     }
 

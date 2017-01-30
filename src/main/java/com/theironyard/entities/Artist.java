@@ -24,6 +24,9 @@ public class Artist{
     private int id;
 
     @Column
+    boolean loaded = false;
+
+    @Column
     boolean populated = false;
 
     @Column(nullable = false)
@@ -42,7 +45,6 @@ public class Artist{
     private String name;
 
     @Column
-    @JsonProperty("sortable_name")
     private String sortableName;
 
     @Column
@@ -283,5 +285,13 @@ public class Artist{
 
     public void setPopulated(boolean populated) {
         this.populated = populated;
+    }
+
+    public boolean isLoaded() {
+        return loaded;
+    }
+
+    public void setLoaded(boolean loaded) {
+        this.loaded = loaded;
     }
 }

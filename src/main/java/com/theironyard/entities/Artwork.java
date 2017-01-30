@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -33,6 +34,8 @@ public class Artwork{
     @JsonProperty("id")
     private String artsyArtworkId;
 
+    @Lob
+    @Type(type = "org.hibernate.type.TextType")
     @Column
     private String title;
 
@@ -218,12 +221,6 @@ public class Artwork{
 
     public void setRawDims(Map<String, Map<String, Object>> rawDims) {
         this.rawDims = rawDims;
-        if (rawDims == null){
-            this.size = null;
-        }
-        else {
-            this.size = rawDims.get("in").get("text").toString();
-        }
     }
 
     public Map<String, Map> getLinks() {

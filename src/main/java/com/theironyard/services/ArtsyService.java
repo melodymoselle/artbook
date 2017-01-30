@@ -79,6 +79,7 @@ public class ArtsyService {
             if (artwork == null) {
                 artwork = mapper.convertValue(art, Artwork.class);
             }
+            System.out.println(artwork);
             artworkRepo.save(artwork);
             artist.addArtwork(artwork);
         }

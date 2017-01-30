@@ -275,8 +275,13 @@ public class Artist{
 
     public void setLinks(Map<String, Map> links) {
         this.links = links;
-        this.imgBaseUrl = links.get("image").get("href").toString();
-        this.imgFourThirds = this.imgBaseUrl.replace("{image_version}", "four_thirds");
+        try {
+            this.imgBaseUrl = links.get("image").get("href").toString();
+            this.imgFourThirds = this.imgBaseUrl.replace("{image_version}", "four_thirds");
+        }
+        catch (NullPointerException e){
+            System.out.println(links);
+        }
     }
 
     public boolean isPopulated() {

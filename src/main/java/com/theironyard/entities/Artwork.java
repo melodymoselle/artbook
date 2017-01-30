@@ -42,6 +42,8 @@ public class Artwork{
     @Column
     private String category;
 
+    @Lob
+    @Type(type = "org.hibernate.type.TextType")
     @Column
     private String medium;
 
@@ -229,9 +231,13 @@ public class Artwork{
 
     public void setLinks(Map<String, Map> links) {
         this.links = links;
-        this.imgBaseUrl = links.get("image").get("href").toString();
-        this.imgLarge = this.imgBaseUrl.replace("{image_version}", "large");
-
+        try {
+            this.imgBaseUrl = links.get("image").get("href").toString();
+            this.imgLarge = this.imgBaseUrl.replace("{image_version}", "large");
+        }
+        catch (NullPointerException e){
+            System.out.println(links);
+        }
     }
 
 

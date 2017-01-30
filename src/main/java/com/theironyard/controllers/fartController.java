@@ -36,11 +36,11 @@ public class fartController {
 
     @RequestMapping(path = "/", method = RequestMethod.GET)
     public String getHome(HttpSession session, Model model){
-        User user = userRepo.findByUsername(session.getAttribute(SESSION_USER).toString());
-        if (user != null){
-            model.addAttribute("currentUser", user);
+        if (session.getAttribute(SESSION_USER) != null){
             return "home";
         }
+        List<Artist> artists = artistRepo.findByLoadedAndPopulated(true, true);
+        model.addAttribute("artists", artists);
         return "index";
     }
 

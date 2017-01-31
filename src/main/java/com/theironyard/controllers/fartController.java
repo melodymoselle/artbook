@@ -57,22 +57,6 @@ public class fartController {
         return "discover";
     }
 
-    @RequestMapping(path = "/add-artist", method = RequestMethod.GET)
-    public String getAddArtistPage(Model model){
-        List<Artist> artists = artistRepo.findAll();
-        model.addAttribute("artists", artists);
-        return "add-artist";
-    }
-
-    @RequestMapping(path = "/add-artist", method = RequestMethod.POST)
-    public String addArtistToDB(String artsyArtistId, RedirectAttributes redAtt){
-        Artist artist = artsy.getSaveArtistById(artsyArtistId);
-        artist = artsy.getSaveArtworksByArtist(artist);
-        artist = artsy.getSaveSimilarToByArtist(artist);
-        redAtt.addFlashAttribute("artist", artist);
-        return "redirect:/add-artist";
-    }
-
     @RequestMapping(path = "/artist", method = RequestMethod.GET)
     public String getArtistPage(HttpSession session, Model model, int artistId){
         Artist artist = artistRepo.findOne(artistId);
@@ -80,30 +64,24 @@ public class fartController {
             User user = userRepo.findByUsername(session.getAttribute(SESSION_USER).toString());
             model.addAttribute(SESSION_USER, user.getUsername());
             if (user.isFollowing(artist)){
-                model.addAttribute("following", true);
+                model.addAttribute("liked", true);
             }
         }
         model.addAttribute("artist", artist);
         return "artist";
     }
 
-    @RequestMapping(path = "/get-artworks", method = RequestMethod.GET)
-    public String getAddArtworksToArtist(int artistId){
-        Artist artist = artistRepo.findOne(artistId);
-        artist = artsy.getSaveArtworksByArtist(artist);
-        return "redirect:/artist?artistId="+artistId;
-    }
-
-    @RequestMapping(path = "/get-similar-artists", method = RequestMethod.GET)
-    public String getAddSimilarArtistsToArtist(int artistId){
-        Artist artist = artistRepo.findOne(artistId);
-        artist = artsy.getSaveSimilarToByArtist(artist);
-        return "redirect:/artist?artistId="+artistId;
-    }
     @RequestMapping(path = "/artwork", method = RequestMethod.GET)
-    public String getArtworkPage(Model model, int artworkId){
+    public String getArtworkPage(HttpSession session, Model model, int artworkId){
         Artwork artwork = artworkRepo.findOne(artworkId);
+        if (session.getAttribute(SESSION_USER) != null){
+            User user = userRepo.findByUsername(session.getAttribute(SESSION_USER).toString());
+            if (user.isLiked(artwork)){
+                model.addAttribute("following", true);
+            }
+        }
         model.addAttribute("artwork", artwork);
         return "artwork";
     }
+
 }

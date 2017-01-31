@@ -151,11 +151,10 @@ public class User{
     }
 
     public boolean isFollowing(Artist artist){
-     if (this.following.contains(artist)){
-         return true;
-     }
-     else {
-         return false;
-     }
+        return this.following.contains(artist);
+    }
+
+    public boolean isLiked(Artwork artwork){
+        return this.liked.contains(artwork);
     }
 }

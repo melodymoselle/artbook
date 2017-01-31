@@ -91,7 +91,7 @@ public class UserController {
         }
         User user = userRepo.findByUsername(session.getAttribute(SESSION_USER).toString());
         Artwork artwork = artworkRepo.findOne(artworkId);
-        user.deleteLiked(artwork);
+        user.addLiked(artwork);
         userRepo.save(user);
         return "redirect:/artwork?artworkId="+artworkId;
     }
@@ -103,7 +103,7 @@ public class UserController {
         }
         User user = userRepo.findByUsername(session.getAttribute(SESSION_USER).toString());
         Artwork artwork = artworkRepo.findOne(artworkId);
-        user.addLiked(artwork);
+        user.deleteLiked(artwork);
         userRepo.save(user);
         return "redirect:/artwork?artworkId="+artworkId;
     }

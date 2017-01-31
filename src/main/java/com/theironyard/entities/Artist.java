@@ -5,12 +5,15 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.OrderBy;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import static org.hibernate.criterion.Projections.count;
 
 @Entity
 @Table(name = "artists")
@@ -63,16 +66,15 @@ public class Artist{
 
     @Transient
     @JsonProperty("_links")
-    private Map<String, Map> links;
+    private Map<String, Map> imagesMap;
 
-    @Column
-    @JsonIgnore
-    private String imgBaseUrl;
+    @Transient
+    private List<String> imageVersions = new ArrayList<>();
 
-    private String imgFourThirds;
-    private String imgLarge;
-    private String imgSquare;
-    private String imgTall;
+    @Transient
+    @OneToMany(fetch = FetchType.EAGER)
+    private List<ArtsyImage> artsyImages = new ArrayList<>();
+
 
     @ManyToMany(fetch = FetchType.EAGER)
     @Fetch(value = FetchMode.SELECT)
@@ -201,14 +203,6 @@ public class Artist{
         this.nationality = nationality;
     }
 
-    public String getImgBaseUrl() {
-        return imgBaseUrl;
-    }
-
-    public void setImgBaseUrl(String imgBaseUrl) {
-        this.imgBaseUrl = imgBaseUrl;
-    }
-
     public List<Artwork> getArtworks() {
         return artworks;
     }
@@ -267,21 +261,6 @@ public class Artist{
         this.notInterestedBy = notInterestedBy;
     }
 
-    public Map<String, Map> getLinks() {
-        return links;
-    }
-
-    public void setLinks(Map<String, Map> links) {
-        this.links = links;
-        try {
-            this.imgBaseUrl = links.get("image").get("href").toString();
-            this.imgFourThirds = this.imgBaseUrl.replace("{image_version}", "four_thirds");
-        }
-        catch (NullPointerException e){
-            System.out.println(links);
-        }
-    }
-
     public boolean isPopulated() {
         return populated;
     }
@@ -296,5 +275,25 @@ public class Artist{
 
     public void setLoaded(boolean loaded) {
         this.loaded = loaded;
+    }
+
+    public Map<String, Map> getImagesMap() {
+        return imagesMap;
+    }
+
+    public void setImagesMap(Map<String, Map> imagesMap) {
+        this.imagesMap = imagesMap;
+    }
+
+    public List<String> getImageVersions() {
+        return imageVersions;
+    }
+
+    public void setImageVersions(List<String> imageVersions) {
+        this.imageVersions = imageVersions;
+    }
+
+    public void setArtsyImages(List<ArtsyImage> images) {
+        this.artsyImages = images;
     }
 }

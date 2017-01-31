@@ -58,33 +58,29 @@ public class Artwork{
     private String size;
 
     @Column
-    @JsonProperty("collecting_institution")
     private String collectingInstitution;
 
     @Transient
     @JsonProperty("_links")
-    private Map<String, Map> links;
+    private Map<String, Map> imagesMap;
+
+    @Transient
+    private List<String> imageVersions = new ArrayList<>();
+
+    @OneToMany(fetch = FetchType.EAGER)
+    @Fetch(value = FetchMode.SELECT)
+    private List<ArtsyImage> artsyImages = new ArrayList<>();
 
     @Column
-    private String imgBaseUrl;
-
-    private String imgLarge;
-    private String imgMedium;
-    private String imgSmall;
-
-    @Column
-    @JsonProperty("image_rights")
-    private String imgRights;
+    private String imageRights;
 
     @ManyToMany(fetch = FetchType.EAGER, mappedBy = "artworks")
     @Fetch(value = FetchMode.SELECT)
     private List<Artist> artists = new ArrayList<>();
 
-    @ManyToMany(mappedBy = "liked")
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "liked")
+    @Fetch(value = FetchMode.SELECT)
     private List<User> likedBy;
-
-    @ManyToMany(mappedBy = "disliked")
-    private List<User> dislikedBy;
 
     public Artwork() {
     }
@@ -169,20 +165,12 @@ public class Artwork{
         this.collectingInstitution = collectingInstitution;
     }
 
-    public String getImgBaseUrl() {
-        return imgBaseUrl;
+    public String getImageRights() {
+        return imageRights;
     }
 
-    public void setImgBaseUrl(String imgBaseUrl) {
-        this.imgBaseUrl = imgBaseUrl;
-    }
-
-    public String getImgRights() {
-        return imgRights;
-    }
-
-    public void setImgRights(String imgRights) {
-        this.imgRights = imgRights;
+    public void setImageRights(String imageRights) {
+        this.imageRights = imageRights;
     }
 
     public List<Artist> getArtists() {
@@ -209,14 +197,6 @@ public class Artwork{
         this.likedBy = likedBy;
     }
 
-    public List<User> getDislikedBy() {
-        return dislikedBy;
-    }
-
-    public void setDislikedBy(List<User> dislikedBy) {
-        this.dislikedBy = dislikedBy;
-    }
-
     public Map<String, Map<String, Object>> getRawDims() {
         return rawDims;
     }
@@ -225,37 +205,36 @@ public class Artwork{
         this.rawDims = rawDims;
     }
 
-    public Map<String, Map> getLinks() {
-        return links;
+    public Map<String, Map> getImagesMap() {
+        return imagesMap;
     }
 
-    public void setLinks(Map<String, Map> links) {
-        this.links = links;
-        try {
-            this.imgBaseUrl = links.get("image").get("href").toString();
-            this.imgLarge = this.imgBaseUrl.replace("{image_version}", "large");
-        }
-        catch (NullPointerException e){
-            System.out.println(links);
-        }
+    public void setImagesMap(Map<String, Map> imagesMap) {
+        this.imagesMap = imagesMap;
     }
 
+    public List<String> getImageVersions() {
+        return imageVersions;
+    }
+
+    public void setImageVersions(List<String> imageVersions) {
+        this.imageVersions = imageVersions;
+    }
+
+    public List<ArtsyImage> getImages() {
+        return artsyImages;
+    }
+
+    public void setArtsyImages(List<ArtsyImage> images) {
+        this.artsyImages = images;
+    }
 
     @Override
     public String toString() {
         return "Artwork{" +
                 "id=" + id +
-                ", createdAt=" + createdAt +
-                ", updatedAt=" + updatedAt +
                 ", artsyArtworkId='" + artsyArtworkId + '\'' +
                 ", title='" + title + '\'' +
-                ", category='" + category + '\'' +
-                ", medium='" + medium + '\'' +
-                ", date='" + date + '\'' +
-                ", rawDims=" + rawDims +
-                ", collectingInstitution='" + collectingInstitution + '\'' +
-                ", links=" + links +
-                ", imgRights='" + imgRights + '\'' +
                 '}';
     }
 }

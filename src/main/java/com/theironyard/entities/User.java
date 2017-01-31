@@ -104,7 +104,9 @@ public class User{
     }
 
     public void addFollowing(Artist artist){
-        this.following.add(artist);
+        if (!this.following.contains(artist)) {
+            this.following.add(artist);
+        }
     }
 
     public void deleteFollowing(Artist artist){
@@ -128,7 +130,9 @@ public class User{
     }
 
     public void addLiked(Artwork artwork){
-        this.liked.add(artwork);
+        if (!this.liked.contains(artwork)) {
+            this.liked.add(artwork);
+        }
     }
 
     public void deleteLiked(Artwork artwork){

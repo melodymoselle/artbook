@@ -52,7 +52,7 @@ public class fartController {
             return "/";
         }
 
-        List<Artist> artists = artistRepo.findByLoadedAndPopulated(true, true);
+        List<Artist> artists = artistRepo.findAllPopulatedOrderByFollowedBy();
         model.addAttribute("artists", artists);
         return "discover";
     }

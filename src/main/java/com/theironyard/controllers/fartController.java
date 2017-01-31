@@ -41,7 +41,7 @@ public class fartController {
             model.addAttribute("artists", artists);
             return "user-home";
         }
-        List<Artist> artists = artistRepo.findByLoadedAndPopulated(true, true);
+        List<Artist> artists = artistRepo.findAllPopulatedOrderByFollowedBy();
         model.addAttribute("artists", artists);
         return "no-user-home";
     }

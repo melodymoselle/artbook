@@ -6,6 +6,16 @@
 </head>
 <body>
 {{#artwork}}
+
+{{#currentUsername}}
+{{#liked}}
+<a href="/dislike?artworkId={{id}}"><button>Dislike</button></a>
+{{/liked}}
+{{^liked}}
+<a href="/like?artworkId={{id}}"><button>Like</button></a>
+{{/liked}}
+{{/currentUsername}}
+
 <h1>{{title}}, {{date}}</h1>
 <ul style="display: inline">
     {{#artists}}by

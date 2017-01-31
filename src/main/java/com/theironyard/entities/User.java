@@ -42,7 +42,7 @@ public class User{
     private List<Artist> notInterested;
 
     @ManyToMany
-    private List<Item> liked;
+    private List<Artwork> liked;
 
     @ManyToMany
     private List<Item> disliked;
@@ -127,11 +127,18 @@ public class User{
         this.notInterested = notInterested;
     }
 
-    public List<Item> getLiked() {
+    public void addLiked(Artwork artwork){
+        this.liked.add(artwork);
+    }
+
+    public void deleteLiked(Artwork artwork){
+        this.liked.remove(artwork);
+    }
+    public List<Artwork> getLiked() {
         return liked;
     }
 
-    public void setLiked(List<Item> liked) {
+    public void setLiked(List<Artwork> liked) {
         this.liked = liked;
     }
 

@@ -3,8 +3,10 @@ package com.theironyard.controllers;
 import com.theironyard.commands.LoginCommand;
 import com.theironyard.commands.RegisterCommand;
 import com.theironyard.entities.Artist;
+import com.theironyard.entities.Artwork;
 import com.theironyard.entities.User;
 import com.theironyard.repositories.ArtistRepository;
+import com.theironyard.repositories.ArtworkRepository;
 import com.theironyard.repositories.UserRepository;
 import com.theironyard.utitilties.PasswordStorage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,9 @@ public class UserController {
 
     @Autowired
     ArtistRepository artistRepo;
+
+    @Autowired
+    ArtworkRepository artworkRepo;
 
     @RequestMapping(path = "/login", method = RequestMethod.POST)
     public String login(HttpSession session, LoginCommand command, RedirectAttributes redAtt) throws PasswordStorage.InvalidHashException, PasswordStorage.CannotPerformOperationException {
@@ -77,5 +82,29 @@ public class UserController {
         user.deleteFollowing(artist);
         userRepo.save(user);
         return "redirect:/artist?artistId="+artistId;
+    }
+
+    @RequestMapping(path = "/like", method = RequestMethod.GET)
+    public String likeArtwork(HttpSession session, int artworkId){
+        if (session.getAttribute(SESSION_USER) == null){
+            return "/";
+        }
+        User user = userRepo.findByUsername(session.getAttribute(SESSION_USER).toString());
+        Artwork artwork = artworkRepo.findOne(artworkId);
+        user.deleteLiked(artwork);
+        userRepo.save(user);
+        return "redirect:/artwork?artworkId="+artworkId;
+    }
+
+    @RequestMapping(path = "/unlike", method = RequestMethod.GET)
+    public String unlikeArtwork(HttpSession session, int artworkId){
+        if (session.getAttribute(SESSION_USER) == null){
+            return "/";
+        }
+        User user = userRepo.findByUsername(session.getAttribute(SESSION_USER).toString());
+        Artwork artwork = artworkRepo.findOne(artworkId);
+        user.addLiked(artwork);
+        userRepo.save(user);
+        return "redirect:/artwork?artworkId="+artworkId;
     }
 }

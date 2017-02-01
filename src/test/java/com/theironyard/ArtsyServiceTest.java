@@ -5,6 +5,7 @@ import com.theironyard.entities.ArtsyImage;
 import com.theironyard.entities.Artwork;
 import com.theironyard.models.Token;
 import com.theironyard.repositories.ArtistRepository;
+import com.theironyard.repositories.ArtsyImageRepository;
 import com.theironyard.repositories.ArtworkRepository;
 import com.theironyard.services.ArtsyService;
 import org.junit.After;
@@ -41,6 +42,9 @@ public class ArtsyServiceTest {
 
     @Autowired
     ArtsyService artsy;
+
+    @Autowired
+    ArtsyImageRepository artsyImgRepo;
 
     @Before
     public void before() {
@@ -134,6 +138,8 @@ public class ArtsyServiceTest {
         assertEquals(3, images.size());
         assertEquals("https://d32dm0rphc51dk.cloudfront.net/3FBfL2Hs7UzA402R3UM2DQ/four_thirds.jpg", images.get(0).getUrl());
 
+        ArtsyImage image = artsyImgRepo.findOne(images.get(0).getId());
+        assertNotNull(image);
     }
 
 }

@@ -8,18 +8,20 @@
 
 {{#artist}}
 
+{{#currentUsername}}
 {{#following}}
 <a href="/unfollow?artistId={{id}}"><button>Unfollow</button></a>
 {{/following}}
 {{^following}}
 <a href="/follow?artistId={{id}}"><button>Follow</button></a>
 {{/following}}
+{{/currentUsername}}
 
 <h1>{{name}}</h1>
 <p>{{#nationality}}{{.}}{{/nationality}} b. {{#birthday}}{{.}}{{/birthday}} in {{#hometown}}{{.}}{{/hometown}}</p>
 <p>works/ed in {{#location}}{{.}}{{/location}}</p>
 <p>Loaded: {{loaded}} Populated: {{populated}}</p>
-<p><img src="{{#image}}{{.}}{{/image}}"/></p>
+<p><img src="{{#image}}{{url}}{{/image}}"/></p>
 <p><a href="/get-artworks?artistId={{id}}">Load Artworks</a>
 <a href="/get-similar-artists?artistId={{id}}">Load Similar Artists</a></p>
 {{/artist}}

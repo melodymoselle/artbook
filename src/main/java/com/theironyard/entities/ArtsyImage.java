@@ -16,9 +16,11 @@ public class ArtsyImage{
     private String url;
 
     @ManyToOne
+    @JoinColumn(name = "artist_id")
     private Artist artist;
 
     @ManyToOne
+    @JoinColumn(name = "artwork_id")
     private Artwork artwork;
 
     public ArtsyImage() {
@@ -27,6 +29,18 @@ public class ArtsyImage{
     public ArtsyImage(String version, String url) {
         this.version = version;
         this.url = url;
+    }
+
+    public ArtsyImage(String version, String url, Artist artist) {
+        this.version = version;
+        this.url = url;
+        this.artist = artist;
+    }
+
+    public ArtsyImage(String version, String url, Artwork artwork) {
+        this.version = version;
+        this.url = url;
+        this.artwork = artwork;
     }
 
     public int getId() {

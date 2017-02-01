@@ -65,10 +65,10 @@ public class Artwork{
     private Map<String, Map> imagesMap;
 
     @Transient
+    @JsonProperty("image_versions")
     private List<String> imageVersions = new ArrayList<>();
 
-    @OneToMany(fetch = FetchType.EAGER)
-    @Fetch(value = FetchMode.SELECT)
+    @OneToMany(mappedBy = "artwork")
     private List<ArtsyImage> artsyImages = new ArrayList<>();
 
     @Column

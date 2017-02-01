@@ -1,9 +1,5 @@
 package com.theironyard.entities;
 
-import com.theironyard.archive.Item;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
-
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -43,9 +39,6 @@ public class User{
 
     @ManyToMany
     private List<Artwork> liked;
-
-    @ManyToMany
-    private List<Item> disliked;
 
     public User() {
     }
@@ -144,14 +137,6 @@ public class User{
 
     public void setLiked(List<Artwork> liked) {
         this.liked = liked;
-    }
-
-    public List<Item> getDisliked() {
-        return disliked;
-    }
-
-    public void setDisliked(List<Item> disliked) {
-        this.disliked = disliked;
     }
 
     public boolean isFollowing(Artist artist){

@@ -67,13 +67,13 @@ public class Artist{
     private Map<String, Map> imagesMap;
 
     @Transient
+    @JsonProperty("image_versions")
     private List<String> imageVersions = new ArrayList<>();
 
-    @OneToMany
+    @OneToMany(mappedBy = "artist")
     private List<ArtsyImage> artsyImages = new ArrayList<>();
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @Fetch(value = FetchMode.SELECT)
+    @ManyToMany
     private List<Artwork> artworks = new ArrayList<>();
 
     @ManyToMany(fetch = FetchType.EAGER)

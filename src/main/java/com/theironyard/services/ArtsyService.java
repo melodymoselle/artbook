@@ -56,8 +56,8 @@ public class ArtsyService {
         String url = BASE_URL + "/artists/" + artist_id;
         HttpEntity request = getRequest();
         Artist artist = restTemplate.exchange(url, HttpMethod.GET, request, Artist.class).getBody();
-        artist.setArtsyImages(parseImages(artist.getImageVersions(), artist.getImagesMap()));
         artistRepo.save(artist);
+        artist = parseImages(artist);
         return artist;
     }
 
@@ -65,8 +65,8 @@ public class ArtsyService {
         String url = BASE_URL + "/artworks/" + artwork_id;
         HttpEntity request = getRequest();
         Artwork artwork = restTemplate.exchange(url, HttpMethod.GET, request, Artwork.class).getBody();
-        artwork.setArtsyImages(parseImages(artwork.getImageVersions(), artwork.getImagesMap()));
         artworkRepo.save(artwork);
+        artwork = parseImages(artwork);
         return artwork;
     }
 
@@ -85,8 +85,8 @@ public class ArtsyService {
             Artwork artwork = artworkRepo.findByArtsyArtworkId(art.get("id").toString());
             if (artwork == null) {
                 artwork = mapper.convertValue(art, Artwork.class);
-                artwork.setArtsyImages(parseImages(artwork.getImageVersions(), artwork.getImagesMap()));
                 artworkRepo.save(artwork);
+                artwork = parseImages(artwork);
             }
             artist.addArtwork(artwork);
         }
@@ -108,8 +108,8 @@ public class ArtsyService {
             Artist similarArtist = artistRepo.findByArtsyArtistId(rawArtist.get("id").toString());
             if (similarArtist == null){
                 similarArtist = mapper.convertValue(rawArtist, Artist.class);
-                similarArtist.setArtsyImages(parseImages(similarArtist.getImageVersions(), similarArtist.getImagesMap()));
                 artistRepo.save(similarArtist);
+                similarArtist = parseImages(similarArtist);
             }
             artist.addSimilarArtist(similarArtist);
         }
@@ -117,21 +117,42 @@ public class ArtsyService {
         return artist;
     }
 
-    public List<ArtsyImage> parseImages(List<String> imageVersions, Map<String, Map> imagesMap){
+    public Artist parseImages(Artist artist){
         List<ArtsyImage> images = new ArrayList<>();
-        if (imageVersions.size()>0) {
-            String href = imagesMap.get("image").get("href").toString();
-            for (String version : imageVersions) {
+        if (artist.getImageVersions().size()>0) {
+            String href = artist.getImagesMap().get("image").get("href").toString();
+            for (String version : artist.getImageVersions()) {
                 String url = href.replace("{image_version}", version);
                 ArtsyImage image = artsyImgRepo.findByUrl(url);
                 if (image == null) {
-                    image = new ArtsyImage(version, url);
+                    image = new ArtsyImage(version, url, artist);
                     artsyImgRepo.save(image);
                 }
                 images.add(image);
             }
+            artist.setArtsyImages(images);
         }
-        return images;
+        artistRepo.save(artist);
+        return artist;
+    }
+
+    public Artwork parseImages(Artwork artwork){
+        List<ArtsyImage> images = new ArrayList<>();
+        if (artwork.getImageVersions().size()>0) {
+            String href = artwork.getImagesMap().get("image").get("href").toString();
+            for (String version : artwork.getImageVersions()) {
+                String url = href.replace("{image_version}", version);
+                ArtsyImage image = artsyImgRepo.findByUrl(url);
+                if (image == null) {
+                    image = new ArtsyImage(version, url, artwork);
+                    artsyImgRepo.save(image);
+                }
+                images.add(image);
+            }
+            artwork.setArtsyImages(images);
+        }
+        artworkRepo.save(artwork);
+        return artwork;
     }
 
     public HttpEntity getRequest(){

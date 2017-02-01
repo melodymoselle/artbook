@@ -1,0 +1,94 @@
+
+<!DOCTYPE html>
+<html>
+{{> head}}
+
+<body>
+
+<!-- Preloader -->
+<section id="preloader">
+    <div class="loader" id="loader">
+        <div class="loader-img"></div>
+    </div>
+</section>
+<!-- End Preloader -->
+
+<!-- Search Overlay Menu -->
+<div class="search-overlay-menu">
+    <span class="search-overlay-close"><i class="ion ion-ios-close-empty"></i></span>
+    <form role="search" id="searchform" action="/search" method="get">
+        <input value="" name="q" type="search" placeholder="Search..." />
+        <button type="submit"><i class="ion ion-ios-search"></i></button>
+    </form>
+</div>
+<!-- End Search Overlay Menu -->
+
+<!-- Site Wraper -->
+<div class="wrapper">
+
+    {{> header}}
+
+    <!-- CONTENT --------------------------------------------------------------------------------->
+
+    <!-- About Section -->
+    <section id="about" class="pt pt-sm-80">
+        {{#artist}}
+        <p><a href="/artist?artistId={{id}}">{{name}}</a>was add to the database.</p>
+        {{/artist}}
+    </section>
+    <!-- End About Section -->
+
+    <!-- Work Section -->
+    <section class="ptb ptb-sm-80">
+        <div class="container">
+            <div class="row container-grid nf-col-3">
+                {{#artists}}
+                <div class="nf-item branding coffee spacing">
+                    <div class="item-box">
+                        <a href="/artist?artistId={{id}}">
+                            <img alt="1" src="{{imgThumb.url}}" class="item-container">
+                            <div class="item-mask">
+                                <div class="item-caption">
+                                    <h5 class="white">{{name}}</h5>
+                                    <p class="white">Loaded: {{loaded}} | Populated: {{populated}}</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                {{/artists}}
+
+            </div>
+        </div>
+
+        {{#previous}}
+        <a href="/add-artist?page={{prevPageNum}}"> <-- Previous Page</a>
+        {{/previous}}
+
+        {{#next}}
+        <a href="/add-artist?page={{nextPageNum}}">Next Page --> </a>
+        {{/next}}
+
+    </section>
+    <!-- End Work Section -->
+
+    <div class="spacer-60"></div>
+    <!-- END CONTENT ---------------------------------------------------------------------------->
+
+    {{> footer}}
+
+    <!-- Scroll Top -->
+    <a class="scroll-top">
+        <i class="fa fa-angle-double-up"></i>
+    </a>
+    <!-- End Scroll Top -->
+
+</div>
+<!-- Site Wraper End -->
+
+
+{{> javascript}}
+
+
+</body>
+</html>

@@ -50,8 +50,6 @@ public class fartController {
             model.addAttribute("artists", artists);
             return "user-home";
         }
-//        List<Artist> artists = artistRepo.findAllPopulatedOrderByFollowedBy();
-//        model.addAttribute("artists", artists);
         Page<Artwork> artworks = artworkRepo.findAllOrderByLikes(new PageRequest(page, 10));
         model.addAttribute("artworks", artworks);
 

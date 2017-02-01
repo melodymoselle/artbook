@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
-import org.hibernate.annotations.OrderBy;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -13,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static org.hibernate.criterion.Projections.count;
 
 @Entity
 @Table(name = "artists")
@@ -71,10 +69,8 @@ public class Artist{
     @Transient
     private List<String> imageVersions = new ArrayList<>();
 
-    @Transient
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany
     private List<ArtsyImage> artsyImages = new ArrayList<>();
-
 
     @ManyToMany(fetch = FetchType.EAGER)
     @Fetch(value = FetchMode.SELECT)
@@ -93,7 +89,6 @@ public class Artist{
     @ManyToMany(mappedBy = "notInterested")
     @JsonIgnore
     private List<User> notInterestedBy;
-
 
     public Artist() {
     }
@@ -295,5 +290,9 @@ public class Artist{
 
     public void setArtsyImages(List<ArtsyImage> images) {
         this.artsyImages = images;
+    }
+
+    public List<ArtsyImage> getArtsyImages() {
+        return artsyImages;
     }
 }

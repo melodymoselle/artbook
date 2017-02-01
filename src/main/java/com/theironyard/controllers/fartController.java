@@ -1,9 +1,11 @@
 package com.theironyard.controllers;
 
 import com.theironyard.entities.Artist;
+import com.theironyard.entities.ArtsyImage;
 import com.theironyard.entities.Artwork;
 import com.theironyard.entities.User;
 import com.theironyard.repositories.ArtistRepository;
+import com.theironyard.repositories.ArtsyImageRepository;
 import com.theironyard.repositories.ArtworkRepository;
 import com.theironyard.repositories.UserRepository;
 import com.theironyard.services.ArtsyService;
@@ -32,6 +34,9 @@ public class fartController {
 
     @Autowired
     ArtworkRepository artworkRepo;
+
+    @Autowired
+    ArtsyImageRepository artsyImgRepo;
 
     @RequestMapping(path = "/", method = RequestMethod.GET)
     public String getHome(HttpSession session, Model model){
@@ -62,11 +67,12 @@ public class fartController {
         Artist artist = artistRepo.findOne(artistId);
         if (session.getAttribute(SESSION_USER) != null){
             User user = userRepo.findByUsername(session.getAttribute(SESSION_USER).toString());
-            model.addAttribute(SESSION_USER, user.getUsername());
             if (user.isFollowing(artist)){
-                model.addAttribute("liked", true);
+                model.addAttribute("following", true);
             }
         }
+        ArtsyImage image = artsyImgRepo.findByVersionAndArtist("large", artist);
+        model.addAttribute("image", image);
         model.addAttribute("artist", artist);
         return "artist";
     }
@@ -77,9 +83,11 @@ public class fartController {
         if (session.getAttribute(SESSION_USER) != null){
             User user = userRepo.findByUsername(session.getAttribute(SESSION_USER).toString());
             if (user.isLiked(artwork)){
-                model.addAttribute("following", true);
+                model.addAttribute("liked", true);
             }
         }
+        ArtsyImage image = artsyImgRepo.findByVersionAndArtwork("large", artwork);
+        model.addAttribute("image", image);
         model.addAttribute("artwork", artwork);
         return "artwork";
     }

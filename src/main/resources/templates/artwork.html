@@ -17,10 +17,10 @@
 <h1>{{title}}, {{date}}</h1>
 <ul style="display: inline">
     {{#artists}}by
-    <li style="display: inline">{{name}},</li>
+    <li style="display: inline">{{name}}</li>
     {{/artists}}
 </ul>
-<img src="{{imgLarge}}">
+<img src="{{#image}}{{.}}{{/image}}">
 <p>category: {{category}}</p>
 <p>medium: {{medium}}</p>
 

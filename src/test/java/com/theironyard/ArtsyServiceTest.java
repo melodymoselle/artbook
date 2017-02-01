@@ -1,6 +1,7 @@
 package com.theironyard;
 
 import com.theironyard.entities.Artist;
+import com.theironyard.entities.ArtsyImage;
 import com.theironyard.entities.Artwork;
 import com.theironyard.models.Token;
 import com.theironyard.repositories.ArtistRepository;
@@ -17,7 +18,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import javax.persistence.ManyToOne;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -37,14 +42,8 @@ public class ArtsyServiceTest {
     @Autowired
     ArtsyService artsy;
 
-    @Autowired
-    WebApplicationContext wap;
-
-    MockMvc mockMvc;
-
     @Before
     public void before() {
-        mockMvc = MockMvcBuilders.webAppContextSetup(wap).build();
     }
 
     @After
@@ -114,7 +113,26 @@ public class ArtsyServiceTest {
         assertNotNull("Error setting list of similar artists", similarTo);
         assertEquals("Size of list of similar artist in incorrect", 18, similarTo.size());
         assertEquals("First artist was not set correctly", "4ee776e9d87cf50001000425", similarTo.get(0).getArtsyArtistId());
+    }
 
+    @Test
+    public void parseImages(){
+        List<String> imageVersions = new ArrayList<>();
+        imageVersions.add("four_thirds");
+        imageVersions.add("large");
+        imageVersions.add("square");
+
+        Map<String, Object> href = new HashMap<>();
+        href.put("href", "https://d32dm0rphc51dk.cloudfront.net/3FBfL2Hs7UzA402R3UM2DQ/{image_version}.jpg");
+        href.put("templated", true);
+
+        Map<String, Map> imagesMap = new HashMap<>();
+        imagesMap.put("image", href);
+
+        List<ArtsyImage> images = artsy.parseImages(imageVersions, imagesMap);
+
+        assertEquals(3, images.size());
+        assertEquals("https://d32dm0rphc51dk.cloudfront.net/3FBfL2Hs7UzA402R3UM2DQ/four_thirds.jpg", images.get(0).getUrl());
 
     }
 

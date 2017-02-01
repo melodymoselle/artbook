@@ -12,7 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.context.WebApplicationContext;
@@ -21,6 +21,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.flash;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 @RunWith(SpringRunner.class)
@@ -62,7 +63,7 @@ public class UserControllerTests {
                 MockMvcRequestBuilders.post("/register")
                         .param("username", "testUsername")
                         .param("password", "testPassword")
-        ).andExpect(MockMvcResultMatchers.status().is3xxRedirection()
+        ).andExpect(status().is3xxRedirection()
         ).andExpect(flash().attribute("message", "That username is taken.")
         ).andExpect(view().name("redirect:/"));
     }
@@ -74,7 +75,7 @@ public class UserControllerTests {
                 MockMvcRequestBuilders.post("/register")
                         .param("username", "testUsername2")
                         .param("password", "testPassword")
-        ).andExpect(MockMvcResultMatchers.status().is3xxRedirection()
+        ).andExpect(status().is3xxRedirection()
         ).andExpect(view().name("redirect:/discover"));
 
         User user = userRepo.findByUsername("testUsername2");
@@ -90,7 +91,7 @@ public class UserControllerTests {
                 MockMvcRequestBuilders.post("/login")
                         .param("username", "testUsername")
                         .param("password", "testPassword")
-        ).andExpect(MockMvcResultMatchers.status().is3xxRedirection()
+        ).andExpect(status().is3xxRedirection()
         ).andExpect(view().name("redirect:/"));
     }
 }

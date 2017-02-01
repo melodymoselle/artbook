@@ -73,10 +73,10 @@ public class Artist{
     @OneToMany(mappedBy = "artist")
     private List<ArtsyImage> artsyImages = new ArrayList<>();
 
-    @Column
+    @OneToOne(fetch = FetchType.EAGER)
     private ArtsyImage imgThumb;
 
-    @Column
+    @OneToOne(fetch = FetchType.EAGER)
     private ArtsyImage imgLarge;
 
     @ManyToMany

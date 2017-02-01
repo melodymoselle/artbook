@@ -32,6 +32,12 @@
 
     <!-- About Section -->
     <section id="about" class="pt pt-sm-80">
+
+        <form action="/add-artist" method="post">
+            <input type="text" class="newsletter-input input-md mb-0" placeholder="Artsy Artist Id" name="artsyArtistId">
+            <button class="newsletter-btn btn btn-xs btn-white" type="submit" value=""><i class="fa fa-angle-right mr-0"></i></button>
+        </form>
+
         {{#artist}}
         <p><a href="/artist?artistId={{id}}">{{name}}</a>was add to the database.</p>
         {{/artist}}
@@ -86,9 +92,7 @@
 </div>
 <!-- Site Wraper End -->
 
-
 {{> javascript}}
-
 
 </body>
 </html>

@@ -128,6 +128,12 @@ public class ArtsyService {
                     image = new ArtsyImage(version, url, artist);
                     artsyImgRepo.save(image);
                 }
+                if(version.equals("medium")){
+                    artist.setImgLarge(image);
+                }
+                if(version.equals("square")){
+                    artist.setImgThumb(image);
+                }
                 images.add(image);
             }
             artist.setArtsyImages(images);

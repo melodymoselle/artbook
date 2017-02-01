@@ -73,6 +73,12 @@ public class Artist{
     @OneToMany(mappedBy = "artist")
     private List<ArtsyImage> artsyImages = new ArrayList<>();
 
+    @Column
+    private ArtsyImage imgThumb;
+
+    @Column
+    private ArtsyImage imgLarge;
+
     @ManyToMany
     private List<Artwork> artworks = new ArrayList<>();
 
@@ -294,5 +300,21 @@ public class Artist{
 
     public List<ArtsyImage> getArtsyImages() {
         return artsyImages;
+    }
+
+    public ArtsyImage getImgThumb() {
+        return imgThumb;
+    }
+
+    public void setImgThumb(ArtsyImage imgThumb) {
+        this.imgThumb = imgThumb;
+    }
+
+    public ArtsyImage getImgLarge() {
+        return imgLarge;
+    }
+
+    public void setImgLarge(ArtsyImage imgLarge) {
+        this.imgLarge = imgLarge;
     }
 }

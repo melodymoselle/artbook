@@ -72,6 +72,12 @@ public class Artwork{
     private List<ArtsyImage> artsyImages = new ArrayList<>();
 
     @Column
+    private ArtsyImage imgThumb;
+
+    @Column
+    private ArtsyImage imgLarge;
+
+    @Column
     private String imageRights;
 
     @ManyToMany(fetch = FetchType.EAGER, mappedBy = "artworks")
@@ -227,6 +233,26 @@ public class Artwork{
 
     public void setArtsyImages(List<ArtsyImage> images) {
         this.artsyImages = images;
+    }
+
+    public List<ArtsyImage> getArtsyImages() {
+        return artsyImages;
+    }
+
+    public ArtsyImage getImgThumb() {
+        return imgThumb;
+    }
+
+    public void setImgThumb(ArtsyImage imgThumb) {
+        this.imgThumb = imgThumb;
+    }
+
+    public ArtsyImage getImgLarge() {
+        return imgLarge;
+    }
+
+    public void setImgLarge(ArtsyImage imgLarge) {
+        this.imgLarge = imgLarge;
     }
 
     @Override

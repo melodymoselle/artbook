@@ -35,7 +35,7 @@ public class AdminController {
 
     @RequestMapping(path = "/add-artist", method = RequestMethod.GET)
     public String getAddArtistPage(Model model, @RequestParam(defaultValue = "0") int page){
-        Page<Artist> artists = artistRepo.findAll(new PageRequest(page, 10));
+        Page<Artist> artists = artistRepo.findAll(new PageRequest(page, 9));
         model.addAttribute("artists", artists);
 
         if(artists.hasPrevious()){
@@ -46,6 +46,7 @@ public class AdminController {
             model.addAttribute("next", true);
             model.addAttribute("nextPageNum", page + 1);
         }
+        model.addAttribute("admin", true);
 
         return "add-artist";
     }
@@ -59,14 +60,14 @@ public class AdminController {
         return "redirect:/add-artist";
     }
 
-    @RequestMapping(path = "/get-artworks", method = RequestMethod.GET)
+    @RequestMapping(path = "/load-artworks", method = RequestMethod.GET)
     public String getAddArtworksToArtist(int artistId){
         Artist artist = artistRepo.findOne(artistId);
         artist = artsy.getSaveArtworksByArtist(artist);
         return "redirect:/artist?artistId="+artistId;
     }
 
-    @RequestMapping(path = "/get-similar-artists", method = RequestMethod.GET)
+    @RequestMapping(path = "/load-similar-artists", method = RequestMethod.GET)
     public String getAddSimilarArtistsToArtist(int artistId){
         Artist artist = artistRepo.findOne(artistId);
         artist = artsy.getSaveSimilarToByArtist(artist);

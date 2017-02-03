@@ -1,0 +1,36 @@
+.img-thumb {
+    /*max-width: 350px;*/
+    vertical-align: middle;
+}
+
+.img-large {
+    height: 500px;
+    width: auto;
+}
+
+.item-box {
+    height: 233px;
+}
+
+/*.item-box img {*/
+    /*min-height:233px;*/
+    /*min-width:300px;*/
+/*}*/
+
+#logout {
+    color: #ffffff;
+    padding: 15px;
+}
+
+#logout:hover{
+    color: #e6ae49;
+}
+
+#login {
+    color: #ffffff;
+    padding: 15px;
+}
+
+#login:hover {
+    color: #e6ae49;
+}

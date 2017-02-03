@@ -30,12 +30,17 @@ public class UserController {
     @Autowired
     ArtworkRepository artworkRepo;
 
+    @RequestMapping(path = "/login", method = RequestMethod.GET)
+    public String getLogin(){
+        return "login";
+    }
+
     @RequestMapping(path = "/login", method = RequestMethod.POST)
     public String login(HttpSession session, LoginCommand command, RedirectAttributes redAtt) throws PasswordStorage.InvalidHashException, PasswordStorage.CannotPerformOperationException {
         User user = userRepo.findByUsername(command.getUsername());
         if (user == null || !PasswordStorage.verifyPassword(command.getPassword(), user.getPassword())){
             redAtt.addFlashAttribute("message", "Invalid Username/Password");
-            return "redirect:/";
+            return "redirect:/login";
         }
         session.setAttribute(SESSION_USER, user.getUsername());
         return "redirect:/";
@@ -46,7 +51,7 @@ public class UserController {
         User user = userRepo.findByUsername(command.getUsername());
         if (user != null){
             redAtt.addFlashAttribute("message", "That username is taken.");
-            return "redirect:/";
+            return "redirect:/login";
         }
         user = new User(command.getUsername(), PasswordStorage.createHash(command.getPassword()));
         userRepo.save(user);
@@ -54,7 +59,7 @@ public class UserController {
         return "redirect:/discover";
     }
 
-    @RequestMapping(path = "/logout", method = RequestMethod.POST)
+    @RequestMapping(path = "/logout", method = RequestMethod.GET)
     public String logout(HttpSession session){
         session.invalidate();
         return "redirect:/";

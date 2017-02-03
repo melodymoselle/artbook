@@ -70,14 +70,11 @@ public class Artist{
     @JsonProperty("image_versions")
     private List<String> imageVersions = new ArrayList<>();
 
-    @OneToMany(mappedBy = "artist")
-    private List<ArtsyImage> artsyImages = new ArrayList<>();
+    @Column
+    private String imgThumb;
 
-    @OneToOne(fetch = FetchType.EAGER)
-    private ArtsyImage imgThumb;
-
-    @OneToOne(fetch = FetchType.EAGER)
-    private ArtsyImage imgLarge;
+    @Column
+    private String imgLarge;
 
     @ManyToMany
     private List<Artwork> artworks = new ArrayList<>();
@@ -294,27 +291,19 @@ public class Artist{
         this.imageVersions = imageVersions;
     }
 
-    public void setArtsyImages(List<ArtsyImage> images) {
-        this.artsyImages = images;
-    }
-
-    public List<ArtsyImage> getArtsyImages() {
-        return artsyImages;
-    }
-
-    public ArtsyImage getImgThumb() {
+    public String getImgThumb() {
         return imgThumb;
     }
 
-    public void setImgThumb(ArtsyImage imgThumb) {
+    public void setImgThumb(String imgThumb) {
         this.imgThumb = imgThumb;
     }
 
-    public ArtsyImage getImgLarge() {
+    public String getImgLarge() {
         return imgLarge;
     }
 
-    public void setImgLarge(ArtsyImage imgLarge) {
+    public void setImgLarge(String imgLarge) {
         this.imgLarge = imgLarge;
     }
 }

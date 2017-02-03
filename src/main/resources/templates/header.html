@@ -1,5 +1,5 @@
 <!-- Header -->
-<header id="header" class="header">
+<header id="header" class="header header-light">
     <div class="container header-inner">
 
         <!-- Logo -->
@@ -34,7 +34,12 @@
                     <a class="" href="/">Blog</a>
                 </li>
                 <li>
-                    <a class="" href="/">Elements</a>
+                    {{#currentUsername}}
+                    <a href="/Logout" class="btn btn-xs btn-black" id="logout">Logout</a>
+                    {{/currentUsername}}
+                    {{^currentUsername}}
+                    <a href="/login" class="btn btn-xs btn-black" id="login">Login</a>
+                    {{/currentUsername}}
                 </li>
             </ul>
         </div>

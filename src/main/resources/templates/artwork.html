@@ -1,0 +1,80 @@
+
+<!DOCTYPE html>
+<html>
+
+{{> head}}
+
+<body>
+
+<!-- Preloader -->
+<section id="preloader">
+    <div class="loader" id="loader">
+        <div class="loader-img"></div>
+    </div>
+</section>
+<!-- End Preloader -->
+
+<!-- Search Overlay Menu -->
+<div class="search-overlay-menu">
+    <span class="search-overlay-close"><i class="ion ion-ios-close-empty"></i></span>
+    <form role="search" id="searchform" action="/search" method="get">
+        <input value="" name="q" type="search" placeholder="Search..." />
+        <button type="submit"><i class="ion ion-ios-search"></i></button>
+    </form>
+</div>
+<!-- End Search Overlay Menu -->
+
+<!-- Site Wrapper -->
+<div class="wrapper">
+
+    {{> header}}
+
+    <!-- CONTENT --------------------------------------------------------------------------------->
+
+    <!-- Artwork Detail Section -->
+    {{#artwork}}
+    <section class="pt pt-sm-80">
+        <div class="container">
+            <div class="row mb-60 mb-xs-30">
+                <div class="col-md-6">
+                    <img class="item-container img-large pull-right" src="{{imgLarge}}" alt="1">
+                </div>
+                <div class="col-md-6">
+                    <div class="project-detail-block">
+                        <h4>{{title}}</h4>
+                        <p><strong class="dark-color">Artist:</strong>{{#artists}}{{name}}{{/artists}}</p>
+                        <p><strong class="dark-color">Date:</strong>{{#date}}{{.}}{{/date}}, {{#hometown}}{{.}}{{/hometown}}</p>
+                        <p><strong class="dark-color">Medium:</strong>{{#Medium}}{{.}}{{/Medium}}</p>
+                        {{#currentUsername}}
+                        {{#liked}}
+                        <p><a href="/unlike?artworkId={{id}}" class="btn btn-xs btn-black">Unlike</a></p>
+                        {{/liked}}
+                        {{^liked}}
+                        <p><a href="/like?artworkId={{id}}" class="btn btn-xs btn-black">Like</a></p>
+                        {{/liked}}
+                        {{/currentUsername}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    {{/artwork}}
+    <!--- End Artwork Detail Section -->
+
+    <!-- End CONTENT ------------------------------------------------------------------------------>
+
+    {{> footer}}
+
+    <!-- Scroll Top -->
+    <a class="scroll-top">
+        <i class="fa fa-angle-double-up"></i>
+    </a>
+    <!-- End Scroll Top -->
+
+</div>
+<!-- Site Wrapper End -->
+
+{{> javascript}}
+
+</body>
+</html>

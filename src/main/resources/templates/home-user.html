@@ -23,79 +23,67 @@
 </div>
 <!-- End Search Overlay Menu -->
 
-<!-- Site Wrapper -->
+<!-- Site Wraper -->
 <div class="wrapper">
 
     {{> header}}
 
     <!-- CONTENT --------------------------------------------------------------------------------->
 
-    <!-- Form Section -->
-    <section class="ptb ptb-sm-80">
-        <div class="container">
+    <!-- About Section -->
+    <section id="about" class="pt pt-sm-80">
+        <div class="container text-center">
             <div class="row">
-                <div class="col-md-6 col-md-offset-3 text-center">
-                    <h3>Add Artist</h3>
-                </div>
-            </div>
-            <div class="spacer-75"></div>
-            <div class="row">
-                <div class="col-md-6 col-md-offset-3">
-                    <!-- FORM -->
-                    <form action="/add-artist" method="post" class="contact-form" id="contact" role="form">
-
-                        <div class="form-field-wrapper">
-                            <input class="input-sm form-full" id="artsyArtistId" type="text" name="artsyArtistId" placeholder="Artsy Artist Id" required>
-                        </div>
-
-                        <button class="btn btn-md btn-black form-full" type="submit" id="form-submit" name="submit">Submit</button>
-                    </form>
-                    <!-- END FORM -->
-                </div>
+                <div class="col-md-8 col-md-offset-2"></div>
+                <h2>Artworks popular right now ...</h2>
             </div>
         </div>
     </section>
-    <!-- Form Section -->
+    <!-- End About Section -->
 
-    <!-- Work Section -->
+    <!-- Artworks Section -->
     <section class="ptb ptb-sm-80">
-        <div class="container text-center">
-            <div class="row">
+        <div class="container">
+            {{^artists}}
+            <p>You aren't following any artists. Go to the <a href="/discover">Discover</a> page to find some artists to follow.</p>
+            {{/artists}}
+            <div class="row container-grid nf-col-3">
                 {{#artists}}
-                <div class="col-lg-4 spacing-grid">
+                <div class="nf-item branding coffee spacing">
                     <div class="item-box">
-                        <a href="/artist?artistId={{id}}">
+                        <a href="/artists?artistsId={{id}}">
                             <img alt="1" src="{{imgThumb}}" class="item-container img-thumb">
                             <div class="item-mask">
                                 <div class="item-caption">
                                     <h5 class="white">{{name}}</h5>
-                                    <p class="white">Loaded: {{loaded}} | Populated: {{populated}}</p>
                                 </div>
                             </div>
                         </a>
                     </div>
                 </div>
                 {{/artists}}
+
             </div>
         </div>
+
         <!-- Pagination Nav -->
         <div class="pagination-nav mt-60 mt-xs-30">
             <ul>
                 {{#previous}}
-                <li><a href="/add-artist?page={{prevPageNum}}"><i class="fa fa-angle-left"></i></a></li>
+                <li><a href="/?page={{prevPageNum}}"><i class="fa fa-angle-left"></i></a></li>
                 {{/previous}}
                 <li class="active"><a href="#">1</a></li>
                 <li><a href="#">2</a></li>
                 <li><a href="#">3</a></li>
                 {{#next}}
-                <li><a href="/add-artist?page={{nextPageNum}}"><i class="fa fa-angle-right"></i></a></li>
+                <li><a href="/?page={{nextPageNum}}"><i class="fa fa-angle-right"></i></a></li>
                 {{/next}}
             </ul>
         </div>
         <!-- End Pagination Nav -->
 
     </section>
-    <!-- End Work Section -->
+    <!-- End Artworks Section -->
 
     <div class="spacer-60"></div>
     <!-- END CONTENT ---------------------------------------------------------------------------->
@@ -109,7 +97,7 @@
     <!-- End Scroll Top -->
 
 </div>
-<!-- Site Wraper End -->
+<!-- Site Wrapper End -->
 
 {{> javascript}}
 

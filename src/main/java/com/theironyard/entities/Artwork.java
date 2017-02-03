@@ -68,14 +68,14 @@ public class Artwork{
     @JsonProperty("image_versions")
     private List<String> imageVersions = new ArrayList<>();
 
-    @OneToMany(mappedBy = "artwork")
-    private List<ArtsyImage> artsyImages = new ArrayList<>();
+    @Column
+    private String imgThumb;
 
-    @OneToOne(fetch = FetchType.EAGER)
-    private ArtsyImage imgThumb;
+    @Column
+    private String imgLarge;
 
-    @OneToOne(fetch = FetchType.EAGER)
-    private ArtsyImage imgLarge;
+    @Column
+    private String imgZoom;
 
     @Column
     private String imageRights;
@@ -227,32 +227,28 @@ public class Artwork{
         this.imageVersions = imageVersions;
     }
 
-    public List<ArtsyImage> getImages() {
-        return artsyImages;
-    }
-
-    public void setArtsyImages(List<ArtsyImage> images) {
-        this.artsyImages = images;
-    }
-
-    public List<ArtsyImage> getArtsyImages() {
-        return artsyImages;
-    }
-
-    public ArtsyImage getImgThumb() {
+    public String getImgThumb() {
         return imgThumb;
     }
 
-    public void setImgThumb(ArtsyImage imgThumb) {
+    public void setImgThumb(String imgThumb) {
         this.imgThumb = imgThumb;
     }
 
-    public ArtsyImage getImgLarge() {
+    public String getImgLarge() {
         return imgLarge;
     }
 
-    public void setImgLarge(ArtsyImage imgLarge) {
+    public void setImgLarge(String imgLarge) {
         this.imgLarge = imgLarge;
+    }
+
+    public String getImgZoom() {
+        return imgZoom;
+    }
+
+    public void setImgZoom(String imgZoom) {
+        this.imgZoom = imgZoom;
     }
 
     @Override

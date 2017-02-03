@@ -24,87 +24,64 @@
 </div>
 <!-- End Search Overlay Menu -->
 
-<!-- Site Wraper -->
+<!-- Site Wrapper -->
 <div class="wrapper">
 
     {{> header}}
 
     <!-- CONTENT --------------------------------------------------------------------------------->
+
+    <!-- Artist Detail Section -->
     {{#artist}}
-    <!-- Work Detail Section -->
     <section class="pt pt-sm-80">
         <div class="container">
             <div class="row mb-60 mb-xs-30">
                 <div class="col-md-6">
-                    <h4>{{name}}</h4>
+                    <img class="item-container img-large pull-right" src="{{imgLarge}}" alt="1">
                 </div>
                 <div class="col-md-6">
-                    <p class="lead">
-
-                    </p>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-md-12">
-                    <img class="item-container" src="{{#imgLarge}}{{.}}{{/imgLarge}}" alt="1">
-                </div>
-            </div>
-
-            <div class="row mtb-60 mtb-xs-30">
-                <div class="col-md-4 mb-30">
                     <div class="project-detail-block">
-                        <p>
-                            <strong class="dark-color">Nationality :</strong>{{#nationality}}{{.}}{{/nationality}}
-                        </p>
-
-                        <p>
-                            <strong class="dark-color">Born:</strong>{{#birthday}}{{.}}{{/birthday}}, {{#hometown}}{{.}}{{/hometown}}
-                        </p>
-                        <p>
-                            <strong class="dark-color">Location :</strong>{{#location}}{{.}}{{/location}}
-                        </p>
-                        <p>
-                            <strong class="dark-color">User :</strong>John Doe
-                        </p>
+                        <h4>{{name}}</h4>
+                        <p><strong class="dark-color">Nationality:</strong>{{#nationality}}{{.}}{{/nationality}}</p>
+                        <p><strong class="dark-color">Born:</strong>{{#birthday}}{{.}}{{/birthday}}, {{#hometown}}{{.}}{{/hometown}}</p>
+                        <p><strong class="dark-color">Location:</strong>{{#location}}{{.}}{{/location}}</p>
                     </div>
-                </div>
-                <div class="col-md-8">
-                    <div class="row">
-                        <!--<div class="col-md-6 mb-30">-->
-                            <!--<h5>Fully responsive</h5>-->
-                            <!--<p>Nam libero tempore cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere.</p>-->
-                        <!--</div>-->
-                        <!--<div class="col-md-6 mb-30">-->
-                            <!--<h5>Flexible & Customizable</h5>-->
-                            <!--<p>Nam libero tempore cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere.</p>-->
-                        <!--</div>-->
-                        <!--<div class="col-md-6 mb-30">-->
-                            <!--<h5>html 5 video & Audio</h5>-->
-                            <!--<p>Nam libero tempore cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere.</p>-->
-                        <!--</div>-->
-                        <!--<div class="col-md-6 mb-30">-->
-                            <!--<h5>Clean code & design</h5>-->
-                            <!--<p>Nam libero tempore cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere.</p>-->
-                        <!--</div>-->
+                    {{#currentUsername}}
+                    <div>
+                    {{#following}}
+                    <a href="/unfollow?artistId={{id}}"><button>Unfollow</button></a>
+                    {{/following}}
+                    {{^following}}
+                    <a href="/follow?artistId={{id}}"><button>Follow</button></a>
+                    {{/following}}
+                    {{/currentUsername}}
                     </div>
                 </div>
             </div>
         </div>
-
     </section>
+    {{/artist}}
+    <!--- End Artist Detail Section -->
 
     <hr />
 
+    <!--- Artist's Artworks Section -->
     <section class="ptb ptb-sm-80">
         <div class="container text-center">
+            <div>
+                <p><strong class="dark-color">Loaded:</strong>{{artist.loaded}}<strong class="dark-color">Populated:</strong>{{artist.populated}}</p>
+                {{#admin}}
+                <a href="/load-artworks?artistId={{artist.id}}" class="btn btn-xs btn-black">Load Artwork</a>
+                <a href="/load-similar-artists?artistId={{artist.id}}" class="btn btn-xs btn-black">Load Similar</a>
+                {{/admin}}
+            </div>
             <h4>Artworks</h4>
             <div class="row">
                 {{#artworks}}
                 <div class="col-lg-4 spacing-grid">
                     <div class="item-box">
                         <a href="/artwork?artworkId={{id}}">
-                            <img alt="1" src="{{imgThumb}}" class="item-container">
+                            <img alt="1" src="{{imgThumb}}" class="item-container img-thumb">
                             <div class="item-mask">
                                 <div class="item-caption">
                                     <h5 class="white">{{title}}</h5>
@@ -117,59 +94,61 @@
                 {{/artworks}}
             </div>
         </div>
+        <!-- Pagination Nav -->
+        <div class="pagination-nav mt-60 mt-xs-30">
+            <ul>
+                {{#previous}}
+                <li><a href="/artist?artistId={{artist.id}}&page={{prevPageNum}}"><i class="fa fa-angle-left"></i></a></li>
+                {{/previous}}
+                <li class="active"><a href="#">1</a></li>
+                <li><a href="#">2</a></li>
+                <li><a href="#">3</a></li>
+                {{#next}}
+                <li><a href="/artist?artistId={{artist.id}}&page={{nextPageNum}}"><i class="fa fa-angle-right"></i></a></li>
+                {{/next}}
+            </ul>
+        </div>
+        <!-- End Pagination Nav -->
     </section>
+    <!--- End Artist's Artworks Section -->
     <hr />
 
+    <!-- Similar Artists Slider-->
     <section class="ptb ptb-sm-80">
-        <div class="container text-center">
-            <h4>Similar Artists</h4>
-            <div class="row">
-                {{#similarTo}}
-                <div class="col-lg-4 spacing-grid">
-                    <div class="item-box">
-                        <a href="/artist?artistId={{id}}">
-                            <img alt="1" src="{{imgThumb}}" class="item-container">
-                            <div class="item-mask">
-                                <div class="item-caption">
-                                    <h5 class="white">{{name}}</h5>
-                                    <p class="white">Loaded: {{loaded}} | Populated: {{populated}}</p>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-                {{/similarTo}}
-            </div>
-        </div>
-    </section>
-    <!--- End Work Detail Section -->
-
-    <!-- Work Next Prev Bar -->
-    <section class="mb-60">
         <div class="container">
-            <div class="item-nav">
-                <a class="item-prev" href="">
-                    <div class="prev-btn"><i class="fa fa-angle-left"></i></div>
-                    <div class="item-prev-text xs-hidden">
-                        <h6>Prev Project</h6>
+            <h4 class="text-center">Similar Artists</h4>
+            {{#artist}}
+            <div class="spacer-30"></div>
+            <div class="row">
+                <div class="owl-carousel item4-carousel nf-carousel-theme o-flow-hidden">
+                    {{#similarTo}}
+                    <div class="item">
+                        <div class="nf-col-padding">
+                            <div class="item-box">
+                                <a href="/artist?artistId={{id}}">
+                                    <!-- Shop item images -->
+                                    <div class="item-img ">
+                                        <img src="{{imgThumb}}" class="img-thumb"/>
+                                    </div>
+                                    <div class="item-mask">
+                                        <div class="item-caption">
+                                            <h5 class="white">{{name}}</h5>
+                                            <p class="white">Loaded: {{loaded}} | Populated: {{populated}}</p>
+                                        </div>
+                                    </div>
+                                <!-- End Shop item images -->
+                                </a>
+                            </div>
+                        </div>
                     </div>
-                </a>
-
-                <a class="item-all-view">
-                    <h6>All Work</h6>
-                </a>
-
-                <a class="item-next" href="">
-                    <div class="next-btn"><i class="fa fa-angle-right"></i></div>
-                    <div class="item-next-text xs-hidden">
-                        <h6>Next Project</h6>
-                    </div>
-                </a>
+                    {{/similarTo}}
+                </div>
             </div>
+            {{/artist}}
         </div>
     </section>
-    <!-- End Work Next Prev Bar -->
-    {{/artist}}
+    <!-- End Similar Artists Slider -->
+
 
     <!-- End CONTENT ------------------------------------------------------------------------------>
 
@@ -182,7 +161,7 @@
     <!-- End Scroll Top -->
 
 </div>
-<!-- Site Wraper End -->
+<!-- Site Wrapper End -->
 
 {{> javascript}}
 

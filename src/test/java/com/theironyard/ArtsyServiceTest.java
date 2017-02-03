@@ -1,11 +1,9 @@
 package com.theironyard;
 
 import com.theironyard.entities.Artist;
-import com.theironyard.entities.ArtsyImage;
 import com.theironyard.entities.Artwork;
 import com.theironyard.models.Token;
 import com.theironyard.repositories.ArtistRepository;
-import com.theironyard.repositories.ArtsyImageRepository;
 import com.theironyard.repositories.ArtworkRepository;
 import com.theironyard.services.ArtsyService;
 import org.junit.After;
@@ -15,11 +13,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 
-import javax.persistence.ManyToOne;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

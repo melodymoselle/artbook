@@ -1,0 +1,105 @@
+
+<!DOCTYPE html>
+<html>
+
+{{> head}}
+
+<body>
+
+<!-- Preloader -->
+<section id="preloader">
+    <div class="loader" id="loader">
+        <div class="loader-img"></div>
+    </div>
+</section>
+<!-- End Preloader -->
+
+<!-- Search Overlay Menu -->
+<div class="search-overlay-menu">
+    <span class="search-overlay-close"><i class="ion ion-ios-close-empty"></i></span>
+    <form role="search" id="searchform" action="/search" method="get">
+        <input value="" name="q" type="search" placeholder="Search..." />
+        <button type="submit"><i class="ion ion-ios-search"></i></button>
+    </form>
+</div>
+<!-- End Search Overlay Menu -->
+
+<!-- Site Wrapper -->
+<div class="wrapper">
+
+    {{> header}}
+
+    <!-- CONTENT --------------------------------------------------------------------------------->
+
+    <!-- Login Section -->
+    <section id="Pricing" class="ptb ptb-sm-80">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+                    <div class="tabs b-lrb-none">
+
+                        <ul>
+                            <li><a href="#tabs-1">Login</a></li>
+                            <li><a href="#tabs-2">Register</a></li>
+                        </ul>
+                        <div class="ui-tab-content">
+                            <div id="tabs-1" class="plr-0">
+                                <h4>Customer Login</h4>
+                                <p>{{#message}}{{.}}{{/message}}</p>
+                                <form action="/login" method="post">
+                                    <div class="form-field-wrapper">
+                                        <label for="login-email">Username</label>
+                                        <input type="text" required="" placeholder="Enter your Username" name="username" id="login-email" class="input-sm form-full" aria-required="true">
+                                    </div>
+                                    <div class="form-field-wrapper">
+                                        <label for="login-pass">Password</label>
+                                        <input type="password" required="" placeholder="Enter your Password" name="password" id="login-pass" class="input-sm form-full" aria-required="true">
+                                    </div>
+                                    <button name="submit" id="Button1" type="submit" class="btn btn-md btn-black">Sign In</button>
+                                    <a class="float-right">Forgot password?</a>
+                                </form>
+                            </div>
+                            <div id="tabs-2" class="plr-0">
+                                <h4>Create Account</h4>
+                                <p>Test error message</p>
+                                <form action="/register" method="post">
+                                    <div class="form-field-wrapper">
+                                        <label for="login-email">Choose Username</label>
+                                        <input type="text" required="" placeholder="Enter your Username" name="username" id="signup-username" class="input-sm form-full" aria-required="true">
+                                    </div>
+                                    <div class="form-field-wrapper">
+                                        <label for="signup-pass">Choose Password</label>
+                                        <input type="password" required="" placeholder="Enter Password" name="password" id="signup-pass" class="input-sm form-full" aria-required="true">
+                                    </div>
+                                    <button name="submit" id="form-submit" type="submit" class="btn btn-md btn-black">Signup Now</button>
+                                </form>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+    <!-- End Login Section -->
+
+
+    <!-- End CONTENT ------------------------------------------------------------------------------>
+
+    {{> footer}}
+
+    <!-- Scroll Top -->
+    <a class="scroll-top">
+        <i class="fa fa-angle-double-up"></i>
+    </a>
+    <!-- End Scroll Top -->
+
+</div>
+<!-- Site Wrapper End -->
+
+{{> javascript}}
+
+</body>
+</html>

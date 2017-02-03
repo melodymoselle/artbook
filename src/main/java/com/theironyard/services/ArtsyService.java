@@ -2,11 +2,9 @@ package com.theironyard.services;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.theironyard.entities.Artist;
-import com.theironyard.entities.ArtsyImage;
 import com.theironyard.entities.Artwork;
 import com.theironyard.models.Token;
 import com.theironyard.repositories.ArtistRepository;
-import com.theironyard.repositories.ArtsyImageRepository;
 import com.theironyard.repositories.ArtworkRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PostConstruct;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,9 +41,6 @@ public class ArtsyService {
     @Autowired
     ArtistRepository artistRepo;
 
-    @Autowired
-    ArtsyImageRepository artsyImgRepo;
-
     @PostConstruct
     public void init(){
         token = getAccessToken();
@@ -56,8 +50,9 @@ public class ArtsyService {
         String url = BASE_URL + "/artists/" + artist_id;
         HttpEntity request = getRequest();
         Artist artist = restTemplate.exchange(url, HttpMethod.GET, request, Artist.class).getBody();
+        artist = parseArtistImgThumb(artist);
+        artist = parseArtistImgLarge(artist);
         artistRepo.save(artist);
-        artist = parseImages(artist);
         return artist;
     }
 
@@ -65,8 +60,10 @@ public class ArtsyService {
         String url = BASE_URL + "/artworks/" + artwork_id;
         HttpEntity request = getRequest();
         Artwork artwork = restTemplate.exchange(url, HttpMethod.GET, request, Artwork.class).getBody();
+        artwork = parseArtworkImgThumb(artwork);
+        artwork = parseArtworkImgLarge(artwork);
+        artwork = parseArtworkImgZoom(artwork);
         artworkRepo.save(artwork);
-        artwork = parseImages(artwork);
         return artwork;
     }
 
@@ -85,8 +82,10 @@ public class ArtsyService {
             Artwork artwork = artworkRepo.findByArtsyArtworkId(art.get("id").toString());
             if (artwork == null) {
                 artwork = mapper.convertValue(art, Artwork.class);
+                artwork = parseArtworkImgThumb(artwork);
+                artwork = parseArtworkImgLarge(artwork);
+                artwork = parseArtworkImgZoom(artwork);
                 artworkRepo.save(artwork);
-                artwork = parseImages(artwork);
             }
             artist.addArtwork(artwork);
         }
@@ -108,8 +107,9 @@ public class ArtsyService {
             Artist similarArtist = artistRepo.findByArtsyArtistId(rawArtist.get("id").toString());
             if (similarArtist == null){
                 similarArtist = mapper.convertValue(rawArtist, Artist.class);
+                similarArtist = parseArtistImgThumb(similarArtist);
+                similarArtist = parseArtistImgLarge(similarArtist);
                 artistRepo.save(similarArtist);
-                similarArtist = parseImages(similarArtist);
             }
             artist.addSimilarArtist(similarArtist);
         }
@@ -117,46 +117,113 @@ public class ArtsyService {
         return artist;
     }
 
-    public Artist parseImages(Artist artist){
-        List<ArtsyImage> images = new ArrayList<>();
-        if (artist.getImageVersions().size()>0) {
-            String href = artist.getImagesMap().get("image").get("href").toString();
-            for (String version : artist.getImageVersions()) {
-                String url = href.replace("{image_version}", version);
-                ArtsyImage image = artsyImgRepo.findByUrl(url);
-                if (image == null) {
-                    image = new ArtsyImage(version, url, artist);
-                    artsyImgRepo.save(image);
-                }
-                if(version.equals("medium")){
-                    artist.setImgLarge(image);
-                }
-                if(version.equals("square")){
-                    artist.setImgThumb(image);
-                }
-                images.add(image);
-            }
-            artist.setArtsyImages(images);
+    public Artist parseArtistImgThumb(Artist artist){
+        String href = artist.getImagesMap().get("image").get("href").toString();
+        List<String> versions = artist.getImageVersions();
+        String url;
+        if (versions.contains("four_thirds")) {
+            url = href.replace("{image_version}", "four_thirds");
         }
+        else if (versions.contains("square")) {
+            url = href.replace("{image_version}", "square");
+        }
+        else if (versions.contains("tall")) {
+            url = href.replace("{image_version}", "tall");
+        }
+        else if (versions.contains("large")) {
+            url = href.replace("{image_version}", "large");
+        }
+        else {
+            url = ""; // img not found thumbnail ???
+        }
+        artist.setImgThumb(url);
         artistRepo.save(artist);
         return artist;
     }
 
-    public Artwork parseImages(Artwork artwork){
-        List<ArtsyImage> images = new ArrayList<>();
-        if (artwork.getImageVersions().size()>0) {
-            String href = artwork.getImagesMap().get("image").get("href").toString();
-            for (String version : artwork.getImageVersions()) {
-                String url = href.replace("{image_version}", version);
-                ArtsyImage image = artsyImgRepo.findByUrl(url);
-                if (image == null) {
-                    image = new ArtsyImage(version, url, artwork);
-                    artsyImgRepo.save(image);
-                }
-                images.add(image);
-            }
-            artwork.setArtsyImages(images);
+    public Artist parseArtistImgLarge(Artist artist){
+        String href = artist.getImagesMap().get("image").get("href").toString();
+        List<String> versions = artist.getImageVersions();
+        String url;
+        if (versions.contains("large")) {
+            url = href.replace("{image_version}", "large");
         }
+        else if (versions.contains("four_thirds")) {
+            url = href.replace("{image_version}", "four_thirds");
+        }
+        else if (versions.contains("square")) {
+            url = href.replace("{image_version}", "square");
+        }
+        else if (versions.contains("tall")) {
+            url = href.replace("{image_version}", "tall");
+        }
+        else {
+            url = ""; // img not found thumbnail ???
+        }
+        artist.setImgLarge(url);
+        artistRepo.save(artist);
+        return artist;
+    }
+
+    public Artwork parseArtworkImgThumb(Artwork artwork){
+        String href = artwork.getImagesMap().get("image").get("href").toString();
+        List<String> versions = artwork.getImageVersions();
+        String url;
+        if (versions.contains("medium")) {
+            url = href.replace("{image_version}", "medium");
+        }
+        else if (versions.contains("tall")) {
+            url = href.replace("{image_version}", "tall");
+        }
+        else if (versions.contains("medium")) {
+            url = href.replace("{image_version}", "medium");
+        }
+        else if (versions.contains("small")) {
+            url = href.replace("{image_version}", "small");
+        }
+        else {
+            url = ""; // img not found thumbnail ???
+        }
+        artwork.setImgThumb(url);
+        artworkRepo.save(artwork);
+        return artwork;
+    }
+
+    public Artwork parseArtworkImgLarge(Artwork artwork){
+        String href = artwork.getImagesMap().get("image").get("href").toString();
+        List<String> versions = artwork.getImageVersions();
+        String url;
+        if (versions.contains("larger")) {
+            url = href.replace("{image_version}", "larger");
+        }
+        else if (versions.contains("large")) {
+            url = href.replace("{image_version}", "large");
+        }
+        else if (versions.contains("large_rectangle")) {
+            url = href.replace("{image_version}", "large_rectangle");
+        }
+        else if (versions.contains("square")) {
+            url = href.replace("{image_version}", "square");
+        }
+        else {
+            url = ""; // img not found thumbnail ???
+        }
+        artwork.setImgLarge(url);
+        artworkRepo.save(artwork);
+        return artwork;
+    }
+
+    public Artwork parseArtworkImgZoom(Artwork artwork){
+        String href = artwork.getImagesMap().get("image").get("href").toString();
+        List<String> versions = artwork.getImageVersions();
+        String url;
+        if (versions.contains("normalized")) {
+            url = href.replace("{image_version}", "normalized");
+        }
+        else {
+            url = null;
+        }
+        artwork.setImgZoom(url);
         artworkRepo.save(artwork);
         return artwork;
     }

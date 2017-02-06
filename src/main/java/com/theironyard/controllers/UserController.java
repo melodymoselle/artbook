@@ -10,10 +10,13 @@ import com.theironyard.repositories.ArtworkRepository;
 import com.theironyard.repositories.UserRepository;
 import com.theironyard.utitilties.PasswordStorage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
@@ -71,35 +74,36 @@ public class UserController {
     }
 
     @RequestMapping(path = "/discover", method = RequestMethod.GET)
-    public String getDiscoverPage(HttpSession session, Model model){
+    public String getDiscoverPage(HttpSession session, Model model, @RequestParam(defaultValue = "0") int page, RedirectAttributes redAtt){
         if (session.getAttribute(SESSION_USER) == null){
-            model.addAttribute("message", "You need to be signed for that action.");
-            return "/error";
+            redAtt.addAttribute("message", "You need to be signed for that action.");
+            return "redirect:/error";
         }
         User user = userRepo.findByUsername(session.getAttribute(SESSION_USER).toString());
         model.addAttribute(SESSION_USER, user.getUsername());
-        if (user.getPrivileges() != User.rights.ADMINISTRATOR) {
+        if (user.getPrivileges() == User.rights.ADMINISTRATOR) {
             model.addAttribute("admin", true);
         }
-        Collection<Artist> artists;
         List<Artist> following = user.getFollowing();
         if (following.size() > 0) {
-            artists = new HashSet<>();
+            Set<Artist> artists = new HashSet<>();
             for (Artist artist : following) {
                 artists.addAll(artist.getSimilarTo());
             }
+            model.addAttribute("artists", artists);
         }
         else {
-            artists = artistRepo.findAllOrderByFollowers();
+            Page<Artist> artists = artistRepo.findAllOrderByFollowers(new PageRequest(page, 9));
+            model.addAttribute("artists", artists);
         }
-        model.addAttribute("artists", artists);
         return "discover";
     }
 
     @RequestMapping(path = "/follow", method = RequestMethod.GET)
-    public String followArtist(HttpSession session, int artistId){
+    public String followArtist(HttpSession session, int artistId, RedirectAttributes redAtt){
         if (session.getAttribute(SESSION_USER) == null){
-            return "/";
+            redAtt.addAttribute("message", "You need to be signed for that action.");
+            return "redirect:/error";
         }
         User user = userRepo.findByUsername(session.getAttribute(SESSION_USER).toString());
         Artist artist = artistRepo.findOne(artistId);
@@ -109,9 +113,10 @@ public class UserController {
     }
 
     @RequestMapping(path = "/unfollow", method = RequestMethod.GET)
-    public String unfollowArtist(HttpSession session, int artistId){
+    public String unfollowArtist(HttpSession session, int artistId, RedirectAttributes redAtt){
         if (session.getAttribute(SESSION_USER) == null){
-            return "/";
+            redAtt.addAttribute("message", "You need to be signed for that action.");
+            return "redirect:/error";
         }
         User user = userRepo.findByUsername(session.getAttribute(SESSION_USER).toString());
         Artist artist = artistRepo.findOne(artistId);
@@ -121,9 +126,10 @@ public class UserController {
     }
 
     @RequestMapping(path = "/like", method = RequestMethod.GET)
-    public String likeArtwork(HttpSession session, int artworkId){
+    public String likeArtwork(HttpSession session, int artworkId, RedirectAttributes redAtt){
         if (session.getAttribute(SESSION_USER) == null){
-            return "/";
+            redAtt.addAttribute("message", "You need to be signed for that action.");
+            return "redirect:/error";
         }
         User user = userRepo.findByUsername(session.getAttribute(SESSION_USER).toString());
         Artwork artwork = artworkRepo.findOne(artworkId);
@@ -133,9 +139,10 @@ public class UserController {
     }
 
     @RequestMapping(path = "/unlike", method = RequestMethod.GET)
-    public String unlikeArtwork(HttpSession session, int artworkId){
+    public String unlikeArtwork(HttpSession session, int artworkId, RedirectAttributes redAtt){
         if (session.getAttribute(SESSION_USER) == null){
-            return "/";
+            redAtt.addAttribute("message", "You need to be signed for that action.");
+            return "redirect:/error";
         }
         User user = userRepo.findByUsername(session.getAttribute(SESSION_USER).toString());
         Artwork artwork = artworkRepo.findOne(artworkId);

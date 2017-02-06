@@ -83,12 +83,12 @@ public class AdminController {
     public String loadArtist(HttpSession session, int artistId, RedirectAttributes redAtt){
         if (session.getAttribute(UserController.SESSION_USER) == null){
             redAtt.addAttribute("message", "You do not have access for that action.");
-            return "/error";
+            return "redirect:/error";
         }
         User user = userRepo.findByUsername(session.getAttribute(UserController.SESSION_USER).toString());
         if (user.getPrivileges() != User.rights.ADMINISTRATOR) {
             redAtt.addAttribute("message", "You do not have access for that action.");
-            return "/error";
+            return "redirect:/error";
         }
         Artist artist = artistRepo.findOne(artistId);
         artist = artsy.getSaveArtworksByArtist(artist);

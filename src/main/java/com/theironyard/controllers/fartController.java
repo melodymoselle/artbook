@@ -1,8 +1,10 @@
 package com.theironyard.controllers;
 
+import com.theironyard.entities.Article;
 import com.theironyard.entities.Artist;
 import com.theironyard.entities.Artwork;
 import com.theironyard.entities.User;
+import com.theironyard.repositories.ArticleRepository;
 import com.theironyard.repositories.ArtistRepository;
 import com.theironyard.repositories.ArtworkRepository;
 import com.theironyard.repositories.UserRepository;
@@ -36,6 +38,9 @@ public class fartController {
     @Autowired
     ArtworkRepository artworkRepo;
 
+    @Autowired
+    ArticleRepository articleRepo;
+
     @RequestMapping(path = "/", method = RequestMethod.GET)
     public String forward(){
         return "redirect:/artworks";
@@ -47,11 +52,11 @@ public class fartController {
         if (session.getAttribute(SESSION_USER) != null){
             User user = userRepo.findByUsername(session.getAttribute(SESSION_USER).toString());
             model.addAttribute(SESSION_USER, user.getUsername());
-            if (user.getPrivileges() != User.rights.ADMINISTRATOR) {
+            if (user.getPrivileges() == User.rights.ADMINISTRATOR) {
                 model.addAttribute("admin", true);
             }
             List<Artist> artists = user.getFollowing();
-            artworks = artworkRepo.findArtworksByFollowing(artists, new PageRequest(page, 9));
+            artworks = artworkRepo.findArtworksByFollowing(new PageRequest(page, 9), artists);
         }
         else {
             artworks = artworkRepo.findAllOrderByLikes(new PageRequest(page, 9));
@@ -99,13 +104,17 @@ public class fartController {
         Artist artist = artistRepo.findOne(artistId);
         if (session.getAttribute(SESSION_USER) != null){
             User user = userRepo.findByUsername(session.getAttribute(SESSION_USER).toString());
+            model.addAttribute(SESSION_USER, user.getUsername());
+            if (user.getPrivileges() != User.rights.ADMINISTRATOR) {
+                model.addAttribute("admin", true);
+            }
             if (user.isFollowing(artist)){
                 model.addAttribute("following", true);
             }
-            model.addAttribute(SESSION_USER, user.getUsername());
         }
-
+        List<Article> articles = articleRepo.findByArtist(artist);
         Page<Artwork> artworks = artworkRepo.findByArtist(new PageRequest(page, 6), artist);
+        model.addAttribute("articles", articles);
         model.addAttribute("artworks", artworks);
         model.addAttribute("artist", artist);
 

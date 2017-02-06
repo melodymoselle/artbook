@@ -22,6 +22,7 @@ public class Article {
     private String snippet;
     @Column
     private String imgThumb;
+    @Column
     private String ingLarge;
     @ManyToOne
     private Artist artist;

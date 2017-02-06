@@ -19,6 +19,6 @@ public interface ArtworkRepository extends JpaRepository<Artwork, Integer> {
     Page<Artwork> findAllOrderByLikes(Pageable pageable);
 
     @Query("SELECT a FROM Artwork a WHERE artist IN :following")
-    Page<Artwork> findArtworksByFollowing(@Param("following") List<Artist> following, Pageable pageable);
+    Page<Artwork> findArtworksByFollowing(Pageable pageable, @Param("following") List following);
 
 }

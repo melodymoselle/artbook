@@ -126,7 +126,6 @@ public class fartController {
             model.addAttribute("next", true);
             model.addAttribute("nextPageNum", page + 1);
         }
-        model.addAttribute("admin", true);
         model.addAttribute("pageName", artist.getName());
         return "artist";
     }

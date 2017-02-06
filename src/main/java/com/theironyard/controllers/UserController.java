@@ -75,6 +75,7 @@ public class UserController {
 
     @RequestMapping(path = "/discover", method = RequestMethod.GET)
     public String getDiscoverPage(HttpSession session, Model model, @RequestParam(defaultValue = "0") int page, RedirectAttributes redAtt){
+        Page<Artist> artists = artistRepo.findAllOrderByFollowers(new PageRequest(page, 9));
         if (session.getAttribute(SESSION_USER) == null){
             redAtt.addAttribute("message", "You need to be signed for that action.");
             return "redirect:/error";
@@ -86,16 +87,10 @@ public class UserController {
         }
         List<Artist> following = user.getFollowing();
         if (following.size() > 0) {
-            Set<Artist> artists = new HashSet<>();
-            for (Artist artist : following) {
-                artists.addAll(artist.getSimilarTo());
-            }
-            model.addAttribute("artists", artists);
+            artists = artistRepo.findSimilarFromFollowing(new PageRequest(page, 9), following);
         }
-        else {
-            Page<Artist> artists = artistRepo.findAllOrderByFollowers(new PageRequest(page, 9));
-            model.addAttribute("artists", artists);
-        }
+        model.addAttribute("artists", artists);
+        model.addAttribute("pageName", "Discover");
         return "discover";
     }
 

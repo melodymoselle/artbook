@@ -1,5 +1,5 @@
 h1 {
-    font-size: 21px;
+    font-size: 26px;
     letter-spacing: 4px;
     line-height: 32px;
 }
@@ -9,6 +9,19 @@ h1:after {
     content: ".";
     font-size: 34px;
 }
+
+
+
+.header {
+    background-color: rgba(255, 255, 255, 0.95);
+}
+.header-fixed {
+    background-color: rgba(255, 255, 255, 0.95);
+}
+.header-prepare {
+    background-color: rgba(255, 255, 255, 0.95);
+}
+
 .img-thumb {
     vertical-align: middle;
 }

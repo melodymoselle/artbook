@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Controller
 public class fartController {
@@ -47,7 +48,7 @@ public class fartController {
 
     @RequestMapping(path = "/artworks", method = RequestMethod.GET)
     public String getArtworks(HttpSession session, Model model, @RequestParam(defaultValue = "0") int page){
-        Page<Artwork> artworks;
+        Page<Artwork> artworks = artworkRepo.findAllOrderByLikes(new PageRequest(page, 9));
         if (session.getAttribute(UserController.SESSION_USER) != null){
             User user = userRepo.findByUsername(session.getAttribute(UserController.SESSION_USER).toString());
             model.addAttribute(UserController.SESSION_USER, user.getUsername());
@@ -55,10 +56,9 @@ public class fartController {
                 model.addAttribute("admin", true);
             }
             List<Artist> artists = user.getFollowing();
-            artworks = artworkRepo.findAllOrderByLikes(new PageRequest(page, 9));
-        }
-        else {
-            artworks = artworkRepo.findAllOrderByLikes(new PageRequest(page, 9));
+            if (artists.size() > 0) {
+                artworks = artworkRepo.findArtworksByFollowing(new PageRequest(page, 9), artists);
+            }
         }
         if(artworks.hasPrevious()){
             model.addAttribute("previous", true);
@@ -69,12 +69,13 @@ public class fartController {
             model.addAttribute("nextPageNum", page + 1);
         }
         model.addAttribute("artworks", artworks);
+        model.addAttribute("pageName", "Artworks");
         return "artworks";
     }
 
     @RequestMapping(path = "/artists", method = RequestMethod.GET)
     public String getArtists(HttpSession session, Model model, @RequestParam(defaultValue = "0") int page){
-        Page<Artist> artists;
+        Page<Artist> artists = artistRepo.findAllOrderByFollowers(new PageRequest(page, 9));
         if (session.getAttribute(UserController.SESSION_USER) != null){
             User user = userRepo.findByUsername(session.getAttribute(UserController.SESSION_USER).toString());
             model.addAttribute(UserController.SESSION_USER, user.getUsername());
@@ -82,9 +83,6 @@ public class fartController {
                 model.addAttribute("admin", true);
             }
             artists = artistRepo.findByFollowedBy(new PageRequest(page, 9), user);
-        }
-        else {
-            artists = artistRepo.findAllOrderByFollowers(new PageRequest(page, 9));
         }
         if(artists.hasPrevious()){
             model.addAttribute("previous", true);
@@ -95,6 +93,7 @@ public class fartController {
             model.addAttribute("nextPageNum", page + 1);
         }
         model.addAttribute("artists", artists);
+        model.addAttribute("pageName", "Artists");
         return "artists";
     }
 
@@ -112,8 +111,10 @@ public class fartController {
             }
         }
         List<Article> articles = articleRepo.findByArtist(artist);
+        Set<Artist> similar = artistRepo.findSimilarAndPopulated(artist.getId());
         Page<Artwork> artworks = artworkRepo.findByArtist(new PageRequest(page, 6), artist);
         model.addAttribute("articles", articles);
+        model.addAttribute("similar", similar);
         model.addAttribute("artworks", artworks);
         model.addAttribute("artist", artist);
 
@@ -126,6 +127,7 @@ public class fartController {
             model.addAttribute("nextPageNum", page + 1);
         }
         model.addAttribute("admin", true);
+        model.addAttribute("pageName", artist.getName());
         return "artist";
     }
 
@@ -143,6 +145,7 @@ public class fartController {
             }
         }
         model.addAttribute("artwork", artwork);
+        model.addAttribute("pageName", artwork.getTitle());
         return "artwork";
     }
 

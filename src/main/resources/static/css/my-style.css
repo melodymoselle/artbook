@@ -1,21 +1,30 @@
+h1 {
+    font-size: 21px;
+    letter-spacing: 4px;
+    line-height: 32px;
+}
+
+h1:after {
+    color: #e6ae49;
+    content: ".";
+    font-size: 34px;
+}
 .img-thumb {
-    /*max-width: 350px;*/
     vertical-align: middle;
 }
 
 .img-large {
-    height: 500px;
-    width: auto;
+    max-height: 500px;
+    width:auto;
+}
+
+.img-large-div {
+    overflow: hidden;
 }
 
 .item-box {
     height: 233px;
 }
-
-/*.item-box img {*/
-    /*min-height:233px;*/
-    /*min-width:300px;*/
-/*}*/
 
 #logout {
     color: #ffffff;
@@ -33,4 +42,46 @@
 
 #login:hover {
     color: #e6ae49;
+}
+
+.article-img-div {
+    height: 300px;
+}
+.article-img-div img{
+    max-height: 300px;
+}
+/* ----------------------------------------------------------------------*/
+/* Pagination Navigation   --------------------------------------------- */
+/* ----------------------------------------------------------------------*/
+.pagination-nav {
+    width: 100%;
+    display: block;
+    position: relative;
+    text-align: center;
+}
+
+.pagination-nav ul {
+    margin: 0px;
+    padding: 0px;
+}
+
+.pagination-nav ul li {
+    display: inline-block;
+    margin: 0px 2px;
+}
+
+.pagination-nav ul li a {
+    display: block;
+    background-color: #323232;
+    color: #ffffff;
+    height: 40px;
+    width: 40px;
+    line-height: 40px;
+    text-align: center;
+    font-size: 18px;
+}
+
+.pagination-nav ul li.active a {
+    background: #f7f7f7;
+    color: #fff;
 }

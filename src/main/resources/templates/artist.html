@@ -36,7 +36,7 @@
     <section class="pt pt-sm-80">
         <div class="container">
             <div class="row mb-60 mb-xs-30">
-                <div class="col-md-6">
+                <div class="col-md-6 img-large-div">
                     <img class="item-container img-large pull-right" src="{{imgLarge}}" alt="1">
                 </div>
                 <div class="col-md-6">
@@ -98,10 +98,10 @@
         <div class="pagination-nav mt-60 mt-xs-30">
             <ul>
                 {{#previous}}
-                <li><a href="/artist?artistId={{artist.id}}&page={{prevPageNum}}"><i class="fa fa-angle-left"></i></a></li>
+                <li><a href="/artist?artistId={{artist.id}}&page={{prevPageNum}}" class="btn btn-md btn-black-line"><i class="fa fa-angle-left"></i></a></li>
                 {{/previous}}
                 {{#next}}
-                <li><a href="/artist?artistId={{artist.id}}&page={{nextPageNum}}"><i class="fa fa-angle-right"></i></a></li>
+                <li><a href="/artist?artistId={{artist.id}}&page={{nextPageNum}}" class="btn btn-md btn-black-line"><i class="fa fa-angle-right"></i></a></li>
                 {{/next}}
             </ul>
         </div>
@@ -118,7 +118,7 @@
             <div class="item">
                 <div class="container">
                     <div class="row">
-                        <div class="col-md-6 mb-sm-30">
+                        <div class="col-md-6 mb-sm-30 article-img-div">
                             <img src="{{#imgLarge}}{{.}}{{/imgLarge}}" alt="" class="img-large pull-right"/>
                         </div>
                         <div class="col-md-6 mb-sm-30">
@@ -140,34 +140,32 @@
     <section class="ptb ptb-sm-80">
         <div class="container">
             <h3 class="text-center">Similar Artists</h3>
-            {{#artist}}
             <div class="spacer-30"></div>
             <div class="row">
                 <div class="owl-carousel item4-carousel nf-carousel-theme o-flow-hidden">
-                    {{#similarTo}}
+                    {{#similar}}
                     <div class="item">
                         <div class="nf-col-padding">
                             <div class="item-box">
                                 <a href="/artist?artistId={{id}}">
-                                    <!-- Shop item images -->
+                                    <!-- Similar Artists images -->
                                     <div class="item-img ">
                                         <img src="{{imgLarge}}" class=""/>
                                     </div>
                                     <div class="item-mask">
                                         <div class="item-caption">
                                             <h5 class="white">{{name}}</h5>
-                                            <!--{{#admin}}<p class="white">Loaded: {{loaded}} | Populated: {{populated}}</p>{{/admin}}-->
+                                            {{#admin}}<p class="white">Loaded: {{loaded}} | Populated: {{populated}}</p>{{/admin}}
                                         </div>
                                     </div>
-                                <!-- End Shop item images -->
+                                <!-- End Similar Artists images -->
                                 </a>
                             </div>
                         </div>
                     </div>
-                    {{/similarTo}}
+                    {{/similar}}
                 </div>
             </div>
-            {{/artist}}
         </div>
     </section>
     <!-- End Similar Artists Slider -->

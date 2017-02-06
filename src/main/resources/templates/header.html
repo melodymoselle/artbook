@@ -4,13 +4,9 @@
 
         <!-- Logo -->
         <div class="logo">
-            <a href="/artworks">
-                <img class="logo-light" src="img/logo-white.png" alt="Mazel" />
-                <img class="logo-dark" src="img/logo-black.png" alt="Mazel" />
-            </a>
+                <h1>{{#pageName}}{{.}}{{/pageName}}</h1>
         </div>
         <!-- End Logo -->
-
 
         <!-- Mobile Navbar Icon -->
         <div class="nav-mobile nav-bar-icon">
@@ -21,6 +17,9 @@
         <!-- Navbar Navigation -->
         <div class="nav-menu">
             <ul class="nav-menu-inner">
+                {{#admin}}
+                <li><a class="" href="/add-artist">Add Artist</a></li>
+                {{/admin}}
                 {{#currentUsername}}
                 <li><a class="" href="/discover">Discover</a></li>
                 {{/currentUsername}}

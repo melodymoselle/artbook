@@ -30,44 +30,57 @@
 
     <!-- CONTENT --------------------------------------------------------------------------------->
 
-    <!-- Artists Section -->
+    <!-- Artworks Section -->
     <section class="ptb ptb-sm-80">
-        <div class="container text-center">
-            <div class="row">
-                {{#artists}}
-                <div class="col-lg-4 spacing-grid">
+        <div class="container">
+            {{#currentUsername}}
+            <h2>From your collection ...</h2>
+            {{/currentUsername}}
+            {{^currentUsername}}
+            <h2>Popular right now ...</h2>
+            {{/currentUsername}}
+            <div class="row container-grid nf-col-3">
+                {{^artworks}}
+                <div class="col-lg-3 center-block">
+                    <p>You aren't following any artists. Go to the <a href="/discover">Discover</a> page to find some artists to follow.</p>
+                </div>
+                {{/artworks}}
+                {{#artworks}}
+                <div class="nf-item branding coffee spacing">
                     <div class="item-box">
-                        <a href="/artist?artistId={{id}}">
+                        <a href="/artwork?artworkId={{id}}">
                             <img alt="1" src="{{imgLarge}}" class="item-container img-thumb">
                             <div class="item-mask">
                                 <div class="item-caption">
-                                    <h5 class="white">{{name}}</h5>
+                                    <h5 class="white">{{title}}</h5>
+                                    <p class="white">{{#artists}}{{name}}{{/artists}}</p>
                                 </div>
                             </div>
                         </a>
                     </div>
                 </div>
-                {{/artists}}
+                {{/artworks}}
             </div>
         </div>
+
         <!-- Pagination Nav -->
         <div class="pagination-nav mt-60 mt-xs-30">
             <ul>
                 {{#previous}}
-                <li><a href="/add-artist?page={{prevPageNum}}"><i class="fa fa-angle-left"></i></a></li>
+                <li><a href="/?page={{prevPageNum}}"><i class="fa fa-angle-left"></i></a></li>
                 {{/previous}}
                 <li class="active"><a href="#">1</a></li>
                 <li><a href="#">2</a></li>
                 <li><a href="#">3</a></li>
                 {{#next}}
-                <li><a href="/add-artist?page={{nextPageNum}}"><i class="fa fa-angle-right"></i></a></li>
+                <li><a href="/?page={{nextPageNum}}"><i class="fa fa-angle-right"></i></a></li>
                 {{/next}}
             </ul>
         </div>
         <!-- End Pagination Nav -->
 
     </section>
-    <!-- End Artists Section -->
+    <!-- End Artworks Section -->
 
     <div class="spacer-60"></div>
     <!-- END CONTENT ---------------------------------------------------------------------------->

@@ -26,7 +26,7 @@ public class Artwork{
     @JsonIgnore
     private LocalDateTime createdAt = LocalDateTime.now();
 
-    @Column()
+    @Column
     @JsonIgnore
     private LocalDateTime updatedAt;
 
@@ -57,9 +57,6 @@ public class Artwork{
     @Column
     private String size;
 
-    @Column
-    private String collectingInstitution;
-
     @Transient
     @JsonProperty("_links")
     private Map<String, Map> imagesMap;
@@ -77,15 +74,10 @@ public class Artwork{
     @Column
     private String imgZoom;
 
-    @Column
-    private String imageRights;
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Artist artist;
 
-    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "artworks")
-    @Fetch(value = FetchMode.SELECT)
-    private List<Artist> artists = new ArrayList<>();
-
-    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "liked")
-    @Fetch(value = FetchMode.SELECT)
+    @ManyToMany(mappedBy = "liked")
     private List<User> likedBy;
 
     public Artwork() {
@@ -163,36 +155,12 @@ public class Artwork{
         this.size = size;
     }
 
-    public String getCollectingInstitution() {
-        return collectingInstitution;
+    public Artist getArtist() {
+        return artist;
     }
 
-    public void setCollectingInstitution(String collectingInstitution) {
-        this.collectingInstitution = collectingInstitution;
-    }
-
-    public String getImageRights() {
-        return imageRights;
-    }
-
-    public void setImageRights(String imageRights) {
-        this.imageRights = imageRights;
-    }
-
-    public List<Artist> getArtists() {
-        return artists;
-    }
-
-    public void setArtists(List<Artist> artists) {
-        this.artists = artists;
-    }
-
-    public void addArtist(Artist artist){
-        this.artists.add(artist);
-    }
-
-    public void deleteArtist(Artist artist){
-        this.artists.remove(artist);
+    public void setArtist(Artist artist) {
+        this.artist = artist;
     }
 
     public List<User> getLikedBy() {

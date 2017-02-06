@@ -11,11 +11,16 @@ import com.theironyard.repositories.UserRepository;
 import com.theironyard.utitilties.PasswordStorage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Controller
 public class UserController {
@@ -63,6 +68,32 @@ public class UserController {
     public String logout(HttpSession session){
         session.invalidate();
         return "redirect:/";
+    }
+
+    @RequestMapping(path = "/discover", method = RequestMethod.GET)
+    public String getDiscoverPage(HttpSession session, Model model){
+        if (session.getAttribute(SESSION_USER) == null){
+            model.addAttribute("message", "You need to be signed for that action.");
+            return "/error";
+        }
+        User user = userRepo.findByUsername(session.getAttribute(SESSION_USER).toString());
+        model.addAttribute(SESSION_USER, user.getUsername());
+        if (user.getPrivileges() != User.rights.ADMINISTRATOR) {
+            model.addAttribute("admin", true);
+        }
+        Collection<Artist> artists;
+        List<Artist> following = user.getFollowing();
+        if (following.size() > 0) {
+            artists = new HashSet<>();
+            for (Artist artist : following) {
+                artists.addAll(artist.getSimilarTo());
+            }
+        }
+        else {
+            artists = artistRepo.findAllOrderByFollowers();
+        }
+        model.addAttribute("artists", artists);
+        return "discover";
     }
 
     @RequestMapping(path = "/follow", method = RequestMethod.GET)

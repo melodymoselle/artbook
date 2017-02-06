@@ -16,7 +16,7 @@ public interface ArtistRepository extends JpaRepository<Artist, Integer> {
     Page<Artist> findAll(Pageable pageable);
 
     @Query("SELECT a  FROM Artist a LEFT JOIN a.followedBy f WHERE a.populated = true GROUP BY a.id ORDER BY count(f) DESC")
-    List<Artist> findAllPopulatedOrderByFollowedBy();
+    List<Artist> findAllOrderByFollowers();
 
 
 }

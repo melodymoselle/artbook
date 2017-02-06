@@ -27,7 +27,7 @@ public class User{
     @Column(nullable = false)
     private rights privileges = rights.SUBSCRIBER;
 
-    private enum rights {
+    public enum rights {
         SUBSCRIBER, ADMINISTRATOR
     }
 
@@ -131,6 +131,7 @@ public class User{
     public void deleteLiked(Artwork artwork){
         this.liked.remove(artwork);
     }
+
     public List<Artwork> getLiked() {
         return liked;
     }

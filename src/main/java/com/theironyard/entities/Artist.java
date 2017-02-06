@@ -24,10 +24,10 @@ public class Artist{
     private int id;
 
     @Column
-    boolean loaded = false;
+    private boolean loaded = false;
 
     @Column
-    boolean populated = false;
+    private boolean populated = false;
 
     @Column(nullable = false)
     @JsonIgnore
@@ -43,12 +43,6 @@ public class Artist{
 
     @Column(nullable = false)
     private String name;
-
-    @Column
-    private String sortableName;
-
-    @Column
-    private String gender;
 
     @Column
     private String birthday;
@@ -76,11 +70,13 @@ public class Artist{
     @Column
     private String imgLarge;
 
-    @ManyToMany
+    @OneToMany(mappedBy="artist")
+    private List<Article> articles = new ArrayList<>();
+
+    @OneToMany(mappedBy="artist")
     private List<Artwork> artworks = new ArrayList<>();
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @Fetch(value = FetchMode.SELECT)
     private List<Artist> similarTo = new ArrayList<>();
 
     @ManyToMany(mappedBy = "similarTo")
@@ -90,7 +86,6 @@ public class Artist{
     private List<User> followedBy;
 
     @ManyToMany(mappedBy = "notInterested")
-    @JsonIgnore
     private List<User> notInterestedBy;
 
     public Artist() {
@@ -100,12 +95,8 @@ public class Artist{
     public String toString() {
         return "Artist{" +
                 "id=" + id +
-                ", createdAt=" + createdAt +
-                ", updatedAt=" + updatedAt +
                 ", artsyArtistId='" + artsyArtistId + '\'' +
                 ", name='" + name + '\'' +
-                ", sortableName='" + sortableName + '\'' +
-                ", gender='" + gender + '\'' +
                 ", birthday='" + birthday + '\'' +
                 ", hometown='" + hometown + '\'' +
                 ", location='" + location + '\'' +
@@ -151,22 +142,6 @@ public class Artist{
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getSortableName() {
-        return sortableName;
-    }
-
-    public void setSortableName(String sortableName) {
-        this.sortableName = sortableName;
-    }
-
-    public String getGender() {
-        return gender;
-    }
-
-    public void setGender(String gender) {
-        this.gender = gender;
     }
 
     public String getBirthday() {
@@ -305,5 +280,23 @@ public class Artist{
 
     public void setImgLarge(String imgLarge) {
         this.imgLarge = imgLarge;
+    }
+
+    public List<Article> getArticles() {
+        return articles;
+    }
+
+    public void setArticles(List<Article> articles) {
+        this.articles = articles;
+    }
+
+    public void addArticle(Article article){
+        if (!this.articles.contains(article)){
+            this.articles.add(article);
+        }
+    }
+
+    public void deleteArticle(Article article){
+        this.articles.remove(article);
     }
 }

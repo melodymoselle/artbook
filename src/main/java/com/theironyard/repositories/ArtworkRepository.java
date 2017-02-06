@@ -6,15 +6,19 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
 public interface ArtworkRepository extends JpaRepository<Artwork, Integer> {
     Artwork findByArtsyArtworkId(String artsyArtworkId);
-    List<Artwork> findByArtists(Artist artist);
-    Page<Artwork> findByArtists( Pageable pageable, Artist artist);
+    List<Artwork> findByArtist(Artist artist);
+    Page<Artwork> findByArtist(Pageable pageable, Artist artist);
 
     @Query("SELECT a  FROM Artwork a LEFT JOIN a.likedBy l GROUP BY a.id ORDER BY count(l) DESC")
     Page<Artwork> findAllOrderByLikes(Pageable pageable);
+
+    @Query("SELECT a FROM Artwork a WHERE artist IN :following")
+    Page<Artwork> findArtworksByFollowing(@Param("following") List<Artist> following, Pageable pageable);
 
 }

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -36,17 +37,25 @@ public class fartController {
     ArtworkRepository artworkRepo;
 
     @RequestMapping(path = "/", method = RequestMethod.GET)
+    public String forward(){
+        return "redirect:/artworks";
+    }
+
+    @RequestMapping(path = "/artworks", method = RequestMethod.GET)
     public String getHome(HttpSession session, Model model, @RequestParam(defaultValue = "0") int page){
+        Page<Artwork> artworks;
         if (session.getAttribute(SESSION_USER) != null){
             User user = userRepo.findByUsername(session.getAttribute(SESSION_USER).toString());
-            List<Artist> artists = user.getFollowing();
-            model.addAttribute("artists", artists);
             model.addAttribute(SESSION_USER, user.getUsername());
-            return "home-user";
+            if (user.getPrivileges() != User.rights.ADMINISTRATOR) {
+                model.addAttribute("admin", true);
+            }
+            List<Artist> artists = user.getFollowing();
+            artworks = artworkRepo.findArtworksByFollowing(artists, new PageRequest(page, 9));
         }
-        Page<Artwork> artworks = artworkRepo.findAllOrderByLikes(new PageRequest(page, 9));
-        model.addAttribute("artworks", artworks);
-
+        else {
+            artworks = artworkRepo.findAllOrderByLikes(new PageRequest(page, 9));
+        }
         if(artworks.hasPrevious()){
             model.addAttribute("previous", true);
             model.addAttribute("prevPageNum", page - 1);
@@ -55,22 +64,10 @@ public class fartController {
             model.addAttribute("next", true);
             model.addAttribute("nextPageNum", page + 1);
         }
-
-        return "home-no-user";
+        model.addAttribute("artworks", artworks);
+        return "artworks";
     }
 
-    @RequestMapping(path = "/discover", method = RequestMethod.GET)
-    public String getDiscoverPage(HttpSession session, Model model){
-        if (session.getAttribute(SESSION_USER) == null){
-            return "/";
-        }
-        User user = userRepo.findByUsername(session.getAttribute(SESSION_USER).toString());
-        model.addAttribute(SESSION_USER, user.getUsername());
-
-        List<Artist> artists = artistRepo.findAllPopulatedOrderByFollowedBy();
-        model.addAttribute("artists", artists);
-        return "discover";
-    }
 
     @RequestMapping(path = "/artist", method = RequestMethod.GET)
     public String getArtistPage(HttpSession session, Model model, int artistId, @RequestParam(defaultValue = "0") int page){
@@ -83,7 +80,7 @@ public class fartController {
             model.addAttribute(SESSION_USER, user.getUsername());
         }
 
-        Page<Artwork> artworks = artworkRepo.findByArtists(new PageRequest(page, 6), artist);
+        Page<Artwork> artworks = artworkRepo.findByArtist(new PageRequest(page, 6), artist);
         model.addAttribute("artworks", artworks);
         model.addAttribute("artist", artist);
 

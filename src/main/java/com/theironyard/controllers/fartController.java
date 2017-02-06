@@ -24,7 +24,6 @@ import java.util.List;
 
 @Controller
 public class fartController {
-    public static final String SESSION_USER = "currentUsername";
 
     @Autowired
     ArtsyService artsy;
@@ -49,14 +48,14 @@ public class fartController {
     @RequestMapping(path = "/artworks", method = RequestMethod.GET)
     public String getArtworks(HttpSession session, Model model, @RequestParam(defaultValue = "0") int page){
         Page<Artwork> artworks;
-        if (session.getAttribute(SESSION_USER) != null){
-            User user = userRepo.findByUsername(session.getAttribute(SESSION_USER).toString());
-            model.addAttribute(SESSION_USER, user.getUsername());
+        if (session.getAttribute(UserController.SESSION_USER) != null){
+            User user = userRepo.findByUsername(session.getAttribute(UserController.SESSION_USER).toString());
+            model.addAttribute(UserController.SESSION_USER, user.getUsername());
             if (user.getPrivileges() == User.rights.ADMINISTRATOR) {
                 model.addAttribute("admin", true);
             }
             List<Artist> artists = user.getFollowing();
-            artworks = artworkRepo.findArtworksByFollowing(new PageRequest(page, 9), artists);
+            artworks = artworkRepo.findAllOrderByLikes(new PageRequest(page, 9));
         }
         else {
             artworks = artworkRepo.findAllOrderByLikes(new PageRequest(page, 9));
@@ -76,10 +75,10 @@ public class fartController {
     @RequestMapping(path = "/artists", method = RequestMethod.GET)
     public String getArtists(HttpSession session, Model model, @RequestParam(defaultValue = "0") int page){
         Page<Artist> artists;
-        if (session.getAttribute(SESSION_USER) != null){
-            User user = userRepo.findByUsername(session.getAttribute(SESSION_USER).toString());
-            model.addAttribute(SESSION_USER, user.getUsername());
-            if (user.getPrivileges() != User.rights.ADMINISTRATOR) {
+        if (session.getAttribute(UserController.SESSION_USER) != null){
+            User user = userRepo.findByUsername(session.getAttribute(UserController.SESSION_USER).toString());
+            model.addAttribute(UserController.SESSION_USER, user.getUsername());
+            if (user.getPrivileges() == User.rights.ADMINISTRATOR) {
                 model.addAttribute("admin", true);
             }
             artists = artistRepo.findByFollowedBy(new PageRequest(page, 9), user);
@@ -102,10 +101,10 @@ public class fartController {
     @RequestMapping(path = "/artist", method = RequestMethod.GET)
     public String getArtistPage(HttpSession session, Model model, int artistId, @RequestParam(defaultValue = "0") int page){
         Artist artist = artistRepo.findOne(artistId);
-        if (session.getAttribute(SESSION_USER) != null){
-            User user = userRepo.findByUsername(session.getAttribute(SESSION_USER).toString());
-            model.addAttribute(SESSION_USER, user.getUsername());
-            if (user.getPrivileges() != User.rights.ADMINISTRATOR) {
+        if (session.getAttribute(UserController.SESSION_USER) != null){
+            User user = userRepo.findByUsername(session.getAttribute(UserController.SESSION_USER).toString());
+            model.addAttribute(UserController.SESSION_USER, user.getUsername());
+            if (user.getPrivileges() == User.rights.ADMINISTRATOR) {
                 model.addAttribute("admin", true);
             }
             if (user.isFollowing(artist)){
@@ -133,12 +132,15 @@ public class fartController {
     @RequestMapping(path = "/artwork", method = RequestMethod.GET)
     public String getArtworkPage(HttpSession session, Model model, int artworkId){
         Artwork artwork = artworkRepo.findOne(artworkId);
-        if (session.getAttribute(SESSION_USER) != null){
-            User user = userRepo.findByUsername(session.getAttribute(SESSION_USER).toString());
+        if (session.getAttribute(UserController.SESSION_USER) != null){
+            User user = userRepo.findByUsername(session.getAttribute(UserController.SESSION_USER).toString());
+            model.addAttribute(UserController.SESSION_USER, user.getUsername());
+            if (user.getPrivileges() == User.rights.ADMINISTRATOR) {
+                model.addAttribute("admin", true);
+            }
             if (user.isLiked(artwork)){
                 model.addAttribute("liked", true);
             }
-            model.addAttribute(SESSION_USER, user.getUsername());
         }
         model.addAttribute("artwork", artwork);
         return "artwork";

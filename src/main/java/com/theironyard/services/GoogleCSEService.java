@@ -40,21 +40,24 @@ public class GoogleCSEService {
             Search results = search.execute();
             List<Result> items = results.getItems();
 
-            for (Result rs : items){
-                Article article = articleRepo.findByGoogleCacheId(rs.getCacheId());
-                if (article == null) {
-                    article.setGoogleCacheId(rs.getCacheId());
-                    article.setUrl(rs.getLink());
-                    article.setTitle(rs.getTitle());
-                    article.setSnippet(rs.getSnippet());
-                    article.setImgThumb(rs.getImage().getThumbnailLink());
-                    article.setIngLarge(rs.getImage().getContextLink());
-                    article.setArtist(artist);
-                    articleRepo.save(article);
-                    artist.addArticle(article);
+            if(items != null) {
+                for (Result rs : items) {
+                    Article article = articleRepo.findByGoogleCacheId(rs.getCacheId());
+                    if (article == null) {
+                        article = new Article();
+                        article.setGoogleCacheId(rs.getCacheId());
+                        article.setUrl(rs.getLink());
+                        article.setTitle(rs.getTitle());
+                        article.setSnippet(rs.getSnippet());
+                        if (rs.getPagemap().size() > 1) {
+                            article.setImgThumb(rs.getPagemap().get("cse_thumbnail").get(0).get("src").toString());
+                            article.setImgLarge(rs.getPagemap().get("cse_image").get(0).get("src").toString());
+                        }
+                        article.setArtist(artist);
+                        articleRepo.save(article);
+                    }
                 }
             }
-            artistRepo.save(artist);
         } catch (IOException e) {
             e.printStackTrace();
         }

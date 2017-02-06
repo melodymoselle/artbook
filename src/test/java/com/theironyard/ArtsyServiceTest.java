@@ -88,12 +88,12 @@ public class ArtsyServiceTest {
         artist.setName("Gustav Klimt");
 
         artsy.getSaveArtworksByArtist(artist);
-        List<Artwork> artworks = artworkRepo.findByArtists(artist);
+        List<Artwork> artworks = artworkRepo.findByArtist(artist);
 
         assertNotNull("Error creating List of artworks",artworks);
         assertEquals("List size is incorrect", 6, artworks.size());
         assertEquals("First artwork was not set correctly", "4d8b92eb4eb68a1b2c000968", artworks.get(0).getArtsyArtworkId());
-        assertEquals("Error setting Artist to Artwork", "4d8b92b64eb68a1b2c000414", artworks.get(0).getArtists().get(0).getArtsyArtistId());
+        assertEquals("Error setting Artist to Artwork", "4d8b92b64eb68a1b2c000414", artworks.get(0).getArtist().getArtsyArtistId());
     }
 
     @Test

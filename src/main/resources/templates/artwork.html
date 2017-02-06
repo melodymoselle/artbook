@@ -42,7 +42,7 @@
                 <div class="col-md-6">
                     <div class="project-detail-block">
                         <h4>{{title}}</h4>
-                        <p><strong class="dark-color">Artist:</strong>{{#artists}}{{name}}{{/artists}}</p>
+                        <p><strong class="dark-color">Artist:</strong>{{#artist}}<a href="/artist?artistId={{id}}">{{name}}</a> {{/artist}}</p>
                         <p><strong class="dark-color">Date:</strong>{{#date}}{{.}}{{/date}}, {{#hometown}}{{.}}{{/hometown}}</p>
                         <p><strong class="dark-color">Medium:</strong>{{#Medium}}{{.}}{{/Medium}}</p>
                         {{#currentUsername}}

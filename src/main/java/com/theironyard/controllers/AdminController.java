@@ -39,7 +39,16 @@ public class AdminController {
     ArtworkRepository artworkRepo;
 
     @RequestMapping(path = "/add-artist", method = RequestMethod.GET)
-    public String getAddArtistPage(Model model, @RequestParam(defaultValue = "0") int page){
+    public String getAddArtistPage(HttpSession session, Model model, @RequestParam(defaultValue = "0") int page, RedirectAttributes redAtt){
+        if (session.getAttribute(UserController.SESSION_USER) == null){
+            redAtt.addAttribute("message", "You do not have access for that action.");
+            return "redirect:/error";
+        }
+        User user = userRepo.findByUsername(session.getAttribute(UserController.SESSION_USER).toString());
+        if (user.getPrivileges() != User.rights.ADMINISTRATOR) {
+            redAtt.addAttribute("message", "You do not have access for that action.");
+            return "redirect:/error";
+        }
         Page<Artist> artists = artistRepo.findAll(new PageRequest(page, 9));
         model.addAttribute("artists", artists);
 
@@ -57,26 +66,18 @@ public class AdminController {
     }
 
     @RequestMapping(path = "/add-artist", method = RequestMethod.POST)
-    public String addArtistToDB(String artsyArtistId, RedirectAttributes redAtt){
+    public String addArtistToDB(HttpSession session, String artsyArtistId, RedirectAttributes redAtt){
+        if (session.getAttribute(UserController.SESSION_USER) == null){
+            redAtt.addAttribute("message", "You do not have access for that action.");
+            return "redirect:/error";
+        }
+        User user = userRepo.findByUsername(session.getAttribute(UserController.SESSION_USER).toString());
+        if (user.getPrivileges() != User.rights.ADMINISTRATOR) {
+            redAtt.addAttribute("message", "You do not have access for that action.");
+            return "redirect:/error";
+        }
         Artist artist = artsy.getSaveArtistById(artsyArtistId);
-        artist = artsy.getSaveArtworksByArtist(artist);
-        artist = artsy.getSaveSimilarToByArtist(artist);
-        redAtt.addFlashAttribute("artist", artist);
-        return "redirect:/add-artist";
-    }
-
-    @RequestMapping(path = "/load-artworks", method = RequestMethod.GET)
-    public String getAddArtworksToArtist(int artistId){
-        Artist artist = artistRepo.findOne(artistId);
-        artist = artsy.getSaveArtworksByArtist(artist);
-        return "redirect:/artist?artistId="+artistId;
-    }
-
-    @RequestMapping(path = "/load-similar-artists", method = RequestMethod.GET)
-    public String getAddSimilarArtistsToArtist(int artistId){
-        Artist artist = artistRepo.findOne(artistId);
-        artist = artsy.getSaveSimilarToByArtist(artist);
-        return "redirect:/artist?artistId="+artistId;
+        return "redirect:/artist?artistId=" + artist.getId();
     }
 
     @RequestMapping(path = "/load-artist", method = RequestMethod.GET)
@@ -95,6 +96,20 @@ public class AdminController {
         artist = artsy.getSaveSimilarToByArtist(artist);
         artist = google.getArticlesByArtist(artist);
         return "redirect:/artist?artistId=" + artistId;
+    }
+
+    @RequestMapping(path = "/load-artworks", method = RequestMethod.GET)
+    public String getAddArtworksToArtist(int artistId){
+        Artist artist = artistRepo.findOne(artistId);
+        artist = artsy.getSaveArtworksByArtist(artist);
+        return "redirect:/artist?artistId="+artistId;
+    }
+
+    @RequestMapping(path = "/load-similar-artists", method = RequestMethod.GET)
+    public String getAddSimilarArtistsToArtist(int artistId){
+        Artist artist = artistRepo.findOne(artistId);
+        artist = artsy.getSaveSimilarToByArtist(artist);
+        return "redirect:/artist?artistId="+artistId;
     }
 
 }

@@ -65,6 +65,6 @@ public class FartControllerTests {
         assertEquals("Error setting Artist name", "Gustav Klimt", artist.getName());
         assertEquals("Number of artworks is incorrect", 6, artist.getArtworks().size());
         assertEquals("First Artwork is not correct", "4d8b92eb4eb68a1b2c000968", artist.getArtworks().get(0).getArtsyArtworkId());
-        assertEquals("Artwork not saved correctly", "Gustav Klimt", artwork.getArtists().get(0).getName());
+        assertEquals("Artwork not saved correctly", "Gustav Klimt", artwork.getArtist().getName());
     }
 }

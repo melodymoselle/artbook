@@ -22,13 +22,13 @@
         <div class="nav-menu">
             <ul class="nav-menu-inner">
                 {{#currentUsername}}
-                <li><a class="" href="/">Pages</a></li>
+                <li><a class="" href="/discover">Discover</a></li>
                 {{/currentUsername}}
                 <li><a class="" href="/artists">Artists</a></li>
                 <li><a class="" href="/artworks">Artworks</a></li>
                 <li>
                     {{#currentUsername}}
-                    <a href="/Logout" class="btn btn-xs btn-black" id="logout">Logout</a>
+                    <a href="/logout" class="btn btn-xs btn-black" id="logout">Logout</a>
                     {{/currentUsername}}
                     {{^currentUsername}}
                     <a href="/login" class="btn btn-xs btn-black" id="login">Login</a>

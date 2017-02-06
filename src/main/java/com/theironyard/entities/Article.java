@@ -11,10 +11,8 @@ public class Article {
     @GeneratedValue
     private int id;
     @Column
-    @JsonProperty("cacheId")
     private String googleCacheId;
     @Column
-    @JsonProperty("link")
     private String url;
     @Column
     private String title;
@@ -23,7 +21,7 @@ public class Article {
     @Column
     private String imgThumb;
     @Column
-    private String ingLarge;
+    private String imgLarge;
     @ManyToOne
     private Artist artist;
 
@@ -78,12 +76,12 @@ public class Article {
         this.imgThumb = imgThumb;
     }
 
-    public String getIngLarge() {
-        return ingLarge;
+    public String getImgLarge() {
+        return imgLarge;
     }
 
-    public void setIngLarge(String ingLarge) {
-        this.ingLarge = ingLarge;
+    public void setImgLarge(String imgLarge) {
+        this.imgLarge = imgLarge;
     }
 
     public Artist getArtist() {

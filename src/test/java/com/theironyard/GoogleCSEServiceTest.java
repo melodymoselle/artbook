@@ -18,7 +18,7 @@ public class GoogleCSEServiceTest {
     @Test
     public void testGetArticlesByArtist(){
         Artist artist = new Artist();
-        artist.setName("Gustav Klimt");
+        artist.setName("SIMON DE VLIEGER");
 
         google.getArticlesByArtist(artist);
     }

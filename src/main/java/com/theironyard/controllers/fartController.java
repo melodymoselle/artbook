@@ -42,7 +42,7 @@ public class fartController {
     }
 
     @RequestMapping(path = "/artworks", method = RequestMethod.GET)
-    public String getHome(HttpSession session, Model model, @RequestParam(defaultValue = "0") int page){
+    public String getArtworks(HttpSession session, Model model, @RequestParam(defaultValue = "0") int page){
         Page<Artwork> artworks;
         if (session.getAttribute(SESSION_USER) != null){
             User user = userRepo.findByUsername(session.getAttribute(SESSION_USER).toString());
@@ -68,6 +68,31 @@ public class fartController {
         return "artworks";
     }
 
+    @RequestMapping(path = "/artists", method = RequestMethod.GET)
+    public String getArtists(HttpSession session, Model model, @RequestParam(defaultValue = "0") int page){
+        Page<Artist> artists;
+        if (session.getAttribute(SESSION_USER) != null){
+            User user = userRepo.findByUsername(session.getAttribute(SESSION_USER).toString());
+            model.addAttribute(SESSION_USER, user.getUsername());
+            if (user.getPrivileges() != User.rights.ADMINISTRATOR) {
+                model.addAttribute("admin", true);
+            }
+            artists = artistRepo.findByFollowedBy(new PageRequest(page, 9), user);
+        }
+        else {
+            artists = artistRepo.findAllOrderByFollowers(new PageRequest(page, 9));
+        }
+        if(artists.hasPrevious()){
+            model.addAttribute("previous", true);
+            model.addAttribute("prevPageNum", page - 1);
+        }
+        if(artists.hasNext()){
+            model.addAttribute("next", true);
+            model.addAttribute("nextPageNum", page + 1);
+        }
+        model.addAttribute("artists", artists);
+        return "artists";
+    }
 
     @RequestMapping(path = "/artist", method = RequestMethod.GET)
     public String getArtistPage(HttpSession session, Model model, int artistId, @RequestParam(defaultValue = "0") int page){

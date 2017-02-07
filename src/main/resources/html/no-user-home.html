@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Home : No User</title>
+</head>
+<body>
+<form action="/login" method="post">
+    <input type="text" name="username" required/>
+    <input type="password" name="password" required/>
+    <button type="submit">Login</button>
+</form>
+<form action="/register" method="post">
+    <input type="text" name="username" required/>
+    <input type="password" name="password" required/>
+    <button type="submit">Register</button>
+</form>
+{{#message}}<p>{{.}}</p>{{/message}}
+{{#artists}}
+<ul>
+    <li><a href="/artist?artistId={{id}}">{{name}}</a> has [{{artworks.size}}] of artworks and [{{similarTo.size}}] similar artists.</li>
+</ul>
+{{/artists}}
+</body>
+</html>

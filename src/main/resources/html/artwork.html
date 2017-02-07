@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Artwork Page</title>
+</head>
+<body>
+{{#artwork}}
+
+{{#currentUsername}}
+{{#liked}}
+<a href="/unlike?artworkId={{id}}"><button>Unlike</button></a>
+{{/liked}}
+{{^liked}}
+<a href="/like?artworkId={{id}}"><button>Like</button></a>
+{{/liked}}
+{{/currentUsername}}
+
+<h1>{{title}}, {{date}}</h1>
+<ul style="display: inline">
+    {{#artists}}by
+    <li style="display: inline">{{name}}</li>
+    {{/artists}}
+</ul>
+<img src="{{#image}}{{url}}{{/image}}">
+<p>category: {{category}}</p>
+<p>medium: {{medium}}</p>
+
+{{/artwork}}
+</body>
+</html>

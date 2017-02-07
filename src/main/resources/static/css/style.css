@@ -4171,8 +4171,8 @@ ul.project-detail-block, .project-detail-block ul {
     .fullwidth-slider .owl-controls .owl-buttons .owl-next,
     .nf-carousel-theme .owl-controls .owl-buttons .owl-prev,
     .nf-carousel-theme .owl-controls .owl-buttons .owl-next {
-        background: rgba(245,245,245,0.8);
-        color: #252525;
+        background: #555555;
+        color: #ffffff;
         display: block;
         top: 50%;
         transition: all 0.25s ease 0s;
@@ -4192,8 +4192,8 @@ ul.project-detail-block, .project-detail-block ul {
         .fullwidth-slider .owl-controls .owl-buttons .owl-next:hover,
         .nf-carousel-theme .owl-controls .owl-buttons .owl-prev:hover,
         .nf-carousel-theme .owl-controls .owl-buttons .owl-next:hover {
-            /*background: #fff;*/
-            color: #e6ae49;
+            background: #e6ae49;
+            color: #ffffff;
         }
 
     .content-carousel .owl-controls .owl-buttons .owl-next,
@@ -4230,7 +4230,7 @@ ul.project-detail-block, .project-detail-block ul {
 
 
 /* -------------------------------------*/
-/* Singel Item slider (Images & Contant Slider) ---------*/
+/* Single Item slider (Images & Content Slider) ---------*/
 /* -------------------------------------*/
 .content-carousel .owl-controls .owl-pagination,
 .image-slider .owl-controls .owl-pagination,

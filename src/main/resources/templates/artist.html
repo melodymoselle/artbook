@@ -72,7 +72,7 @@
     <hr />
 
     <!--- Artist's Artworks Section -->
-    <section class="ptb ptb-sm-80">
+    <section class="ptb ptb-sm-30">
         <div class="container text-center">
             <h3>Artworks</h3>
             <div class="row">
@@ -95,13 +95,13 @@
         </div>
 
         <!-- Pagination Nav -->
-        <div class="pagination-nav mt-60 mt-xs-30">
+        <div class="pagination-nav mt-30 mt-xs-15">
             <ul>
                 {{#previous}}
-                <li><a href="/artist?artistId={{artist.id}}&page={{prevPageNum}}" class="btn btn-md btn-black-line"><i class="fa fa-angle-left"></i></a></li>
+                <li><a href="/artist?artistId={{artist.id}}&page={{prevPageNum}}"><i class="fa fa-angle-left"></i></a></li>
                 {{/previous}}
                 {{#next}}
-                <li><a href="/artist?artistId={{artist.id}}&page={{nextPageNum}}" class="btn btn-md btn-black-line"><i class="fa fa-angle-right"></i></a></li>
+                <li><a href="/artist?artistId={{artist.id}}&page={{nextPageNum}}"><i class="fa fa-angle-right"></i></a></li>
                 {{/next}}
             </ul>
         </div>
@@ -110,7 +110,7 @@
     <!--- End Artist's Artworks Section -->
     <hr />
     <!-- Articles Slider -->
-    <section class="ptb ptb-sm-80">
+    <section class="ptb ptb-sm-30">
         <h3 class="text-center">Articles</h3>
         <div class="spacer-60"></div>
         <div class="owl-carousel content-carousel content-slider">
@@ -137,7 +137,7 @@
     <!-- End Articles Slider -->
 
     <!-- Similar Artists Slider-->
-    <section class="ptb ptb-sm-80">
+    <section class="ptb ptb-sm-30">
         <div class="container">
             <h3 class="text-center">Similar Artists</h3>
             <div class="spacer-30"></div>

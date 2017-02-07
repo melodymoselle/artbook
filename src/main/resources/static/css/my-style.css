@@ -85,7 +85,7 @@ h1:after {
 
 .pagination-nav ul li a {
     display: block;
-    background-color: #323232;
+    background: #555555;
     color: #ffffff;
     height: 40px;
     width: 40px;
@@ -93,8 +93,16 @@ h1:after {
     text-align: center;
     font-size: 18px;
 }
-
-.pagination-nav ul li.active a {
-    background: #f7f7f7;
+.pagination-nav ul li:hover a {
+    background: #e6ae49;
     color: #fff;
+}
+.pagination-nav ul li.active a {
+    background: #e6ae49;
+    color: #fff;
+}
+
+.ptb{
+    padding-top: 50px;
+    padding-bottom: 50px;
 }

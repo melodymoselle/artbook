@@ -232,6 +232,7 @@ $(function () {
             pagination: true,  // Show pagination buttons
             slideSpeed: 350,
             paginationSpeed: 400,
+            loop: true,
             singleItem: true,
             navigationText: ["<i class='fa fa-angle-left'></i>", "<i class='fa fa-angle-right'></i>"],
             autoPlay: false,
@@ -244,6 +245,7 @@ $(function () {
             autoPlay: true,
             autoHeight: true,
             stopOnHover: true,
+            loop: true,
             singleItem: true,
             slideSpeed: 350,
             pagination: true,  // Show pagination buttons
@@ -256,6 +258,7 @@ $(function () {
         $('.team-carousel').owlCarousel({
             autoPlay: false,
             stopOnHover: true,
+            loop: true,
             items: 3,
             itemsDesktop: [1170, 3],
             itemsDesktopSmall: [1024, 2],
@@ -270,6 +273,7 @@ $(function () {
         $('.client-carousel').owlCarousel({
             autoPlay: 2500,
             stopOnHover: true,
+            loop: true,
             items: 5,
             itemsDesktop: [1170, 4],
             itemsDesktopSmall: [1024, 3],
@@ -282,9 +286,10 @@ $(function () {
 
         // Content Slider
         $('.content-carousel').owlCarousel({
-            autoPlay: true,
+            autoPlay: false,
             autoHeight: true,
             stopOnHover: true,
+            loop: true,
             singleItem: true,
             slideSpeed: 500,
             pagination: false,  // Hide pagination buttons
@@ -295,8 +300,9 @@ $(function () {
 
         // Item-5 Carousel
         $('.item5-carousel').owlCarousel({
-            autoPlay: 2500,
+            autoPlay: false,
             stopOnHover: true,
+            loop: true,
             items: 5,
             itemsDesktop: [1170, 3],
             itemsDesktopSmall: [1024, 2],
@@ -309,14 +315,15 @@ $(function () {
 
         // Item-4 Carousel
         $('.item4-carousel').owlCarousel({
-            autoPlay: 2500,
+            autoPlay: false,
             stopOnHover: true,
+            loop: true,
             items: 4,
             itemsDesktop: [1170, 3],
             itemsDesktopSmall: [1024, 2],
             itemsTabletSmall: [768, 1],
             itemsMobile: [480, 1],
-            pagination: false,  // Hide pagination buttons
+            pagination: true,  // Hide pagination buttons
             navigation: true,  // Show next and prev buttons
             navigationText: ["<i class='fa fa-angle-left'></i>", "<i class='fa fa-angle-right'></i>"]
         });
@@ -324,7 +331,7 @@ $(function () {
         // Item-3 Carousel
         $('.item3-carousel').owlCarousel({
             autoPlay: false,
-            stopOnHover: true,
+            loop: true,
             items: 3,
             itemsDesktop: [1170, 3],
             itemsDesktopSmall: [1024, 2],
@@ -340,12 +347,47 @@ $(function () {
             autoPlay: false,
             autoHeight: true,
             stopOnHover: true,
+            loop: true,
             singleItem: true,
             slideSpeed: 350,
             pagination: true,  // Show pagination buttons
             navigation: true,  // Show next and prev buttons
             navigationText: ["<i class='fa fa-angle-left'></i>", "<i class='fa fa-angle-right'></i>"],
             responsive: true
+        });
+
+        // Artworks Carousel
+        $('.artworks-carousel').owlCarousel({
+            loop: true,
+            lazyLoad: true,
+            items: 3,
+            itemsDesktop: [1170, 3],
+            itemsDesktopSmall: [1024, 2],
+            itemsTabletSmall: [768, 1],
+            itemsMobile: [480, 1],
+            pagination: true,  // show pagination buttons
+            nav: true,  // Show next and prev buttons
+            navText: ["<i class='fa fa-angle-left'></i>", "<i class='fa fa-angle-right'></i>"]
+        });
+
+        // Articles Carousel
+        $('.articles-carousel').owlCarousel({
+            loop: true,
+            lazyLoad: true,
+            items: 1,
+            pagination: true,  // show pagination buttons
+            nav: true,  // Show next and prev buttons
+            navText: ["<i class='fa fa-angle-left'></i>", "<i class='fa fa-angle-right'></i>"]
+        });
+
+        // Video Carousel
+        $('.video-carousel').owlCarousel({
+            loop: true,
+            lazyLoad: true,
+            items: 1,
+            pagination: true,  // show pagination buttons
+            nav: true,  // Show next and prev buttons
+            navText: ["<i class='fa fa-angle-left'></i>", "<i class='fa fa-angle-right'></i>"]
         });
 
     };

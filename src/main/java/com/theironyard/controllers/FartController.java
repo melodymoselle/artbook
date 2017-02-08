@@ -111,20 +111,21 @@ public class FartController {
         }
         List<Article> articles = articleRepo.findByArtist(artist);
         Set<Artist> similar = artistRepo.findSimilarAndPopulated(artist.getId());
-        Page<Artwork> artworks = artworkRepo.findByArtist(new PageRequest(page, 6), artist);
+        List<Artwork> artworks = artworkRepo.findByArtist(artist);
+// Page<Artwork> artworks = artworkRepo.findByArtist(new PageRequest(page, 6), artist);
         model.addAttribute("articles", articles);
         model.addAttribute("similar", similar);
         model.addAttribute("artworks", artworks);
         model.addAttribute("artist", artist);
 
-        if(artworks.hasPrevious()){
-            model.addAttribute("previous", true);
-            model.addAttribute("prevPageNum", page - 1);
-        }
-        if(artworks.hasNext()){
-            model.addAttribute("next", true);
-            model.addAttribute("nextPageNum", page + 1);
-        }
+//        if(artworks.hasPrevious()){
+//            model.addAttribute("previous", true);
+//            model.addAttribute("prevPageNum", page - 1);
+//        }
+//        if(artworks.hasNext()){
+//            model.addAttribute("next", true);
+//            model.addAttribute("nextPageNum", page + 1);
+//        }
         model.addAttribute("pageName", artist.getName());
         return "artist";
     }

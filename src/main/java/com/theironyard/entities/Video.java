@@ -15,6 +15,8 @@ public class Video extends Item{
     private String description;
     @Column
     private String thumbnail;
+    @Column
+    private String url;
 
     public Video() {
     }
@@ -57,5 +59,13 @@ public class Video extends Item{
 
     public void setThumbnail(String thumbnail) {
         this.thumbnail = thumbnail;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = "https://www.youtube.com/watch?v=" + url;
     }
 }

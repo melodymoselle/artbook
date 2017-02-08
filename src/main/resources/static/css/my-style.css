@@ -63,6 +63,12 @@ h1:after {
 .article-img-div img{
     max-height: 300px;
 }
+
+.ptb{
+    padding-top: 50px;
+    padding-bottom: 50px;
+}
+
 /* ----------------------------------------------------------------------*/
 /* Pagination Navigation   --------------------------------------------- */
 /* ----------------------------------------------------------------------*/
@@ -102,7 +108,104 @@ h1:after {
     color: #fff;
 }
 
-.ptb{
-    padding-top: 50px;
-    padding-bottom: 50px;
+/* -------------------------------------*/
+/* Carousel-Theme (Slider Elements - Bullets, Pagination, etc..) ---------*/
+/* -------------------------------------*/
+.owl-buttons {
+    position: static;
+}
+
+.owl-carousel.white .owl-controls .owl-page span {
+    background: none repeat scroll 0 0 #fff;
+}
+
+.owl-carousel.white .owl-controls .owl-page.active span {
+    background: rgba(0, 0, 0, 0);
+    border: 2px solid #fff;
+}
+
+.nf-carousel-theme {
+}
+
+.nf-carousel-theme .owl-controls .owl-pagination {
+    position: absolute;
+    z-index: 2;
+    left: 0;
+    text-align: center;
+    width: 100%;
+    margin-top: 15px;
+}
+
+.nf-carousel-theme .owl-nav .owl-prev,
+.nf-carousel-theme .owl-nav .owl-next {
+    width: 31px;
+    height: 31px;
+    line-height: 31px;
+    font-size: 16px;
+    margin-top: -15px;
+}
+
+.content-carousel .owl-nav .owl-prev,
+.content-carousel .owl-nav .owl-next,
+.image-slider .owl-nav .owl-prev,
+.image-slider .owl-nav .owl-next,
+.fullwidth-slider .owl-nav .owl-prev,
+.fullwidth-slider .owl-nav .owl-next,
+.nf-carousel-theme .owl-nav .owl-prev,
+.nf-carousel-theme .owl-nav .owl-next {
+    background: #555555;
+    color: #ffffff;
+    display: block;
+    top: 50%;
+    transition: all 0.25s ease 0s;
+    -o-transition: all 0.25s ease 0s;
+    -moz-transition: all 0.25s ease 0s;
+    -webkit-transition: all 0.25s ease 0s;
+    z-index: 3;
+    position: absolute;
+    text-align: center;
+}
+
+.content-carousel .owl-nav .owl-prev:hover,
+.content-carousel .owl-nav .owl-next:hover,
+.image-slider .owl-nav .owl-prev:hover,
+.image-slider .owl-nav .owl-next:hover,
+.fullwidth-slider .owl-nav .owl-prev:hover,
+.fullwidth-slider .owl-nav .owl-next:hover,
+.nf-carousel-theme .owl-nav .owl-prev:hover,
+.nf-carousel-theme .owl-nav .owl-next:hover {
+    background: #e6ae49;
+    color: #ffffff;
+}
+
+.content-carousel .owl-nav .owl-next,
+.image-slider .owl-nav .owl-next,
+.fullwidth-slider .owl-nav .owl-next,
+.nf-carousel-theme .owl-nav .owl-next {
+    right: 0;
+}
+
+.nf-carousel-theme .owl-nav .owl-prev {
+    left: 0;
+    margin-left: -51px;
+    opacity: 0;
+}
+
+.nf-carousel-theme .owl-nav .owl-next {
+    right: 0;
+    margin-right: -51px;
+    opacity: 0;
+}
+
+.content-carousel:hover .owl-nav .owl-prev,
+.content-carousel:hover .owl-nav .owl-next,
+.image-slider:hover .owl-nav .owl-prev,
+.image-slider:hover .owl-nav .owl-next,
+.fullwidth-slider:hover .owl-nav .owl-prev,
+.fullwidth-slider:hover .owl-nav .owl-next,
+.nf-carousel-theme:hover .owl-nav .owl-prev,
+.nf-carousel-theme:hover .owl-nav .owl-next {
+    margin-right: 0;
+    margin-left: 0;
+    opacity: 1;
 }

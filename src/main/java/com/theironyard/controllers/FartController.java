@@ -19,12 +19,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 @Controller
-public class fartController {
+public class FartController {
 
     @Autowired
     ArtsyService artsy;
@@ -52,10 +51,10 @@ public class fartController {
         if (session.getAttribute(UserController.SESSION_USER) != null){
             User user = userRepo.findByUsername(session.getAttribute(UserController.SESSION_USER).toString());
             model.addAttribute(UserController.SESSION_USER, user.getUsername());
-            if (user.getPrivileges() == User.rights.ADMINISTRATOR) {
+            if (user.getPrivileges() == User.Rights.ADMINISTRATOR) {
                 model.addAttribute("admin", true);
             }
-            List<Artist> artists = user.getFollowing();
+            Set artists = user.getFollowing();
             if (artists.size() > 0) {
                 artworks = artworkRepo.findArtworksByFollowing(new PageRequest(page, 9), artists);
             }
@@ -79,7 +78,7 @@ public class fartController {
         if (session.getAttribute(UserController.SESSION_USER) != null){
             User user = userRepo.findByUsername(session.getAttribute(UserController.SESSION_USER).toString());
             model.addAttribute(UserController.SESSION_USER, user.getUsername());
-            if (user.getPrivileges() == User.rights.ADMINISTRATOR) {
+            if (user.getPrivileges() == User.Rights.ADMINISTRATOR) {
                 model.addAttribute("admin", true);
             }
             artists = artistRepo.findByFollowedBy(new PageRequest(page, 9), user);
@@ -103,7 +102,7 @@ public class fartController {
         if (session.getAttribute(UserController.SESSION_USER) != null){
             User user = userRepo.findByUsername(session.getAttribute(UserController.SESSION_USER).toString());
             model.addAttribute(UserController.SESSION_USER, user.getUsername());
-            if (user.getPrivileges() == User.rights.ADMINISTRATOR) {
+            if (user.getPrivileges() == User.Rights.ADMINISTRATOR) {
                 model.addAttribute("admin", true);
             }
             if (user.isFollowing(artist)){
@@ -136,7 +135,7 @@ public class fartController {
         if (session.getAttribute(UserController.SESSION_USER) != null){
             User user = userRepo.findByUsername(session.getAttribute(UserController.SESSION_USER).toString());
             model.addAttribute(UserController.SESSION_USER, user.getUsername());
-            if (user.getPrivileges() == User.rights.ADMINISTRATOR) {
+            if (user.getPrivileges() == User.Rights.ADMINISTRATOR) {
                 model.addAttribute("admin", true);
             }
             if (user.isLiked(artwork)){

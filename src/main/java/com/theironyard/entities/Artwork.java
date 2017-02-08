@@ -14,21 +14,9 @@ import java.util.List;
 import java.util.Map;
 
 @Entity
-@Table(name = "artworks")
+@DiscriminatorValue("artwork")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Artwork{
-    @Id
-    @GeneratedValue
-    @JsonIgnore
-    private int id;
-
-    @Column(nullable = false)
-    @JsonIgnore
-    private LocalDateTime createdAt = LocalDateTime.now();
-
-    @Column
-    @JsonIgnore
-    private LocalDateTime updatedAt;
+public class Artwork extends Item{
 
     @Column(unique = true)
     @JsonProperty("id")
@@ -74,37 +62,7 @@ public class Artwork{
     @Column
     private String imgZoom;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    private Artist artist;
-
-    @ManyToMany(mappedBy = "liked")
-    private List<User> likedBy;
-
     public Artwork() {
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
     }
 
     public String getArtsyArtworkId() {
@@ -153,22 +111,6 @@ public class Artwork{
 
     public void setSize(String size) {
         this.size = size;
-    }
-
-    public Artist getArtist() {
-        return artist;
-    }
-
-    public void setArtist(Artist artist) {
-        this.artist = artist;
-    }
-
-    public List<User> getLikedBy() {
-        return likedBy;
-    }
-
-    public void setLikedBy(List<User> likedBy) {
-        this.likedBy = likedBy;
     }
 
     public Map<String, Map<String, Object>> getRawDims() {
@@ -222,9 +164,10 @@ public class Artwork{
     @Override
     public String toString() {
         return "Artwork{" +
-                "id=" + id +
+                "id=" + super.getId() +
                 ", artsyArtworkId='" + artsyArtworkId + '\'' +
                 ", title='" + title + '\'' +
                 '}';
     }
+
 }

@@ -7,6 +7,7 @@ import com.theironyard.repositories.ArtworkRepository;
 import com.theironyard.repositories.UserRepository;
 import com.theironyard.services.ArtsyService;
 import com.theironyard.services.GoogleCSEService;
+import com.theironyard.services.WikipediaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -33,6 +34,9 @@ public class AdminController {
     UserRepository userRepo;
 
     @Autowired
+    WikipediaService wiki;
+
+    @Autowired
     ArtistRepository artistRepo;
 
     @Autowired
@@ -45,7 +49,7 @@ public class AdminController {
             return "redirect:/error";
         }
         User user = userRepo.findByUsername(session.getAttribute(UserController.SESSION_USER).toString());
-        if (user.getPrivileges() != User.rights.ADMINISTRATOR) {
+        if (user.getPrivileges() != User.Rights.ADMINISTRATOR) {
             redAtt.addAttribute("message", "You do not have access for that action.");
             return "redirect:/error";
         }
@@ -66,17 +70,18 @@ public class AdminController {
     }
 
     @RequestMapping(path = "/add-artist", method = RequestMethod.POST)
-    public String addArtistToDB(HttpSession session, String artsyArtistId, RedirectAttributes redAtt){
+    public String addArtistToDB(HttpSession session, Model model, String artsyArtistId, RedirectAttributes redAtt){
         if (session.getAttribute(UserController.SESSION_USER) == null){
             redAtt.addAttribute("message", "You do not have access for that action.");
             return "redirect:/error";
         }
         User user = userRepo.findByUsername(session.getAttribute(UserController.SESSION_USER).toString());
-        if (user.getPrivileges() != User.rights.ADMINISTRATOR) {
+        if (user.getPrivileges() != User.Rights.ADMINISTRATOR) {
             redAtt.addAttribute("message", "You do not have access for that action.");
             return "redirect:/error";
         }
         Artist artist = artsy.getSaveArtistById(artsyArtistId);
+        model.addAttribute("pageName", "Add Artist");
         return "redirect:/artist?artistId=" + artist.getId();
     }
 
@@ -87,7 +92,7 @@ public class AdminController {
             return "redirect:/error";
         }
         User user = userRepo.findByUsername(session.getAttribute(UserController.SESSION_USER).toString());
-        if (user.getPrivileges() != User.rights.ADMINISTRATOR) {
+        if (user.getPrivileges() != User.Rights.ADMINISTRATOR) {
             redAtt.addAttribute("message", "You do not have access for that action.");
             return "redirect:/error";
         }
@@ -95,6 +100,8 @@ public class AdminController {
         artist = artsy.getSaveArtworksByArtist(artist);
         artist = artsy.getSaveSimilarToByArtist(artist);
         artist = google.getArticlesByArtist(artist);
+        artist.setSummary(wiki.getWikiIntro(artist));
+        artistRepo.save(artist);
         return "redirect:/artist?artistId=" + artistId;
     }
 

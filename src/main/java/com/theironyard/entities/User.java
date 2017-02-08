@@ -3,7 +3,9 @@ package com.theironyard.entities;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -25,20 +27,20 @@ public class User{
     private String password;
 
     @Column(nullable = false)
-    private rights privileges = rights.SUBSCRIBER;
+    private Rights privileges = Rights.SUBSCRIBER;
 
-    public enum rights {
+    public enum Rights {
         SUBSCRIBER, ADMINISTRATOR
     }
 
     @ManyToMany(fetch = FetchType.EAGER)
-    private List<Artist> following = new ArrayList<>();
+    private Set<Artist> following = new HashSet<>();
 
     @ManyToMany
-    private List<Artist> notInterested;
+    private Set<Artist> notInterested;
 
     @ManyToMany
-    private List<Artwork> liked;
+    private Set<Item> liked;
 
     public User() {
     }
@@ -88,11 +90,11 @@ public class User{
         this.password = password;
     }
 
-    public rights getPrivileges() {
+    public Rights getPrivileges() {
         return privileges;
     }
 
-    public void setPrivileges(rights privileges) {
+    public void setPrivileges(Rights privileges) {
         this.privileges = privileges;
     }
 
@@ -106,19 +108,19 @@ public class User{
         this.following.remove(artist);
     }
 
-    public List<Artist> getFollowing() {
+    public Set getFollowing() {
         return following;
     }
 
-    public void setFollowing(List<Artist> following) {
+    public void setFollowing(Set<Artist> following) {
         this.following = following;
     }
 
-    public List<Artist> getNotInterested() {
+    public Set<Artist> getNotInterested() {
         return notInterested;
     }
 
-    public void setNotInterested(List<Artist> notInterested) {
+    public void setNotInterested(Set<Artist> notInterested) {
         this.notInterested = notInterested;
     }
 
@@ -132,11 +134,11 @@ public class User{
         this.liked.remove(artwork);
     }
 
-    public List<Artwork> getLiked() {
+    public Set<Item> getLiked() {
         return liked;
     }
 
-    public void setLiked(List<Artwork> liked) {
+    public void setLiked(Set<Item> liked) {
         this.liked = liked;
     }
 

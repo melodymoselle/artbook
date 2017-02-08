@@ -88,7 +88,7 @@ public class ArtsyService {
                 artwork.setArtist(artist);
                 artworkRepo.save(artwork);
             }
-            artist.addArtwork(artwork);
+            artist.getItems().add(artwork);
         }
         artist.setLoaded(true);
         if (rawArtworks.size()>0){

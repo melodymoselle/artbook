@@ -5,13 +5,11 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
+import java.util.*;
 
 @Entity
 @Table(name = "artists")
@@ -56,6 +54,11 @@ public class Artist{
     @Column
     private String nationality;
 
+    @Lob
+    @Type(type = "org.hibernate.type.TextType")
+    @Column
+    private String summary;
+
     @Transient
     @JsonProperty("_links")
     private Map<String, Map> imagesMap;
@@ -71,22 +74,19 @@ public class Artist{
     private String imgLarge;
 
     @OneToMany(mappedBy="artist")
-    private List<Article> articles = new ArrayList<>();
-
-    @OneToMany(mappedBy="artist")
-    private List<Artwork> artworks = new ArrayList<>();
+    private Set<Item> items = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.EAGER)
-    private List<Artist> similarTo = new ArrayList<>();
+    private Set<Artist> similarTo = new HashSet<>();
 
     @ManyToMany(mappedBy = "similarTo")
-    private List<Artist> similarFrom = new ArrayList<>();
+    private Set<Artist> similarFrom = new HashSet<>();
 
     @ManyToMany(mappedBy = "following")
-    private List<User> followedBy;
+    private Set<User> followedBy;
 
     @ManyToMany(mappedBy = "notInterested")
-    private List<User> notInterestedBy;
+    private Set<User> notInterestedBy;
 
     public Artist() {
     }
@@ -176,24 +176,6 @@ public class Artist{
         this.nationality = nationality;
     }
 
-    public List<Artwork> getArtworks() {
-        return artworks;
-    }
-
-    public void setArtworks(List<Artwork> artworks) {
-        this.artworks = artworks;
-    }
-
-    public void addArtwork(Artwork artwork){
-        if (!this.artworks.contains(artwork)) {
-            this.artworks.add(artwork);
-        }
-    }
-
-    public void deleteArtwork(Artwork artwork){
-        this.artworks.remove(artwork);
-    }
-
     public void addSimilarArtist(Artist artist){
         this.similarTo.add(artist);
     }
@@ -202,35 +184,35 @@ public class Artist{
         this.similarTo.remove(artist);
     }
 
-    public List<Artist> getSimilarTo() {
+    public Set<Artist> getSimilarTo() {
         return similarTo;
     }
 
-    public void setSimilarTo(List<Artist> similarTo) {
+    public void setSimilarTo(Set<Artist> similarTo) {
         this.similarTo = similarTo;
     }
 
-    public List<Artist> getSimilarFrom() {
+    public Set<Artist> getSimilarFrom() {
         return similarFrom;
     }
 
-    public void setSimilarFrom(List<Artist> similarFrom) {
+    public void setSimilarFrom(Set<Artist> similarFrom) {
         this.similarFrom = similarFrom;
     }
 
-    public List<User> getFollowedBy() {
+    public Set<User> getFollowedBy() {
         return followedBy;
     }
 
-    public void setFollowedBy(List<User> followedBy) {
+    public void setFollowedBy(Set<User> followedBy) {
         this.followedBy = followedBy;
     }
 
-    public List<User> getNotInterestedBy() {
+    public Set<User> getNotInterestedBy() {
         return notInterestedBy;
     }
 
-    public void setNotInterestedBy(List<User> notInterestedBy) {
+    public void setNotInterestedBy(Set<User> notInterestedBy) {
         this.notInterestedBy = notInterestedBy;
     }
 
@@ -282,21 +264,19 @@ public class Artist{
         this.imgLarge = imgLarge;
     }
 
-    public List<Article> getArticles() {
-        return articles;
+    public String getSummary() {
+        return summary;
     }
 
-    public void setArticles(List<Article> articles) {
-        this.articles = articles;
+    public void setSummary(String summary) {
+        this.summary = summary;
     }
 
-    public void addArticle(Article article){
-        if (!this.articles.contains(article)){
-            this.articles.add(article);
-        }
+    public Set<Item> getItems() {
+        return items;
     }
 
-    public void deleteArticle(Article article){
-        this.articles.remove(article);
+    public void setItems(Set<Item> items) {
+        this.items = items;
     }
 }

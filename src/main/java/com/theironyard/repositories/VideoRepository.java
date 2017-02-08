@@ -1,4 +1,7 @@
 package com.theironyard.repositories;
 
-public interface VideoRepository {
+import com.theironyard.entities.Video;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface VideoRepository extends JpaRepository<Video, Integer> {
 }

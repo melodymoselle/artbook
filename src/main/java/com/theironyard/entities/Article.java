@@ -1,15 +1,10 @@
 package com.theironyard.entities;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import javax.persistence.*;
 
 @Entity
-@Table(name = "articles")
-public class Article {
-    @Id
-    @GeneratedValue
-    private int id;
+@DiscriminatorValue("article")
+public class Article extends Item{
     @Column
     private String googleCacheId;
     @Column
@@ -22,18 +17,8 @@ public class Article {
     private String imgThumb;
     @Column
     private String imgLarge;
-    @ManyToOne
-    private Artist artist;
 
     public Article() {
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getGoogleCacheId() {
@@ -82,13 +67,5 @@ public class Article {
 
     public void setImgLarge(String imgLarge) {
         this.imgLarge = imgLarge;
-    }
-
-    public Artist getArtist() {
-        return artist;
-    }
-
-    public void setArtist(Artist artist) {
-        this.artist = artist;
     }
 }

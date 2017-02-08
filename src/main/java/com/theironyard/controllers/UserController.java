@@ -20,9 +20,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Controller
@@ -39,7 +36,8 @@ public class UserController {
     ArtworkRepository artworkRepo;
 
     @RequestMapping(path = "/login", method = RequestMethod.GET)
-    public String getLogin(){
+    public String getLogin( Model model){
+        model.addAttribute("pageName", "Login/Register");
         return "login";
     }
 
@@ -82,10 +80,10 @@ public class UserController {
         }
         User user = userRepo.findByUsername(session.getAttribute(SESSION_USER).toString());
         model.addAttribute(SESSION_USER, user.getUsername());
-        if (user.getPrivileges() == User.rights.ADMINISTRATOR) {
+        if (user.getPrivileges() == User.Rights.ADMINISTRATOR) {
             model.addAttribute("admin", true);
         }
-        List<Artist> following = user.getFollowing();
+        Set following = user.getFollowing();
         if (following.size() > 0) {
             artists = artistRepo.findSimilarFromFollowing(new PageRequest(page, 9), following);
         }

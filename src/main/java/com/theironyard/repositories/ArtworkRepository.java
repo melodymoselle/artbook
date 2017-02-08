@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Set;
 
 public interface ArtworkRepository extends JpaRepository<Artwork, Integer> {
     Artwork findByArtsyArtworkId(String artsyArtworkId);
@@ -19,6 +20,6 @@ public interface ArtworkRepository extends JpaRepository<Artwork, Integer> {
     Page<Artwork> findAllOrderByLikes(Pageable pageable);
 
     @Query("SELECT a FROM Artwork a WHERE artist IN :following")
-    Page<Artwork> findArtworksByFollowing(Pageable pageable, @Param("following") List following);
+    Page<Artwork> findArtworksByFollowing(Pageable pageable, @Param("following") Set following);
 
 }

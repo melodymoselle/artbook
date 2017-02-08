@@ -11,12 +11,20 @@ import java.io.IOException;
 
 @Service
 public class WikipediaService {
-    public static final String BASE_URL = "https://en.wikipedia.org/w/api.php";
-    public static final String QUERY_PARAMS = "?action=query&format=json&prop=extracts&exintro=1&explaintext=1&titles=";
+    private static final String BASE_URL = "https://en.wikipedia.org/w/api.php";
+    private static final String QUERY_PARAMS = "?action=query&format=json&prop=extracts&exintro=1&explaintext=1&titles=";
 
     @Autowired
     RestTemplate restTemplate;
 
+
+    /**
+     * Searches Wikipedia API for page where 'title' matches 'artist.getName()'.
+     * If page exists, returns the page extract as a string.
+     *
+     * @param artist
+     * @return string
+     */
     public String getWikiIntro(Artist artist){
         ObjectMapper mapper = new ObjectMapper();
         String json = restTemplate.getForObject(BASE_URL + QUERY_PARAMS + artist.getName(), String.class);

@@ -2,12 +2,15 @@ package com.theironyard.controllers;
 
 import com.theironyard.entities.Artist;
 import com.theironyard.entities.User;
+import com.theironyard.entities.Video;
 import com.theironyard.repositories.ArtistRepository;
 import com.theironyard.repositories.ArtworkRepository;
 import com.theironyard.repositories.UserRepository;
+import com.theironyard.repositories.VideoRepository;
 import com.theironyard.services.ArtsyService;
 import com.theironyard.services.GoogleCSEService;
 import com.theironyard.services.WikipediaService;
+import com.theironyard.services.YoutubeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,6 +23,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.Set;
 
 @Controller
 public class AdminController {
@@ -37,10 +41,16 @@ public class AdminController {
     WikipediaService wiki;
 
     @Autowired
+    YoutubeService youtube;
+
+    @Autowired
     ArtistRepository artistRepo;
 
     @Autowired
     ArtworkRepository artworkRepo;
+
+    @Autowired
+    VideoRepository videoRepo;
 
     @RequestMapping(path = "/add-artist", method = RequestMethod.GET)
     public String getAddArtistPage(HttpSession session, Model model, @RequestParam(defaultValue = "0") int page, RedirectAttributes redAtt){
@@ -101,6 +111,9 @@ public class AdminController {
         artist = artsy.getSaveSimilarToByArtist(artist);
         artist = google.getArticlesByArtist(artist);
         artist.setSummary(wiki.getWikiIntro(artist));
+        List<Video> videos = youtube.getYoutubeVideos(artist);
+        videoRepo.save(videos);
+        artist.getItems().addAll(videos);
         artistRepo.save(artist);
         return "redirect:/artist?artistId=" + artistId;
     }

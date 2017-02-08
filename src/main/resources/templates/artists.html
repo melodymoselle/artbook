@@ -29,15 +29,16 @@
     {{> header}}
 
     <!-- CONTENT --------------------------------------------------------------------------------->
+    <div class="spacer-60"></div>
 
     <!-- Artists Section -->
     <section class="ptb ptb-sm-80">
         <div class="container">
             {{#currentUsername}}
-            <h2>From your collection ...</h2>
+            <h4>From your collection ...</h4>
             {{/currentUsername}}
             {{^currentUsername}}
-            <h2>Popular right now ...</h2>
+            <h4>Popular right now ...</h4>
             {{/currentUsername}}
             <div class="row container-grid nf-col-3">
                 {{^artists}}

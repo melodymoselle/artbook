@@ -16,42 +16,47 @@ import org.springframework.stereotype.Service;
 import com.google.api.services.youtube.YouTube;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 @Service
 public class YoutubeService {
+
     @Value("${google.youtube.key}")
     private String key;
 
     private static final long NUMBER_OF_VIDEOS_RETURNED = 10;
     private static YouTube youtube;
 
-    public void getYoutubeVideos(Artist artist){
+    /**
+     * Searches the Youtube API for 'video' resources that match 'Artist.getName()'.
+     * Returns a List of Video objects created from each search result. Video objects are NOT saved.
+     *
+     * @param artist Artist object
+     * @return List of Video objects
+     */
+    public List<Video> getYoutubeVideos(Artist artist){
+        List<Video> videos = new ArrayList<>();
         try {
             youtube = new YouTube.Builder(new NetHttpTransport(), new JacksonFactory(), new HttpRequestInitializer() {
                 public void initialize(HttpRequest request) throws IOException {
                 }
-            }).setApplicationName("youtube-cmdline-search-sample").build();
-
-            String queryTerm = artist.getName();
+            }).setApplicationName("f-Art").build();
 
             YouTube.Search.List search = youtube.search().list("id,snippet");
 
-            String apiKey = key;
-            search.setKey(apiKey);
-            search.setQ(queryTerm);
-
+            search.setKey(key);
+            search.setQ(artist.getName());
             search.setType("video");
 
-            // To increase efficiency, only retrieve the fields that the
-            // application uses.
+            // To increase efficiency, only retrieve the fields that the application uses.
             search.setFields("items(id/videoId,snippet/title,snippet/channelTitle,snippet/description,snippet/thumbnails/default/url)");
             search.setMaxResults(NUMBER_OF_VIDEOS_RETURNED);
 
-            // Call the API and print results.
             SearchListResponse searchResponse = search.execute();
             List<SearchResult> searchResultList = searchResponse.getItems();
+
             if (searchResultList != null) {
 
                 while (searchResultList.iterator().hasNext()) {
@@ -68,6 +73,8 @@ public class YoutubeService {
                         video.setTitle(singleVideo.getSnippet().getTitle());
                         video.setDescription(singleVideo.getSnippet().getDescription());
                         video.setThumbnail(thumbnail.getUrl());
+                        video.setArtist(artist);
+                        videos.add(video);
                     }
                 }
             }
@@ -79,5 +86,6 @@ public class YoutubeService {
         } catch (Throwable t) {
             t.printStackTrace();
         }
+        return videos;
     }
 }

@@ -56,26 +56,26 @@ public class YoutubeService {
 
             SearchListResponse searchResponse = search.execute();
             List<SearchResult> searchResultList = searchResponse.getItems();
+            Iterator<SearchResult> iteratorSearchResults = searchResultList.iterator();
 
             if (searchResultList != null) {
 
-                while (searchResultList.iterator().hasNext()) {
+                while (iteratorSearchResults.hasNext()) {
 
-                    SearchResult singleVideo = searchResultList.iterator().next();
+                    SearchResult singleVideo = iteratorSearchResults.next();
                     ResourceId rId = singleVideo.getId();
 
-                    if (rId.getKind().equals("youtube#video")) {
-                        Thumbnail thumbnail = singleVideo.getSnippet().getThumbnails().getDefault();
-                        Video video = new Video();
+                    Thumbnail thumbnail = singleVideo.getSnippet().getThumbnails().getDefault();
+                    Video video = new Video();
 
-                        video.setVideoId(rId.getVideoId());
-                        video.setChannelTitle(singleVideo.getSnippet().getChannelTitle());
-                        video.setTitle(singleVideo.getSnippet().getTitle());
-                        video.setDescription(singleVideo.getSnippet().getDescription());
-                        video.setThumbnail(thumbnail.getUrl());
-                        video.setArtist(artist);
-                        videos.add(video);
-                    }
+                    video.setVideoId(rId.getVideoId());
+                    video.setChannelTitle(singleVideo.getSnippet().getChannelTitle());
+                    video.setTitle(singleVideo.getSnippet().getTitle());
+                    video.setDescription(singleVideo.getSnippet().getDescription());
+                    video.setThumbnail(thumbnail.getUrl());
+                    video.setArtist(artist);
+                    videos.add(video);
+
                 }
             }
         } catch (GoogleJsonResponseException e) {

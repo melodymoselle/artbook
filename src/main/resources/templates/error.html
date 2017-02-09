@@ -1,0 +1,57 @@
+
+<!DOCTYPE html>
+<html>
+
+{{> head}}
+
+<body class="full-intro">
+
+<!-- Preloader -->
+<section id="preloader">
+    <div class="loader" id="loader">
+        <div class="loader-img"></div>
+    </div>
+</section>
+<!-- End Preloader -->
+
+<!-- Site Wrapper -->
+<div class="wrapper">
+
+
+    <!-- CONTENT --------------------------------------------------------------------------------->
+    <!-- Intro -->
+    <section id="intro" class="intro">
+        <!-- Static Intro -->
+        <div class="bg-image parallax parallax-background2">
+            <div class="full-screen-intro container" style="min-height: 400px;">
+                <div class="intro-content">
+                    <div class="intro-content-inner">
+                        <h1 class="large mb-25">Error</h1>
+                        <p class="lead content-wd650">{{#message}}{{.}}{{/message}}</p>
+                        <br />
+                        <a href="/" class="btn btn-md btn-black"><i class="fa fa-angle-left left"></i>Back To Home</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End Static Intro -->
+    </section>
+    <!-- End Intro -->
+
+
+    <!-- End CONTENT ------------------------------------------------------------------------------>
+
+
+    <!-- Scroll Top -->
+    <a class="scroll-top">
+        <i class="fa fa-angle-double-up"></i>
+    </a>
+    <!-- End Scroll Top -->
+
+</div>
+<!-- Site Wrapper End -->
+
+{{> javascript}}
+
+</body>
+</html>

@@ -10,7 +10,9 @@ h1:after {
     font-size: 34px;
 }
 
-
+span {
+    padding-right: 5px;
+}
 
 .header {
     background-color: rgba(255, 255, 255, 0.95);

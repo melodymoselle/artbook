@@ -59,14 +59,6 @@ public class Artist{
     @Column
     private String summary;
 
-    @Transient
-    @JsonProperty("_links")
-    private Map<String, Map> imagesMap;
-
-    @Transient
-    @JsonProperty("image_versions")
-    private List<String> imageVersions = new ArrayList<>();
-
     @Column
     private String imgThumb;
 
@@ -84,9 +76,6 @@ public class Artist{
 
     @ManyToMany(mappedBy = "following")
     private Set<User> followedBy;
-
-    @ManyToMany(mappedBy = "notInterested")
-    private Set<User> notInterestedBy;
 
     public Artist() {
     }
@@ -208,14 +197,6 @@ public class Artist{
         this.followedBy = followedBy;
     }
 
-    public Set<User> getNotInterestedBy() {
-        return notInterestedBy;
-    }
-
-    public void setNotInterestedBy(Set<User> notInterestedBy) {
-        this.notInterestedBy = notInterestedBy;
-    }
-
     public boolean isPopulated() {
         return populated;
     }
@@ -230,22 +211,6 @@ public class Artist{
 
     public void setLoaded(boolean loaded) {
         this.loaded = loaded;
-    }
-
-    public Map<String, Map> getImagesMap() {
-        return imagesMap;
-    }
-
-    public void setImagesMap(Map<String, Map> imagesMap) {
-        this.imagesMap = imagesMap;
-    }
-
-    public List<String> getImageVersions() {
-        return imageVersions;
-    }
-
-    public void setImageVersions(List<String> imageVersions) {
-        this.imageVersions = imageVersions;
     }
 
     public String getImgThumb() {

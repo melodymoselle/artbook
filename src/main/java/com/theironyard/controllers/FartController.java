@@ -138,4 +138,8 @@ public class FartController {
         return "artwork";
     }
 
+    @RequestMapping(path = "/error" , method = RequestMethod.GET)
+    public String getErrorPage(){
+        return "error";
+    }
 }

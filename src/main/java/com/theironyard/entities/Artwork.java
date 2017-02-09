@@ -1,17 +1,10 @@
 package com.theironyard.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 @Entity
 @DiscriminatorValue("artwork")
@@ -37,21 +30,9 @@ public class Artwork extends Item{
 
     @Column
     private String date;
-//
-//    @Transient
-//    @JsonProperty("dimensions")
-//    private Map<String, Map<String, Object>> rawDims;
 
     @Column
     private String size;
-//
-//    @Transient
-//    @JsonProperty("_links")
-//    private Map<String, Map> imagesMap;
-//
-//    @Transient
-//    @JsonProperty("image_versions")
-//    private List<String> imageVersions = new ArrayList<>();
 
     @Column
     private String imgThumb;
@@ -74,11 +55,14 @@ public class Artwork extends Item{
     }
 
     public String getTitle() {
+        if (title.length() > 30){
+            return title.substring(0, 30) + "...";
+        }
         return title;
     }
 
     public void setTitle(String title) {
-        this.title = title;
+        this.title = title.substring(0, 254);
     }
 
     public String getCategory() {
@@ -86,7 +70,7 @@ public class Artwork extends Item{
     }
 
     public void setCategory(String category) {
-        this.category = category;
+        this.category = category.substring(0, 254);
     }
 
     public String getMedium() {
@@ -94,7 +78,7 @@ public class Artwork extends Item{
     }
 
     public void setMedium(String medium) {
-        this.medium = medium;
+        this.medium = medium.substring(0, 254);
     }
 
     public String getDate() {
@@ -112,30 +96,6 @@ public class Artwork extends Item{
     public void setSize(String size) {
         this.size = size;
     }
-//
-//    public Map<String, Map<String, Object>> getRawDims() {
-//        return rawDims;
-//    }
-//
-//    public void setRawDims(Map<String, Map<String, Object>> rawDims) {
-//        this.rawDims = rawDims;
-//    }
-//
-//    public Map<String, Map> getImagesMap() {
-//        return imagesMap;
-//    }
-//
-//    public void setImagesMap(Map<String, Map> imagesMap) {
-//        this.imagesMap = imagesMap;
-//    }
-//
-//    public List<String> getImageVersions() {
-//        return imageVersions;
-//    }
-//
-//    public void setImageVersions(List<String> imageVersions) {
-//        this.imageVersions = imageVersions;
-//    }
 
     public String getImgThumb() {
         return imgThumb;

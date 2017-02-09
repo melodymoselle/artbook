@@ -356,35 +356,68 @@ $(function () {
             responsive: true
         });
 
-        // Artworks Carousel
-        $('.artworks-carousel').owlCarousel({
+        // Artwork Carousel
+        $('.artwork-carousel').owlCarousel({
             loop: true,
             lazyLoad: true,
             items: 3,
-            itemsDesktop: [1170, 3],
-            itemsDesktopSmall: [1024, 2],
-            itemsTabletSmall: [768, 1],
-            itemsMobile: [480, 1],
+            responsive:{
+                480:{
+                    items:1
+                },
+                768:{
+                    items:1
+                },
+                1024:{
+                    items:2
+                },
+                1170:{
+                    items:3
+                }
+            },
             pagination: true,  // show pagination buttons
             nav: true,  // Show next and prev buttons
             navText: ["<i class='fa fa-angle-left'></i>", "<i class='fa fa-angle-right'></i>"]
         });
 
-        // Articles Carousel
-        $('.articles-carousel').owlCarousel({
+        // Article Carousel
+        $('.article-carousel').owlCarousel({
             loop: true,
             lazyLoad: true,
             items: 1,
-            pagination: true,  // show pagination buttons
+            center:true,
+            margin: 10,
             nav: true,  // Show next and prev buttons
             navText: ["<i class='fa fa-angle-left'></i>", "<i class='fa fa-angle-right'></i>"]
         });
 
         // Video Carousel
         $('.video-carousel').owlCarousel({
-            loop: true,
-            lazyLoad: true,
-            items: 1,
+            items:1,
+            loop:true,
+            video:true,
+            lazyLoad:true,
+            center:true,
+            responsive:{
+                480:{
+                    videoHeight: 228,
+                    videoWidth: 370
+                },
+                768:{
+                    videoHeight: 203,
+                    videoWidth: 325
+                },
+                1024:{
+                    videoHeight: 265,
+                    videoWidth: 435
+                },
+                1170:{
+                    videoHeight: 329,
+                    videoWidth: 550
+                }
+            },
+            videoHeight: true,
+            videoWidth: true,
             pagination: true,  // show pagination buttons
             nav: true,  // Show next and prev buttons
             navText: ["<i class='fa fa-angle-left'></i>", "<i class='fa fa-angle-right'></i>"]

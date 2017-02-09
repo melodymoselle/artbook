@@ -27,6 +27,7 @@ public class Video extends Item{
 
     public void setVideoId(String videoId) {
         this.videoId = videoId;
+        this.setUrl(videoId);
     }
 
     public String getChannelTitle() {
@@ -65,7 +66,7 @@ public class Video extends Item{
         return url;
     }
 
-    public void setUrl(String url) {
+    public void setUrl(String videoId) {
         this.url = "https://www.youtube.com/watch?v=" + url;
     }
 }

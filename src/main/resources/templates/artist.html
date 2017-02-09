@@ -78,7 +78,7 @@
             <h3 class="text-center">Artworks</h3>
             <div class="spacer-30"></div>
             <div class="row">
-                <div class="owl-carousel artworks-carousel nf-carousel-theme o-flow-hidden">
+                <div class="owl-carousel artwork-carousel nf-carousel-theme o-flow-hidden">
                     {{#artworks}}
                     <div class="item">
                         <div class="nf-col-padding">
@@ -102,33 +102,55 @@
     </section>
     <!-- End Artworks Slider -->
 
-    <hr />
     <!-- Articles Slider -->
     <section class="ptb ptb-sm-30">
+        <div class="container">
         <div class="row">
-            <div
+            <div class="col-md-6 col-sm-6 col-xs-10 nf-item spacing-grid">
                 <h3 class="text-center">Articles</h3>
-                <div class="spacer-60"></div>
-                <div class="owl-carousel content-carousel content-slider">
+                <div class="spacer-30"></div>
+                {{^articles}}
+                <p>No articles...</p>
+                {{/articles}}
+                <div class="owl-carousel article-carousel nf-carousel-theme content-slider">
                     {{#articles}}
-                    <div class="item">
+                    <div class="item article">
                         <div class="container">
                             <div class="row">
-                                <div class="col-md-6 mb-sm-30 article-img-div">
+                                <div class="col-md-2 mb-sm-30 article-img-div">
                                     <img src="{{#imgLarge}}{{.}}{{/imgLarge}}" alt="" class="img-large pull-right"/>
                                 </div>
-                                <div class="col-md-6 mb-sm-30">
+                                <div class="col-md-4 mb-sm-30">
                                     <h4>{{title}}</h4>
                                     <div class="spacer-15"></div>
                                     <p>{{snippet}}</p>
                                     <div class="spacer-15"></div>
-                                    <a href="{{url}}" class="btn btn-md btn-black">Read Article</a>
+                                    <a href="{{url}}" class="btn btn-md btn-black" target="_blank">Read Article</a>
                                 </div>
                             </div>
                         </div>
                     </div>
                     {{/articles}}
                 </div>
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-10 nf-item spacing-grid">
+                <h3 class="text-center">Videos</h3>
+                <div class="spacer-30"></div>
+                {{^videos}}
+                <p>No videos...</p>
+                {{/videos}}
+                <div class="owl-carousel video-carousel nf-carousel-theme content-slider">
+                    {{#videos}}
+                    <div class="item-video">
+                        <a class="owl-video" href="https://www.youtube.com/watch?v={{videoId}}"></a>
+                        <h5>{{title}}</h5>
+                        <h6>{{channelTitle}}</h6>
+                        <p>{{description}}</p>
+                    </div>
+                    {{/videos}}
+                </div>
+            </div>
+        </div>
         </div>
     </section>
     <!-- End Articles Slider -->
@@ -138,7 +160,10 @@
         <div class="container">
             <h3 class="text-center">Similar Artists</h3>
             <div class="spacer-30"></div>
-            <div class="row">
+            <div class="row ">
+                {{^similar}}
+                <p>No similar artists...</p>
+                {{/similar}}
                 <div class="owl-carousel item4-carousel nf-carousel-theme o-flow-hidden">
                     {{#similar}}
                     <div class="item">

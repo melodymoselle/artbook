@@ -1,13 +1,7 @@
 package com.theironyard.controllers;
 
-import com.theironyard.entities.Article;
-import com.theironyard.entities.Artist;
-import com.theironyard.entities.Artwork;
-import com.theironyard.entities.User;
-import com.theironyard.repositories.ArticleRepository;
-import com.theironyard.repositories.ArtistRepository;
-import com.theironyard.repositories.ArtworkRepository;
-import com.theironyard.repositories.UserRepository;
+import com.theironyard.entities.*;
+import com.theironyard.repositories.*;
 import com.theironyard.services.ArtsyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -39,6 +33,9 @@ public class FartController {
 
     @Autowired
     ArticleRepository articleRepo;
+
+    @Autowired
+    VideoRepository videoRepo;
 
     @RequestMapping(path = "/", method = RequestMethod.GET)
     public String forward(){
@@ -112,20 +109,13 @@ public class FartController {
         List<Article> articles = articleRepo.findByArtist(artist);
         Set<Artist> similar = artistRepo.findSimilarAndPopulated(artist.getId());
         List<Artwork> artworks = artworkRepo.findByArtist(artist);
-// Page<Artwork> artworks = artworkRepo.findByArtist(new PageRequest(page, 6), artist);
+        List<Video> videos = videoRepo.findByArtist(artist);
         model.addAttribute("articles", articles);
         model.addAttribute("similar", similar);
         model.addAttribute("artworks", artworks);
+        model.addAttribute("videos", videos);
         model.addAttribute("artist", artist);
 
-//        if(artworks.hasPrevious()){
-//            model.addAttribute("previous", true);
-//            model.addAttribute("prevPageNum", page - 1);
-//        }
-//        if(artworks.hasNext()){
-//            model.addAttribute("next", true);
-//            model.addAttribute("nextPageNum", page + 1);
-//        }
         model.addAttribute("pageName", artist.getName());
         return "artist";
     }

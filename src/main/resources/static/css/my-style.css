@@ -56,7 +56,9 @@ h1:after {
 #login:hover {
     color: #e6ae49;
 }
-
+.article {
+    margin-left: -25px;
+}
 .article-img-div {
     height: 300px;
 }
@@ -106,6 +108,14 @@ h1:after {
 .pagination-nav ul li.active a {
     background: #e6ae49;
     color: #fff;
+}
+
+.owl-carousel .owl-item,
+.owl-carousel .owl-item .item-video,
+.owl-carousel .owl-item .item-video .owl-video-wrapper,
+.owl-carousel .owl-item .item-video .owl-video-wrapper .owl-video {
+    width: 100%;
+    height:auto;
 }
 
 /* -------------------------------------*/

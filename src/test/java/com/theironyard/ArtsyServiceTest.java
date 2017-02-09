@@ -130,4 +130,13 @@ public class ArtsyServiceTest {
 //        assertNotNull(image);
     }
 
+    @Test
+    public void testGetArtworksByArtist(){
+        Artist artist = new Artist();
+        artist.setArtsyArtistId("4d8b92b64eb68a1b2c000414");
+        artist.setName("Gustav Klimt");
+
+        artsy.getArtworksByArtist(artist);
+    }
+
 }

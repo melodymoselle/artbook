@@ -68,14 +68,13 @@ public class YoutubeService {
                     Thumbnail thumbnail = singleVideo.getSnippet().getThumbnails().getDefault();
                     Video video = new Video();
 
-                    video.setVideoId(rId.getVideoId());
+                    video.setVideoId(singleVideo.getId().getVideoId());
                     video.setChannelTitle(singleVideo.getSnippet().getChannelTitle());
                     video.setTitle(singleVideo.getSnippet().getTitle());
                     video.setDescription(singleVideo.getSnippet().getDescription());
                     video.setThumbnail(thumbnail.getUrl());
                     video.setArtist(artist);
                     videos.add(video);
-
                 }
             }
         } catch (GoogleJsonResponseException e) {

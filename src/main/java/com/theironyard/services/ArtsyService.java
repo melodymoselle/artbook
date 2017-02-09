@@ -1,5 +1,6 @@
 package com.theironyard.services;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.theironyard.entities.Artist;
 import com.theironyard.entities.Artwork;
@@ -15,6 +16,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PostConstruct;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -67,160 +70,139 @@ public class ArtsyService {
         return artwork;
     }
 
-    public Artist getSaveArtworksByArtist(Artist artist){
-        //Gets total artwork count
-        String url = BASE_URL + "/artworks?total_count=1&size=1&artist_id=" + artist.getArtsyArtistId();
+    public List<Artwork> getArtworksByArtist(Artist artist){
+        String url = BASE_URL + "/artworks?size=1000&artist_id=" + artist.getArtsyArtistId();
         HttpEntity request = getRequest();
-        HttpEntity<HashMap> response = restTemplate.exchange(url, HttpMethod.GET, request, HashMap.class);
-        int count = ((int) response.getBody().get("total_count"));
-        //Uses 'count' so that response is not paginated
-        url = BASE_URL + "/artworks?size="+count+"&artist_id=" + artist.getArtsyArtistId();
-        HashMap embedded = (HashMap)restTemplate.exchange(url, HttpMethod.GET, request, HashMap.class).getBody().get("_embedded");
-        List<HashMap> rawArtworks = (List)embedded.get("artworks");
-        ObjectMapper mapper = new ObjectMapper();
-        for (HashMap art : rawArtworks) {
-            Artwork artwork = artworkRepo.findByArtsyArtworkId(art.get("id").toString());
-            if (artwork == null) {
-                artwork = mapper.convertValue(art, Artwork.class);
-                artwork = parseArtworkImgThumb(artwork);
-                artwork = parseArtworkImgLarge(artwork);
-                artwork = parseArtworkImgZoom(artwork);
+        String json = restTemplate.exchange(url, HttpMethod.GET, request, String.class).getBody();
+        JsonNode artworksNode = null;
+        try {
+            artworksNode = new ObjectMapper().readTree(json).get("_embedded").get("artworks");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println(artworksNode);
+        List<Artwork> artworks = new ArrayList<>();
+        if (artworksNode != null && artworksNode.isArray()) {
+            for(JsonNode artworkNode : artworksNode){
+                Artwork artwork = new Artwork();
+                artwork.setArtsyArtworkId(artworkNode.findValue("id").toString());
+                artwork.setTitle(artworkNode.findValue("title").toString());
+                artwork.setMedium(artworkNode.findValue("medium").toString());
+                artwork.setCategory(artworkNode.findValue("category").toString());
+                artwork.setDate(artworkNode.findValue("date").toString());
+                artwork.setSize(artworkNode.findValue("in").findValue("text").toString());
+                artwork.setImgThumb(getImgThumb(artworkNode));
+                artwork.setImgLarge(getImgLarge(artworkNode));
+                artwork.setImgZoom(getImgZoom(artworkNode));
                 artwork.setArtist(artist);
-                artworkRepo.save(artwork);
+                artworks.add(artwork);
             }
-            artist.getItems().add(artwork);
         }
-        artist.setLoaded(true);
-        if (rawArtworks.size()>0){
-            artist.setPopulated(true);
-        }
-        artistRepo.save(artist);
-        return artist;
+        return artworks;
     }
 
-    public Artist getSaveSimilarToByArtist(Artist artist){
-        String url = BASE_URL + "/artists?similar_to_artist_id=" + artist.getArtsyArtistId();
-        HttpEntity request = getRequest();
-        HashMap<String, HashMap<String, List<HashMap>>> response = restTemplate.exchange(url, HttpMethod.GET, request, HashMap.class).getBody();
-        List<HashMap> rawArtists = response.get("_embedded").get("artists");
-        ObjectMapper mapper = new ObjectMapper();
-        for (HashMap rawArtist : rawArtists){
-            Artist similarArtist = artistRepo.findByArtsyArtistId(rawArtist.get("id").toString());
-            if (similarArtist == null){
-                similarArtist = mapper.convertValue(rawArtist, Artist.class);
-                similarArtist = parseArtistImgThumb(similarArtist);
-                similarArtist = parseArtistImgLarge(similarArtist);
-                artistRepo.save(similarArtist);
-            }
-            artist.addSimilarArtist(similarArtist);
+    public String getImgThumb(JsonNode artsyNode){
+        String url = "";
+        JsonNode imgVersions = artsyNode.findValue("image_versions");
+        String imgBaseUrl = artsyNode.findValue("_links").findValue("image").findValue("href").toString();
+        if (imgVersions.has("medium")) {
+            url = imgBaseUrl.replace("{image_version}", "medium");
+        } else if (imgVersions.has("tall")) {
+            url = imgBaseUrl.replace("{image_version}", "tall");
+        } else if (imgVersions.has("square")) {
+            url = imgBaseUrl.replace("{image_version}", "square");
+        } else if (imgVersions.has("large")) {
+            url = imgBaseUrl.replace("{image_version}", "large");
+        } else if (imgVersions.has("larger")) {
+            url = imgBaseUrl.replace("{image_version}", "larger");
+        } else {
+            url = ""; // img not found thumbnail ???
         }
-        artistRepo.save(artist);
-        return artist;
+        return url;
     }
 
-    public Artist parseArtistImgThumb(Artist artist){
-        if (artist.getImagesMap().get("image").get("href") != null) {
-            String href = artist.getImagesMap().get("image").get("href").toString();
-            List<String> versions = artist.getImageVersions();
-            String url;
-            if (versions.contains("four_thirds")) {
-                url = href.replace("{image_version}", "four_thirds");
-            } else if (versions.contains("square")) {
-                url = href.replace("{image_version}", "square");
-            } else if (versions.contains("tall")) {
-                url = href.replace("{image_version}", "tall");
-            } else if (versions.contains("large")) {
-                url = href.replace("{image_version}", "large");
-            } else {
-                url = ""; // img not found thumbnail ???
-            }
-            artist.setImgThumb(url);
-            artistRepo.save(artist);
+    public String getImgLarge(JsonNode artsyNode){
+        String url = "";
+        JsonNode imgVersions = artsyNode.findValue("image_versions");
+        String imgBaseUrl = artsyNode.findValue("_links").findValue("image").findValue("href").toString();
+        if (imgVersions.has("large")) {
+            url = imgBaseUrl.replace("{image_version}", "large");
+        } else if (imgVersions.has("larger")) {
+            url = imgBaseUrl.replace("{image_version}", "larger");
+        } else if (imgVersions.has("medium")) {
+            url = imgBaseUrl.replace("{image_version}", "medium");
+        } else if (imgVersions.has("tall")) {
+            url = imgBaseUrl.replace("{image_version}", "tall");
+        } else if (imgVersions.has("square")) {
+            url = imgBaseUrl.replace("{image_version}", "square");
+        } else {
+            url = ""; // img not found thumbnail ???
         }
-        return artist;
+        return url;
     }
 
-    public Artist parseArtistImgLarge(Artist artist){
-        if (artist.getImagesMap().get("image").get("href") != null) {
-            String href = artist.getImagesMap().get("image").get("href").toString();
-            List<String> versions = artist.getImageVersions();
-            String url;
-            if (versions.contains("large")) {
-                url = href.replace("{image_version}", "large");
-            } else if (versions.contains("four_thirds")) {
-                url = href.replace("{image_version}", "four_thirds");
-            } else if (versions.contains("square")) {
-                url = href.replace("{image_version}", "square");
-            } else if (versions.contains("tall")) {
-                url = href.replace("{image_version}", "tall");
-            } else {
-                url = ""; // img not found thumbnail ???
-            }
-            artist.setImgLarge(url);
-            artistRepo.save(artist);
+    public String getImgZoom(JsonNode artsyNode){
+        String url = "";
+        JsonNode imgVersions = artsyNode.findValue("image_versions");
+        String imgBaseUrl = artsyNode.findValue("_links").findValue("image").findValue("href").toString();
+        if (imgVersions.has("normalized")) {
+            url = imgBaseUrl.replace("{image_version}", "normalized");
+        } else {
+            url = ""; // img not found thumbnail ???
         }
-        return artist;
+        return url;
     }
 
-    public Artwork parseArtworkImgThumb(Artwork artwork){
-        if (artwork.getImagesMap().get("image").get("href") != null) {
-            String href = artwork.getImagesMap().get("image").get("href").toString();
-            List<String> versions = artwork.getImageVersions();
-            String url;
-            if (versions.contains("medium")) {
-                url = href.replace("{image_version}", "medium");
-            } else if (versions.contains("tall")) {
-                url = href.replace("{image_version}", "tall");
-            } else if (versions.contains("medium")) {
-                url = href.replace("{image_version}", "medium");
-            } else if (versions.contains("small")) {
-                url = href.replace("{image_version}", "small");
-            } else {
-                url = ""; // img not found thumbnail ???
-            }
-            artwork.setImgThumb(url);
-            artworkRepo.save(artwork);
-        }
-        return artwork;
-    }
+//    public Artist getSaveArtworksByArtist(Artist artist){
+//        //Gets total artwork count
+//        String url = BASE_URL + "/artworks?total_count=1&size=1&artist_id=" + artist.getArtsyArtistId();
+//        HttpEntity request = getRequest();
+//        HttpEntity<HashMap> response = restTemplate.exchange(url, HttpMethod.GET, request, HashMap.class);
+//        int count = ((int) response.getBody().get("total_count"));
+//        //Uses 'count' so that response is not paginated
+//        url = BASE_URL + "/artworks?size="+count+"&artist_id=" + artist.getArtsyArtistId();
+//        HashMap embedded = (HashMap)restTemplate.exchange(url, HttpMethod.GET, request, HashMap.class).getBody().get("_embedded");
+//        List<HashMap> rawArtworks = (List)embedded.get("artworks");
+//        ObjectMapper mapper = new ObjectMapper();
+//        for (HashMap art : rawArtworks) {
+//            Artwork artwork = artworkRepo.findByArtsyArtworkId(art.get("id").toString());
+//            if (artwork == null) {
+//                artwork = mapper.convertValue(art, Artwork.class);
+//                artwork = parseArtworkImgThumb(artwork);
+//                artwork = parseArtworkImgLarge(artwork);
+//                artwork = parseArtworkImgZoom(artwork);
+//                artwork.setArtist(artist);
+//                artworkRepo.save(artwork);
+//            }
+//            artist.getItems().add(artwork);
+//        }
+//        artist.setLoaded(true);
+//        if (rawArtworks.size()>0){
+//            artist.setPopulated(true);
+//        }
+//        artistRepo.save(artist);
+//        return artist;
+//    }
 
-    public Artwork parseArtworkImgLarge(Artwork artwork){
-        if (artwork.getImagesMap().get("image").get("href") != null) {
-            String href = artwork.getImagesMap().get("image").get("href").toString();
-            List<String> versions = artwork.getImageVersions();
-            String url;
-            if (versions.contains("larger")) {
-                url = href.replace("{image_version}", "larger");
-            } else if (versions.contains("large")) {
-                url = href.replace("{image_version}", "large");
-            } else if (versions.contains("large_rectangle")) {
-                url = href.replace("{image_version}", "large_rectangle");
-            } else if (versions.contains("square")) {
-                url = href.replace("{image_version}", "square");
-            } else {
-                url = ""; // img not found thumbnail ???
-            }
-            artwork.setImgLarge(url);
-            artworkRepo.save(artwork);
-        }
-        return artwork;
-    }
-
-    public Artwork parseArtworkImgZoom(Artwork artwork){
-        if (artwork.getImagesMap().get("image").get("href") != null) {
-            String href = artwork.getImagesMap().get("image").get("href").toString();
-            List<String> versions = artwork.getImageVersions();
-            String url;
-            if (versions.contains("normalized")) {
-                url = href.replace("{image_version}", "normalized");
-            } else {
-                url = null;
-            }
-            artwork.setImgZoom(url);
-            artworkRepo.save(artwork);
-        }
-        return artwork;
-    }
+//    public Artist getSaveSimilarToByArtist(Artist artist){
+//        String url = BASE_URL + "/artists?similar_to_artist_id=" + artist.getArtsyArtistId();
+//        HttpEntity request = getRequest();
+//        HashMap<String, HashMap<String, List<HashMap>>> response = restTemplate.exchange(url, HttpMethod.GET, request, HashMap.class).getBody();
+//        List<HashMap> rawArtists = response.get("_embedded").get("artists");
+//        ObjectMapper mapper = new ObjectMapper();
+//        for (HashMap rawArtist : rawArtists){
+//            Artist similarArtist = artistRepo.findByArtsyArtistId(rawArtist.get("id").toString());
+//            if (similarArtist == null){
+//                similarArtist = mapper.convertValue(rawArtist, Artist.class);
+//                similarArtist = parseArtistImgThumb(similarArtist);
+//                similarArtist = parseArtistImgLarge(similarArtist);
+//                artistRepo.save(similarArtist);
+//            }
+//            artist.addSimilarArtist(similarArtist);
+//        }
+//        artistRepo.save(artist);
+//        return artist;
+//    }
 
     public HttpEntity getRequest(){
         if (!token.isValid()){

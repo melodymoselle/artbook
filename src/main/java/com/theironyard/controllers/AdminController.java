@@ -79,21 +79,21 @@ public class AdminController {
         return "add-artist";
     }
 
-    @RequestMapping(path = "/add-artist", method = RequestMethod.POST)
-    public String addArtistToDB(HttpSession session, Model model, String artsyArtistId, RedirectAttributes redAtt){
-        if (session.getAttribute(UserController.SESSION_USER) == null){
-            redAtt.addAttribute("message", "You do not have access for that action.");
-            return "redirect:/error";
-        }
-        User user = userRepo.findByUsername(session.getAttribute(UserController.SESSION_USER).toString());
-        if (user.getPrivileges() != User.Rights.ADMINISTRATOR) {
-            redAtt.addAttribute("message", "You do not have access for that action.");
-            return "redirect:/error";
-        }
-        Artist artist = artsy.getSaveArtistById(artsyArtistId);
-        model.addAttribute("pageName", "Add Artist");
-        return "redirect:/artist?artistId=" + artist.getId();
-    }
+//    @RequestMapping(path = "/add-artist", method = RequestMethod.POST)
+//    public String addArtistToDB(HttpSession session, Model model, String artsyArtistId, RedirectAttributes redAtt){
+//        if (session.getAttribute(UserController.SESSION_USER) == null){
+//            redAtt.addAttribute("message", "You do not have access for that action.");
+//            return "redirect:/error";
+//        }
+//        User user = userRepo.findByUsername(session.getAttribute(UserController.SESSION_USER).toString());
+//        if (user.getPrivileges() != User.Rights.ADMINISTRATOR) {
+//            redAtt.addAttribute("message", "You do not have access for that action.");
+//            return "redirect:/error";
+//        }
+////        Artist artist = artsy.getSaveArtistById(artsyArtistId);
+//        model.addAttribute("pageName", "Add Artist");
+////        return "redirect:/artist?artistId=" + artist.getId();
+//    }
 
     @RequestMapping(path = "/load-artist", method = RequestMethod.GET)
     public String loadArtist(HttpSession session, int artistId, RedirectAttributes redAtt){
@@ -107,8 +107,8 @@ public class AdminController {
             return "redirect:/error";
         }
         Artist artist = artistRepo.findOne(artistId);
-        artist = artsy.getSaveArtworksByArtist(artist);
-        artist = artsy.getSaveSimilarToByArtist(artist);
+//        artist = artsy.getSaveArtworksByArtist(artist);
+//        artist = artsy.getSaveSimilarToByArtist(artist);
         artist = google.getArticlesByArtist(artist);
         artist.setSummary(wiki.getWikiIntro(artist));
         List<Video> videos = youtube.getYoutubeVideos(artist);
@@ -121,14 +121,14 @@ public class AdminController {
     @RequestMapping(path = "/load-artworks", method = RequestMethod.GET)
     public String getAddArtworksToArtist(int artistId){
         Artist artist = artistRepo.findOne(artistId);
-        artist = artsy.getSaveArtworksByArtist(artist);
+//        artist = artsy.getSaveArtworksByArtist(artist);
         return "redirect:/artist?artistId="+artistId;
     }
 
     @RequestMapping(path = "/load-similar-artists", method = RequestMethod.GET)
     public String getAddSimilarArtistsToArtist(int artistId){
         Artist artist = artistRepo.findOne(artistId);
-        artist = artsy.getSaveSimilarToByArtist(artist);
+//        artist = artsy.getSaveSimilarToByArtist(artist);
         return "redirect:/artist?artistId="+artistId;
     }
 

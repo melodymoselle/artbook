@@ -37,21 +37,21 @@ public class Artwork extends Item{
 
     @Column
     private String date;
-
-    @Transient
-    @JsonProperty("dimensions")
-    private Map<String, Map<String, Object>> rawDims;
+//
+//    @Transient
+//    @JsonProperty("dimensions")
+//    private Map<String, Map<String, Object>> rawDims;
 
     @Column
     private String size;
-
-    @Transient
-    @JsonProperty("_links")
-    private Map<String, Map> imagesMap;
-
-    @Transient
-    @JsonProperty("image_versions")
-    private List<String> imageVersions = new ArrayList<>();
+//
+//    @Transient
+//    @JsonProperty("_links")
+//    private Map<String, Map> imagesMap;
+//
+//    @Transient
+//    @JsonProperty("image_versions")
+//    private List<String> imageVersions = new ArrayList<>();
 
     @Column
     private String imgThumb;
@@ -112,30 +112,30 @@ public class Artwork extends Item{
     public void setSize(String size) {
         this.size = size;
     }
-
-    public Map<String, Map<String, Object>> getRawDims() {
-        return rawDims;
-    }
-
-    public void setRawDims(Map<String, Map<String, Object>> rawDims) {
-        this.rawDims = rawDims;
-    }
-
-    public Map<String, Map> getImagesMap() {
-        return imagesMap;
-    }
-
-    public void setImagesMap(Map<String, Map> imagesMap) {
-        this.imagesMap = imagesMap;
-    }
-
-    public List<String> getImageVersions() {
-        return imageVersions;
-    }
-
-    public void setImageVersions(List<String> imageVersions) {
-        this.imageVersions = imageVersions;
-    }
+//
+//    public Map<String, Map<String, Object>> getRawDims() {
+//        return rawDims;
+//    }
+//
+//    public void setRawDims(Map<String, Map<String, Object>> rawDims) {
+//        this.rawDims = rawDims;
+//    }
+//
+//    public Map<String, Map> getImagesMap() {
+//        return imagesMap;
+//    }
+//
+//    public void setImagesMap(Map<String, Map> imagesMap) {
+//        this.imagesMap = imagesMap;
+//    }
+//
+//    public List<String> getImageVersions() {
+//        return imageVersions;
+//    }
+//
+//    public void setImageVersions(List<String> imageVersions) {
+//        this.imageVersions = imageVersions;
+//    }
 
     public String getImgThumb() {
         return imgThumb;
@@ -164,10 +164,15 @@ public class Artwork extends Item{
     @Override
     public String toString() {
         return "Artwork{" +
-                "id=" + super.getId() +
-                ", artsyArtworkId='" + artsyArtworkId + '\'' +
+                "artsyArtworkId='" + artsyArtworkId + '\'' +
                 ", title='" + title + '\'' +
+                ", category='" + category + '\'' +
+                ", medium='" + medium + '\'' +
+                ", date='" + date + '\'' +
+                ", size='" + size + '\'' +
+                ", imgThumb='" + imgThumb + '\'' +
+                ", imgLarge='" + imgLarge + '\'' +
+                ", imgZoom='" + imgZoom + '\'' +
                 '}';
     }
-
 }

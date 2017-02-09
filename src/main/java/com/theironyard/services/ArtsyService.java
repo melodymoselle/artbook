@@ -1,5 +1,6 @@
 package com.theironyard.services;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.theironyard.entities.Artist;
@@ -35,6 +36,8 @@ public class ArtsyService {
 
     private Token token;
 
+    private ObjectMapper mapper = new ObjectMapper();
+
     @Autowired
     RestTemplate restTemplate;
 
@@ -49,34 +52,38 @@ public class ArtsyService {
         token = getAccessToken();
     }
 
-    public Artist getSaveArtistById(String artist_id){
-        String url = BASE_URL + "/artists/" + artist_id;
+    /**
+     * Gets the artist info with 'artsyArtistId' from Artsy API.
+     * Converts JSON to Artist object and returns. Unsaved.
+     *
+     * @param artsyArtistId Id used to query API
+     * @return Artist
+     */
+    public Artist getArtistByArtsyId(String artsyArtistId){
+        String url = BASE_URL + "/artists/" + artsyArtistId;
         HttpEntity request = getRequest();
-        Artist artist = restTemplate.exchange(url, HttpMethod.GET, request, Artist.class).getBody();
-        artist = parseArtistImgThumb(artist);
-        artist = parseArtistImgLarge(artist);
-        artistRepo.save(artist);
+        JsonNode jsonNode = restTemplate.exchange(url, HttpMethod.GET, request, JsonNode.class).getBody();
+        Artist artist = mapper.convertValue(jsonNode, Artist.class);
+        artist.setImgThumb(getImgThumb(jsonNode));
+        artist.setImgLarge(getImgLarge(jsonNode));
         return artist;
     }
 
-    public Artwork getSaveArtworkById(String artwork_id){
-        String url = BASE_URL + "/artworks/" + artwork_id;
-        HttpEntity request = getRequest();
-        Artwork artwork = restTemplate.exchange(url, HttpMethod.GET, request, Artwork.class).getBody();
-        artwork = parseArtworkImgThumb(artwork);
-        artwork = parseArtworkImgLarge(artwork);
-        artwork = parseArtworkImgZoom(artwork);
-        artworkRepo.save(artwork);
-        return artwork;
-    }
-
+    /**
+     * Gets a list of artworks data related to 'artist.artsyArtistId' from Artsy API.
+     * Converts JSON to Artwork objects and returns. Unsaved.
+     *
+     * @param artist object with 'artsyArtistId' used to query API
+     * @return List of Artwork objects
+     */
     public List<Artwork> getArtworksByArtist(Artist artist){
+        ObjectMapper mapper = new ObjectMapper();
         String url = BASE_URL + "/artworks?size=1000&artist_id=" + artist.getArtsyArtistId();
         HttpEntity request = getRequest();
         String json = restTemplate.exchange(url, HttpMethod.GET, request, String.class).getBody();
         JsonNode artworksNode = null;
         try {
-            artworksNode = new ObjectMapper().readTree(json).get("_embedded").get("artworks");
+            artworksNode = mapper.readTree(json).get("_embedded").get("artworks");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -84,36 +91,71 @@ public class ArtsyService {
         List<Artwork> artworks = new ArrayList<>();
         if (artworksNode != null && artworksNode.isArray()) {
             for(JsonNode artworkNode : artworksNode){
-                Artwork artwork = new Artwork();
-                artwork.setArtsyArtworkId(artworkNode.findValue("id").toString());
-                artwork.setTitle(artworkNode.findValue("title").toString());
-                artwork.setMedium(artworkNode.findValue("medium").toString());
-                artwork.setCategory(artworkNode.findValue("category").toString());
-                artwork.setDate(artworkNode.findValue("date").toString());
+                Artwork artwork = mapper.convertValue(artworkNode, Artwork.class);
                 artwork.setSize(artworkNode.findValue("in").findValue("text").toString());
                 artwork.setImgThumb(getImgThumb(artworkNode));
                 artwork.setImgLarge(getImgLarge(artworkNode));
                 artwork.setImgZoom(getImgZoom(artworkNode));
                 artwork.setArtist(artist);
+                System.out.println(artwork);
                 artworks.add(artwork);
             }
         }
         return artworks;
     }
 
+    /**
+     * Gets a list of similar artists data related to 'artist.artsyArtistId' from API.
+     * Converts JSON to list of Artist objects and returns. Unsaved.
+     *
+     * @param artist object with 'artsyArtistId' used to query API
+     * @return List of Artist objects
+     */
+    public List<Artist> getSimilarToByArtist(Artist artist){
+        String url = BASE_URL + "/artists?similar_to_artist_id=" + artist.getArtsyArtistId();
+        HttpEntity request = getRequest();
+        String json = restTemplate.exchange(url, HttpMethod.GET, request, String.class).getBody();
+        JsonNode artistsNode = null;
+        try {
+            artistsNode = mapper.readTree(json).get("_embedded").get("artists");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        List<Artist> similarArtists = new ArrayList<>();
+        if (artistsNode != null && artistsNode.isArray()) {
+            for (JsonNode artistNode : artistsNode) {
+                Artist similarArtist = artistRepo.findByArtsyArtistId(artistNode.get("id").toString());
+                if (similarArtist == null) {
+                    similarArtist = mapper.convertValue(artistNode, Artist.class);
+                    similarArtist.setImgThumb(getImgThumb(artistNode));
+                    similarArtist.setImgLarge(getImgLarge(artistNode));
+                }
+                similarArtist.getSimilarFrom().add(artist);
+                similarArtists.add(similarArtist);
+            }
+        }
+        return similarArtists;
+    }
+
+    /**
+     * Takes a JsonNode from Artsy API data. Converts and returns valid url for image.
+     *
+     * @param artsyNode JsonNode from API data
+     * @return String of image url
+     */
     public String getImgThumb(JsonNode artsyNode){
         String url = "";
-        JsonNode imgVersions = artsyNode.findValue("image_versions");
+        List<String> imgVersions = mapper.convertValue(artsyNode.findValue("image_versions"), new TypeReference<List<String>>() {});
         String imgBaseUrl = artsyNode.findValue("_links").findValue("image").findValue("href").toString();
-        if (imgVersions.has("medium")) {
+        if (imgVersions.contains("medium")) {
             url = imgBaseUrl.replace("{image_version}", "medium");
-        } else if (imgVersions.has("tall")) {
+        } else if (imgVersions.contains("tall")) {
             url = imgBaseUrl.replace("{image_version}", "tall");
-        } else if (imgVersions.has("square")) {
+        } else if (imgVersions.contains("square")) {
             url = imgBaseUrl.replace("{image_version}", "square");
-        } else if (imgVersions.has("large")) {
+        } else if (imgVersions.contains("large")) {
             url = imgBaseUrl.replace("{image_version}", "large");
-        } else if (imgVersions.has("larger")) {
+        } else if (imgVersions.contains("larger")) {
             url = imgBaseUrl.replace("{image_version}", "larger");
         } else {
             url = ""; // img not found thumbnail ???
@@ -121,19 +163,25 @@ public class ArtsyService {
         return url;
     }
 
+    /**
+     * Takes a JsonNode from Artsy API data. Converts and returns valid url for image.
+     *
+     * @param artsyNode JsonNode from API data
+     * @return String of image url
+     */
     public String getImgLarge(JsonNode artsyNode){
         String url = "";
-        JsonNode imgVersions = artsyNode.findValue("image_versions");
+        List<String> imgVersions = mapper.convertValue(artsyNode.findValue("image_versions"), new TypeReference<List<String>>() {});
         String imgBaseUrl = artsyNode.findValue("_links").findValue("image").findValue("href").toString();
-        if (imgVersions.has("large")) {
+        if (imgVersions.contains("large")) {
             url = imgBaseUrl.replace("{image_version}", "large");
-        } else if (imgVersions.has("larger")) {
+        } else if (imgVersions.contains("larger")) {
             url = imgBaseUrl.replace("{image_version}", "larger");
-        } else if (imgVersions.has("medium")) {
+        } else if (imgVersions.contains("medium")) {
             url = imgBaseUrl.replace("{image_version}", "medium");
-        } else if (imgVersions.has("tall")) {
+        } else if (imgVersions.contains("tall")) {
             url = imgBaseUrl.replace("{image_version}", "tall");
-        } else if (imgVersions.has("square")) {
+        } else if (imgVersions.contains("square")) {
             url = imgBaseUrl.replace("{image_version}", "square");
         } else {
             url = ""; // img not found thumbnail ???
@@ -141,69 +189,27 @@ public class ArtsyService {
         return url;
     }
 
+    /**
+     * Takes a JsonNode from Artsy API data. Converts and returns valid url for image.
+     *
+     * @param artsyNode JsonNode from API data
+     * @return String of image url
+     */
     public String getImgZoom(JsonNode artsyNode){
-        String url = "";
-        JsonNode imgVersions = artsyNode.findValue("image_versions");
+        String url = null;
+        List<String> imgVersions = mapper.convertValue(artsyNode.findValue("image_versions"), new TypeReference<List<String>>() {});
         String imgBaseUrl = artsyNode.findValue("_links").findValue("image").findValue("href").toString();
-        if (imgVersions.has("normalized")) {
+        if (imgVersions.contains("normalized")) {
             url = imgBaseUrl.replace("{image_version}", "normalized");
-        } else {
-            url = ""; // img not found thumbnail ???
         }
         return url;
     }
 
-//    public Artist getSaveArtworksByArtist(Artist artist){
-//        //Gets total artwork count
-//        String url = BASE_URL + "/artworks?total_count=1&size=1&artist_id=" + artist.getArtsyArtistId();
-//        HttpEntity request = getRequest();
-//        HttpEntity<HashMap> response = restTemplate.exchange(url, HttpMethod.GET, request, HashMap.class);
-//        int count = ((int) response.getBody().get("total_count"));
-//        //Uses 'count' so that response is not paginated
-//        url = BASE_URL + "/artworks?size="+count+"&artist_id=" + artist.getArtsyArtistId();
-//        HashMap embedded = (HashMap)restTemplate.exchange(url, HttpMethod.GET, request, HashMap.class).getBody().get("_embedded");
-//        List<HashMap> rawArtworks = (List)embedded.get("artworks");
-//        ObjectMapper mapper = new ObjectMapper();
-//        for (HashMap art : rawArtworks) {
-//            Artwork artwork = artworkRepo.findByArtsyArtworkId(art.get("id").toString());
-//            if (artwork == null) {
-//                artwork = mapper.convertValue(art, Artwork.class);
-//                artwork = parseArtworkImgThumb(artwork);
-//                artwork = parseArtworkImgLarge(artwork);
-//                artwork = parseArtworkImgZoom(artwork);
-//                artwork.setArtist(artist);
-//                artworkRepo.save(artwork);
-//            }
-//            artist.getItems().add(artwork);
-//        }
-//        artist.setLoaded(true);
-//        if (rawArtworks.size()>0){
-//            artist.setPopulated(true);
-//        }
-//        artistRepo.save(artist);
-//        return artist;
-//    }
-
-//    public Artist getSaveSimilarToByArtist(Artist artist){
-//        String url = BASE_URL + "/artists?similar_to_artist_id=" + artist.getArtsyArtistId();
-//        HttpEntity request = getRequest();
-//        HashMap<String, HashMap<String, List<HashMap>>> response = restTemplate.exchange(url, HttpMethod.GET, request, HashMap.class).getBody();
-//        List<HashMap> rawArtists = response.get("_embedded").get("artists");
-//        ObjectMapper mapper = new ObjectMapper();
-//        for (HashMap rawArtist : rawArtists){
-//            Artist similarArtist = artistRepo.findByArtsyArtistId(rawArtist.get("id").toString());
-//            if (similarArtist == null){
-//                similarArtist = mapper.convertValue(rawArtist, Artist.class);
-//                similarArtist = parseArtistImgThumb(similarArtist);
-//                similarArtist = parseArtistImgLarge(similarArtist);
-//                artistRepo.save(similarArtist);
-//            }
-//            artist.addSimilarArtist(similarArtist);
-//        }
-//        artistRepo.save(artist);
-//        return artist;
-//    }
-
+    /**
+     * Sets request headers with API authorization token
+     *
+     * @return HttpEntity to use in API call
+     */
     public HttpEntity getRequest(){
         if (!token.isValid()){
             token = getAccessToken();
@@ -213,6 +219,11 @@ public class ArtsyService {
         return new HttpEntity(headers);
     }
 
+    /**
+     * Calls API with client_id and client_secret to get access token
+     *
+     * @return Token object
+     */
     public Token getAccessToken(){
         Map<String, String> request = new HashMap<>();
         request.put("client_id", id);

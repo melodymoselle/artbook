@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.lang.ref.PhantomReference;
 import java.util.*;
 
 import static org.junit.Assert.assertEquals;
@@ -22,8 +23,13 @@ import static org.junit.Assert.assertNotNull;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class ArtsyServiceTest {
-    private static final String BASE_URL = "https://api.artsy.net/api";
-    private static final String HEAD_AUTH = "X-Xapp-Token";
+    private static final String ARTIST_ID = "4d8b92b64eb68a1b2c000414";
+    private static final String NAME = "Gustav Klimt";
+    private static final String LOCATION = "Vienna, Austria";
+
+    private static final String ARTWORK_ID = "4d8b92eb4eb68a1b2c000968";
+    private static final String TITLE = "Der Kuss (The Kiss)";
+    private static final String MEDIUM = "Oil and gold leaf on canvas";
 
     @Autowired
     ArtistRepository artistRepo;
@@ -33,15 +39,6 @@ public class ArtsyServiceTest {
 
     @Autowired
     ArtsyService artsy;
-
-    @Before
-    public void before() {
-    }
-
-    @After
-    public void after(){
-
-    }
 
     @Test
     public void getAccessToken(){
@@ -54,89 +51,38 @@ public class ArtsyServiceTest {
 
     @Test
     public void getArtistById(){
-        String artsyArtistId = "4d8b92b64eb68a1b2c000414";
-        String name = "Gustav Klimt";
-        String location = "Vienna, Austria";
-
-        Artist artist = artsy.getSaveArtistById(artsyArtistId);
+        Artist artist = artsy.getArtistByArtsyId(ARTIST_ID);
 
         assertNotNull("Error setting Artist object", artist);
-        assertEquals("Error setting Artist Name", name, artist.getName());
-        assertEquals("Error setting Artist Location", location, artist.getLocation());
+        assertEquals("Error setting Artist Name", NAME, artist.getName());
+        assertEquals("Error setting Artist Location", LOCATION, artist.getLocation());
     }
 
     @Test
-    public void getSaveArtworkById(){
-        String artsyArtworkId = "4d8b92eb4eb68a1b2c000968";
-        String title = "Der Kuss (The Kiss)";
-        String medium = "Oil and gold leaf on canvas";
-
-        Artwork artwork = artsy.getSaveArtworkById(artsyArtworkId);
-
-        assertNotNull("Error setting Artwork object", artwork);
-        assertEquals("Error setting Artwork Title", title, artwork.getTitle());
-        assertEquals("Error setting Artwork Location", medium, artwork.getMedium());
-    }
-
-    @Test
-    public void getSaveArtworksByArtist(){
+    public void getArtworksByArtist(){
         Artist artist = new Artist();
-        artist.setArtsyArtistId("4d8b92b64eb68a1b2c000414");
-        artist.setName("Gustav Klimt");
+        artist.setArtsyArtistId(ARTIST_ID);
+        artist.setName(NAME);
 
-        artsy.getSaveArtworksByArtist(artist);
-        List<Artwork> artworks = artworkRepo.findByArtist(artist);
+        List<Artwork> artworks = artsy.getArtworksByArtist(artist);
 
-        assertNotNull("Error creating List of artworks",artworks);
+        assertNotNull("Error creating List of artworks", artworks);
         assertEquals("List size is incorrect", 6, artworks.size());
-        assertEquals("First artwork was not set correctly", "4d8b92eb4eb68a1b2c000968", artworks.get(0).getArtsyArtworkId());
-        assertEquals("Error setting Artist to Artwork", "4d8b92b64eb68a1b2c000414", artworks.get(0).getArtist().getArtsyArtistId());
+        assertEquals("First artwork was not set correctly", ARTWORK_ID, artworks.get(0).getArtsyArtworkId());
+        assertEquals("Error setting Artist to Artwork", ARTIST_ID, artworks.get(0).getArtist().getArtsyArtistId());
     }
 
     @Test
-    public void getSaveSimilarToByArtist(){
+    public void getSimilarToByArtist(){
         Artist artist = new Artist();
-        artist.setArtsyArtistId("4d8b92b64eb68a1b2c000414");
-        artist.setName("Gustav Klimt");
+        artist.setArtsyArtistId(ARTIST_ID);
+        artist.setName(NAME);
 
-        artist = artsy.getSaveSimilarToByArtist(artist);
-        Set<Artist> similarTo = artist.getSimilarTo();
+        List<Artist> similarTo = artsy.getSimilarToByArtist(artist);
 
         assertNotNull("Error setting list of similar artists", similarTo);
         assertEquals("Size of list of similar artist in incorrect", 18, similarTo.size());
-//        assertEquals("First artist was not set correctly", "4ee776e9d87cf50001000425", similarTo.get(0).getArtsyArtistId());
-    }
-
-    @Test
-    public void parseImages(){
-        List<String> imageVersions = new ArrayList<>();
-        imageVersions.add("four_thirds");
-        imageVersions.add("large");
-        imageVersions.add("square");
-
-        Map<String, Object> href = new HashMap<>();
-        href.put("href", "https://d32dm0rphc51dk.cloudfront.net/3FBfL2Hs7UzA402R3UM2DQ/{image_version}.jpg");
-        href.put("templated", true);
-
-        Map<String, Map> imagesMap = new HashMap<>();
-        imagesMap.put("image", href);
-//
-//        List<ArtsyImage> images = artsy.parseImages(imageVersions, imagesMap);
-//
-//        assertEquals(3, images.size());
-//        assertEquals("https://d32dm0rphc51dk.cloudfront.net/3FBfL2Hs7UzA402R3UM2DQ/four_thirds.jpg", images.get(0).getUrl());
-//
-//        ArtsyImage image = artsyImgRepo.findOne(images.get(0).getId());
-//        assertNotNull(image);
-    }
-
-    @Test
-    public void testGetArtworksByArtist(){
-        Artist artist = new Artist();
-        artist.setArtsyArtistId("4d8b92b64eb68a1b2c000414");
-        artist.setName("Gustav Klimt");
-
-        artsy.getArtworksByArtist(artist);
+        assertEquals("First artist was not set correctly", "4ee776e9d87cf50001000425", similarTo.get(0).getArtsyArtistId());
     }
 
 }

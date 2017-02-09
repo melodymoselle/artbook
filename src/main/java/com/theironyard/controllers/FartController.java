@@ -142,4 +142,10 @@ public class FartController {
     public String getErrorPage(){
         return "error";
     }
+
+    @RequestMapping(path = "/search", method = RequestMethod.POST)
+    public String searchResults(String q){
+        Page<Artist> artists = artistRepo.searchForArtist(q);
+        return "redirect:/search";
+    }
 }

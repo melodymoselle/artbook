@@ -1,0 +1,94 @@
+
+<!DOCTYPE html>
+<html>
+
+{{> head}}
+
+<body class="full-intro">
+
+<!-- Preloader -->
+<section id="preloader">
+    <div class="loader" id="loader">
+        <div class="loader-img"></div>
+    </div>
+</section>
+<!-- End Preloader -->
+
+<!-- Search Overlay Menu -->
+<div class="search-overlay-menu">
+    <span class="search-overlay-close"><i class="ion ion-ios-close-empty"></i></span>
+    <form role="search" id="searchform" action="/search" method="get">
+        <input value="" name="q" type="search" placeholder="Search..." />
+        <button type="submit"><i class="ion ion-ios-search"></i></button>
+    </form>
+</div>
+<!-- End Search Overlay Menu -->
+
+<!-- Site Wrapper -->
+<div class="wrapper">
+
+    {{> header}}
+
+    <!-- CONTENT --------------------------------------------------------------------------------->
+
+    <!-- Search Results Section -->
+    <section class="ptb ptb-sm-80">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 col-md-offset-2 blog-post-hr">
+
+                    <!-- Search Result Item -->
+                    <div class="blog-post mb-30">
+                        <div class="post-header">
+                            <h4><a href="/artist?artistId={{artist.id}}">{{artist.name}}</a></h4>
+                        </div>
+                        <div class="post-media">
+                            <div class="owl-carousel item1-carousel nf-carousel-theme">
+                                <div class="item">
+                                    <img src="img/full/26.jpg" alt="" />
+                                </div>
+                                <div class="item">
+                                    <img src="img/full/04.jpg" alt="" />
+                                </div>
+                                <div class="item">
+
+                                    <img src="img/full/28.jpg" alt="" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End Search Result Item -->
+
+                    <hr />
+
+                    <!-- Pagination Nav -->
+                    <div class="pagination-nav mt-60 mtb-xs-30">
+                        <ul>
+                            <li><a href="#"><i class="fa fa-angle-left"></i></a></li>
+                            <li><a href="#"><i class="fa fa-angle-right"></i></a></li>
+                        </ul>
+                    </div>
+                    <!-- End Pagination Nav -->
+
+                </div>
+
+            </div>
+        </div>
+    </section>
+    <!-- End Search Results Section -->
+
+    <!-- End CONTENT ------------------------------------------------------------------------------>
+
+    <!-- Scroll Top -->
+    <a class="scroll-top">
+        <i class="fa fa-angle-double-up"></i>
+    </a>
+    <!-- End Scroll Top -->
+
+</div>
+<!-- Site Wrapper End -->
+
+{{> javascript}}
+
+</body>
+</html>

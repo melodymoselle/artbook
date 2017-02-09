@@ -26,4 +26,7 @@ public interface ArtistRepository extends JpaRepository<Artist, Integer> {
 
     @Query("SELECT DISTINCT a FROM Artist a LEFT JOIN a.similarTo simTo WHERE simTo IN :following AND a NOT IN :following")
     Page<Artist> findSimilarFromFollowing(Pageable pageable, @Param("following") Set<Artist> following);
+
+    @Query("SELECT a FROM Artist a WHERE a.name LIKE '%?1%'")
+    Page<Artist> searchForArtist(String searchTerm);
 }

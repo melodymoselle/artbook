@@ -74,7 +74,7 @@ public class ArtsyService {
      * Converts JSON to Artwork objects and returns. Unsaved.
      *
      * @param artist object with 'artsyArtistId' used to query API
-     * @return List of Artwork objects
+     * @return List of Artwork objects related to 'artist'
      */
     public List<Artwork> getArtworksByArtist(Artist artist){
         ObjectMapper mapper = new ObjectMapper();
@@ -109,7 +109,7 @@ public class ArtsyService {
      * Converts JSON to list of Artist objects and returns. Unsaved.
      *
      * @param artist object with 'artsyArtistId' used to query API
-     * @return List of Artist objects
+     * @return List of Artist objects related to 'artist'
      */
     public List<Artist> getSimilarToByArtist(Artist artist){
         String url = BASE_URL + "/artists?similar_to_artist_id=" + artist.getArtsyArtistId();

@@ -41,6 +41,7 @@ public class UserController {
         return "login";
     }
 
+
     @RequestMapping(path = "/login", method = RequestMethod.POST)
     public String login(HttpSession session, LoginCommand command, RedirectAttributes redAtt) throws PasswordStorage.InvalidHashException, PasswordStorage.CannotPerformOperationException {
         User user = userRepo.findByUsername(command.getUsername());
@@ -73,7 +74,6 @@ public class UserController {
 
     @RequestMapping(path = "/discover", method = RequestMethod.GET)
     public String getDiscoverPage(HttpSession session, Model model, @RequestParam(defaultValue = "0") int page, RedirectAttributes redAtt){
-        Page<Artist> artists = artistRepo.findAllOrderByFollowers(new PageRequest(page, 9));
         if (session.getAttribute(SESSION_USER) == null){
             redAtt.addAttribute("message", "You need to be signed for that action.");
             return "redirect:/error";
@@ -83,9 +83,9 @@ public class UserController {
         if (user.getPrivileges() == User.Rights.ADMINISTRATOR) {
             model.addAttribute("admin", true);
         }
-        Set following = user.getFollowing();
-        if (following.size() > 0) {
-            artists = artistRepo.findSimilarFromFollowing(new PageRequest(page, 9), following);
+        Page<Artist> artists = artistRepo.findAllOrderByFollowers(new PageRequest(page, 9));
+        if (user.getFollowing().size() > 0) {
+            artists = artistRepo.findSimilarFromFollowing(new PageRequest(page, 9), user.getFollowing());
         }
         model.addAttribute("artists", artists);
         model.addAttribute("pageName", "Discover");
@@ -100,7 +100,7 @@ public class UserController {
         }
         User user = userRepo.findByUsername(session.getAttribute(SESSION_USER).toString());
         Artist artist = artistRepo.findOne(artistId);
-        user.addFollowing(artist);
+        user.getFollowing().add(artist);
         userRepo.save(user);
         return "redirect:/artist?artistId="+artistId;
     }
@@ -113,7 +113,7 @@ public class UserController {
         }
         User user = userRepo.findByUsername(session.getAttribute(SESSION_USER).toString());
         Artist artist = artistRepo.findOne(artistId);
-        user.deleteFollowing(artist);
+        user.getFollowing().remove(artist);
         userRepo.save(user);
         return "redirect:/artist?artistId="+artistId;
     }
@@ -126,7 +126,7 @@ public class UserController {
         }
         User user = userRepo.findByUsername(session.getAttribute(SESSION_USER).toString());
         Artwork artwork = artworkRepo.findOne(artworkId);
-        user.addLiked(artwork);
+        user.getLiked().add(artwork);
         userRepo.save(user);
         return "redirect:/artwork?artworkId="+artworkId;
     }
@@ -139,7 +139,7 @@ public class UserController {
         }
         User user = userRepo.findByUsername(session.getAttribute(SESSION_USER).toString());
         Artwork artwork = artworkRepo.findOne(artworkId);
-        user.deleteLiked(artwork);
+        user.getLiked().remove(artwork);
         userRepo.save(user);
         return "redirect:/artwork?artworkId="+artworkId;
     }

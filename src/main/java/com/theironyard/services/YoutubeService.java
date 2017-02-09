@@ -22,11 +22,11 @@ import java.util.List;
 
 @Service
 public class YoutubeService {
+    private static final long NUMBER_OF_VIDEOS_RETURNED = 10;
 
     @Value("${google.youtube.key}")
     private String key;
 
-    private static final long NUMBER_OF_VIDEOS_RETURNED = 10;
     private static YouTube youtube;
 
     /**

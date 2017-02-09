@@ -107,7 +107,7 @@ public class FartController {
             }
         }
         List<Article> articles = articleRepo.findByArtist(artist);
-        Set<Artist> similar = artistRepo.findSimilarAndPopulated(artist.getId());
+        List<Artist> similar = artistRepo.findSimilarAndPopulated(artist.getId());
         List<Artwork> artworks = artworkRepo.findByArtist(artist);
         List<Video> videos = videoRepo.findByArtist(artist);
         model.addAttribute("articles", articles);

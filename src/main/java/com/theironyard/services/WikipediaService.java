@@ -17,12 +17,11 @@ public class WikipediaService {
     @Autowired
     RestTemplate restTemplate;
 
-
     /**
-     * Searches Wikipedia API for page where 'title' matches 'artist.getName()'.
+     * Searches Wikipedia API for page where 'title' matches 'artist.name'.
      * If page exists, returns the page extract as a string.
      *
-     * @param artist
+     * @param artist object with 'name' used for query
      * @return string
      */
     public String getWikiIntro(Artist artist){

@@ -22,8 +22,8 @@ public interface ArtistRepository extends JpaRepository<Artist, Integer> {
     Page<Artist> findAllOrderByFollowers(Pageable pageable);
 
     @Query(value = "SELECT * FROM artists a LEFT JOIN artists_similar_to simTo ON a.id = simTo.similar_to_id WHERE simTo.similar_from_id = :similarId AND a.populated = TRUE", nativeQuery = true)
-    Set<Artist> findSimilarAndPopulated(@Param("similarId") int similarId);
+    List<Artist> findSimilarAndPopulated(@Param("similarId") int similarId);
 
     @Query("SELECT DISTINCT a FROM Artist a LEFT JOIN a.similarTo simTo WHERE simTo IN :following AND a NOT IN :following")
-    Page<Artist> findSimilarFromFollowing(Pageable pageable, @Param("following") Set following);
+    Page<Artist> findSimilarFromFollowing(Pageable pageable, @Param("following") Set<Artist> following);
 }

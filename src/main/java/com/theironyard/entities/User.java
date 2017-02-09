@@ -17,7 +17,7 @@ public class User{
     @Column(nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
-    @Column()
+    @Column
     private LocalDateTime updatedAt;
 
     @Column(nullable = false, unique = true)
@@ -35,9 +35,6 @@ public class User{
 
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Artist> following = new HashSet<>();
-
-    @ManyToMany
-    private Set<Artist> notInterested;
 
     @ManyToMany
     private Set<Item> liked;
@@ -98,40 +95,12 @@ public class User{
         this.privileges = privileges;
     }
 
-    public void addFollowing(Artist artist){
-        if (!this.following.contains(artist)) {
-            this.following.add(artist);
-        }
-    }
-
-    public void deleteFollowing(Artist artist){
-        this.following.remove(artist);
-    }
-
-    public Set getFollowing() {
+    public Set<Artist> getFollowing() {
         return following;
     }
 
     public void setFollowing(Set<Artist> following) {
         this.following = following;
-    }
-
-    public Set<Artist> getNotInterested() {
-        return notInterested;
-    }
-
-    public void setNotInterested(Set<Artist> notInterested) {
-        this.notInterested = notInterested;
-    }
-
-    public void addLiked(Artwork artwork){
-        if (!this.liked.contains(artwork)) {
-            this.liked.add(artwork);
-        }
-    }
-
-    public void deleteLiked(Artwork artwork){
-        this.liked.remove(artwork);
     }
 
     public Set<Item> getLiked() {

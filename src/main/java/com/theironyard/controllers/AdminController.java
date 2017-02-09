@@ -1,12 +1,7 @@
 package com.theironyard.controllers;
 
-import com.theironyard.entities.Artist;
-import com.theironyard.entities.User;
-import com.theironyard.entities.Video;
-import com.theironyard.repositories.ArtistRepository;
-import com.theironyard.repositories.ArtworkRepository;
-import com.theironyard.repositories.UserRepository;
-import com.theironyard.repositories.VideoRepository;
+import com.theironyard.entities.*;
+import com.theironyard.repositories.*;
 import com.theironyard.services.ArtsyService;
 import com.theironyard.services.GoogleCSEService;
 import com.theironyard.services.WikipediaService;
@@ -35,19 +30,22 @@ public class AdminController {
     GoogleCSEService google;
 
     @Autowired
-    UserRepository userRepo;
-
-    @Autowired
     WikipediaService wiki;
 
     @Autowired
     YoutubeService youtube;
 
     @Autowired
+    UserRepository userRepo;
+
+    @Autowired
     ArtistRepository artistRepo;
 
     @Autowired
     ArtworkRepository artworkRepo;
+
+    @Autowired
+    ArticleRepository articleRepo;
 
     @Autowired
     VideoRepository videoRepo;
@@ -75,28 +73,13 @@ public class AdminController {
             model.addAttribute("nextPageNum", page + 1);
         }
         model.addAttribute("admin", true);
+        model.addAttribute("pageName", "Add Artist");
 
         return "add-artist";
     }
 
-//    @RequestMapping(path = "/add-artist", method = RequestMethod.POST)
-//    public String addArtistToDB(HttpSession session, Model model, String artsyArtistId, RedirectAttributes redAtt){
-//        if (session.getAttribute(UserController.SESSION_USER) == null){
-//            redAtt.addAttribute("message", "You do not have access for that action.");
-//            return "redirect:/error";
-//        }
-//        User user = userRepo.findByUsername(session.getAttribute(UserController.SESSION_USER).toString());
-//        if (user.getPrivileges() != User.Rights.ADMINISTRATOR) {
-//            redAtt.addAttribute("message", "You do not have access for that action.");
-//            return "redirect:/error";
-//        }
-////        Artist artist = artsy.getSaveArtistById(artsyArtistId);
-//        model.addAttribute("pageName", "Add Artist");
-////        return "redirect:/artist?artistId=" + artist.getId();
-//    }
-
-    @RequestMapping(path = "/load-artist", method = RequestMethod.GET)
-    public String loadArtist(HttpSession session, int artistId, RedirectAttributes redAtt){
+    @RequestMapping(path = "/add-artist", method = RequestMethod.POST)
+    public String addArtistToDB(HttpSession session, Model model, String artsyArtistId, RedirectAttributes redAtt){
         if (session.getAttribute(UserController.SESSION_USER) == null){
             redAtt.addAttribute("message", "You do not have access for that action.");
             return "redirect:/error";
@@ -106,30 +89,55 @@ public class AdminController {
             redAtt.addAttribute("message", "You do not have access for that action.");
             return "redirect:/error";
         }
+        Artist artist = artsy.getArtistByArtsyId(artsyArtistId);
+        artistRepo.save(artist);
+
+        return "redirect:/artist?artistId=" + artist.getId();
+    }
+
+    @RequestMapping(path = "/load-artist", method = RequestMethod.GET)
+    public String loadArtist(HttpSession session, int artistId, RedirectAttributes redAtt){
+        String message = validateUser(session);
+        if (message != null){
+            redAtt.addAttribute("message", message);
+            return "redirect:/error";
+        }
         Artist artist = artistRepo.findOne(artistId);
-//        artist = artsy.getSaveArtworksByArtist(artist);
-//        artist = artsy.getSaveSimilarToByArtist(artist);
-        artist = google.getArticlesByArtist(artist);
-        artist.setSummary(wiki.getWikiIntro(artist));
+        artist = getSaveArtistData(artist);
+
+        return "redirect:/artist?artistId=" + artist.getId();
+    }
+
+    private Artist getSaveArtistData(Artist artist){
+        String summary = wiki.getWikiIntro(artist);
+        List<Artwork> artworks = artsy.getArtworksByArtist(artist);
+        List<Artist> similarArtists = artsy.getSimilarToByArtist(artist);
+        List<Article> articles = google.getArticlesByArtist(artist);
         List<Video> videos = youtube.getYoutubeVideos(artist);
+        artist.setSummary(summary);
+        artworkRepo.save(artworks);
+        artist.getItems().addAll(artworks);
+        artistRepo.save(similarArtists);
+        artist.getSimilarTo().addAll(similarArtists);
+        articleRepo.save(articles);
+        artist.getItems().addAll(articles);
         videoRepo.save(videos);
         artist.getItems().addAll(videos);
         artistRepo.save(artist);
-        return "redirect:/artist?artistId=" + artistId;
+        return artist;
     }
 
-    @RequestMapping(path = "/load-artworks", method = RequestMethod.GET)
-    public String getAddArtworksToArtist(int artistId){
-        Artist artist = artistRepo.findOne(artistId);
-//        artist = artsy.getSaveArtworksByArtist(artist);
-        return "redirect:/artist?artistId="+artistId;
+    private String validateUser(HttpSession session){
+        String message = null;
+        if (session.getAttribute(UserController.SESSION_USER) == null){
+            message = "You do not have access for that action.";
+        }
+        else {
+            User user = userRepo.findByUsername(session.getAttribute(UserController.SESSION_USER).toString());
+            if (user.getPrivileges() != User.Rights.ADMINISTRATOR) {
+                message = "You do not have access for that action.";
+            }
+        }
+        return message;
     }
-
-    @RequestMapping(path = "/load-similar-artists", method = RequestMethod.GET)
-    public String getAddSimilarArtistsToArtist(int artistId){
-        Artist artist = artistRepo.findOne(artistId);
-//        artist = artsy.getSaveSimilarToByArtist(artist);
-        return "redirect:/artist?artistId="+artistId;
-    }
-
 }

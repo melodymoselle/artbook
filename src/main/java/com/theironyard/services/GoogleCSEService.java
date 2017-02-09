@@ -14,9 +14,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 @Service
 public class GoogleCSEService {
+    private static final long NUMBER_OF_RESULTS_RETURNED = 10;
 
     @Value("${google.cse_id}")
     private String cx;
@@ -32,7 +34,15 @@ public class GoogleCSEService {
 
     Customsearch customsearch = new Customsearch(new NetHttpTransport(), new JacksonFactory(), null);
 
-    public Artist getArticlesByArtist(Artist artist) {
+    /**
+     * Gets articles from Google search API related to 'artist.name.'
+     * Converts results to Article objects and returns a list. Unsaved.
+     *
+     * @param artist object with 'name' used for query
+     * @return List of article objects related to 'artist'
+     */
+    public List<Article> getArticlesByArtist(Artist artist) {
+        List<Article> articles = new ArrayList<>();
         try {
             Customsearch.Cse.List search = customsearch.cse().list(artist.getName().replace(" ", "+"));
             search.setCx(cx);
@@ -54,13 +64,13 @@ public class GoogleCSEService {
                             article.setImgLarge(rs.getPagemap().get("cse_image").get(0).get("src").toString());
                         }
                         article.setArtist(artist);
-                        articleRepo.save(article);
+                        articles.add(article);
                     }
                 }
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return artist;
+        return articles;
     }
 }

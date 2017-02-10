@@ -146,7 +146,7 @@ public class FartController {
 
     @RequestMapping(path = "/search", method = RequestMethod.GET)
     public String getSearchResults(Model model, String q, @RequestParam(defaultValue = "0") int page){
-        Page<Artist> artists = artistRepo.findByNameContainingIgnoreCase(new PageRequest(page, 9), q);
+        Page<Artist> artists = artistRepo.findByNameContainingIgnoreCaseAndPopulated(new PageRequest(page, 9), q, true);
         for (Artist artist : artists){
             List<Artwork> artworks = artworkRepo.findByArtistOrderByLikes(new PageRequest(page, 3), artist).getContent();
             artist.setItemsWithList(artworks);

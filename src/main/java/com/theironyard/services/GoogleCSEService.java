@@ -43,16 +43,18 @@ public class GoogleCSEService {
      */
     public List<Article> getArticlesByArtist(Artist artist) {
         List<Article> articles = new ArrayList<>();
+        String searchTerm = "'"+artist.getName().replace(" ", "+")+"'";
         try {
-            Customsearch.Cse.List search = customsearch.cse().list("'"+artist.getName().replace(" ", "+")+"'");
+            Customsearch.Cse.List search = customsearch.cse().list(searchTerm);
             search.setCx(cx);
             search.setKey(key);
+            search.setExactTerms(searchTerm);
             Search results = search.execute();
             List<Result> items = results.getItems();
 
             if(items != null) {
                 for (Result rs : items) {
-                    Article article = articleRepo.findByGoogleCacheId(rs.getCacheId());
+                    Article article = articleRepo.findByArtistAndUrl(artist, rs.getLink());
                     if (article == null) {
                         article = new Article();
                         article.setGoogleCacheId(rs.getCacheId());

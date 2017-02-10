@@ -244,4 +244,8 @@ public class Artist{
     public void setItems(Set<Item> items) {
         this.items = items;
     }
+
+    public void setItems(List<Artwork> artworks) {
+        this.items = new HashSet<>(artworks);
+    }
 }

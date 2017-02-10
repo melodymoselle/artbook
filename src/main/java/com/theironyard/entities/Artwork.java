@@ -74,6 +74,9 @@ public class Artwork extends Item{
     }
 
     public String getMedium() {
+        if (medium.length() > 30){
+            return medium.substring(0, 30) + "...";
+        }
         return medium;
     }
 

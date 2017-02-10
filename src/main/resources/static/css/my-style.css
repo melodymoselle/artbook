@@ -9,11 +9,13 @@ h1:after {
     content: ".";
     font-size: 34px;
 }
-
-span {
-    padding-right: 5px;
+.search img {
+    height: 250px;
 }
-
+.summary{
+    max-height: 393px;
+    overflow: scroll;
+}
 .header {
     background-color: rgba(255, 255, 255, 0.95);
 }
@@ -126,20 +128,30 @@ span {
 .owl-buttons {
     position: static;
 }
-
-.owl-carousel.white .owl-controls .owl-page span {
-    background: none repeat scroll 0 0 #fff;
+.owl-carousel .owl-dot{
+    display: inline-block;
+    zoom: 1;
+}
+.owl-carousel .owl-dot span {
+    display: block;
+    width: 20px;
+    height: 20px;
+    margin: 0 5px;
+    border-radius: 20px;
+    border: 2px solid;
+    background: #323232;
+    z-index: 10;
 }
 
-.owl-carousel.white .owl-controls .owl-page.active span {
+.owl-carousel .owl-dot.active span {
     background: rgba(0, 0, 0, 0);
-    border: 2px solid #fff;
+    border: 2px solid #000;
 }
 
 .nf-carousel-theme {
 }
 
-.nf-carousel-theme .owl-controls .owl-pagination {
+.nf-carousel-theme .owl-dots {
     position: absolute;
     z-index: 2;
     left: 0;

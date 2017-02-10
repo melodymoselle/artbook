@@ -375,9 +375,9 @@ $(function () {
                     items:3
                 }
             },
-            pagination: true,  // show pagination buttons
             nav: true,  // Show next and prev buttons
-            navText: ["<i class='fa fa-angle-left'></i>", "<i class='fa fa-angle-right'></i>"]
+            navText: ["<i class='fa fa-angle-left'></i>", "<i class='fa fa-angle-right'></i>"],
+            dotsEach: 10
         });
 
         // Article Carousel

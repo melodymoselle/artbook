@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
@@ -143,9 +144,24 @@ public class FartController {
         return "error";
     }
 
-    @RequestMapping(path = "/search", method = RequestMethod.POST)
-    public String searchResults(String q){
-        Page<Artist> artists = artistRepo.searchForArtist(q);
-        return "redirect:/search";
+    @RequestMapping(path = "/search", method = RequestMethod.GET)
+    public String getSearchResults(Model model, String q, @RequestParam(defaultValue = "0") int page){
+        Page<Artist> artists = artistRepo.findByNameContainingIgnoreCase(new PageRequest(page, 9), q);
+        for (Artist artist : artists){
+            List<Artwork> artworks = artworkRepo.findByArtist(new PageRequest(page, 3), artist).getContent();
+            artist.setItems(artworks);
+        }
+
+        model.addAttribute("artists", artists);
+        if(artists.hasPrevious()){
+            model.addAttribute("previous", true);
+            model.addAttribute("prevPageNum", page - 1);
+        }
+        if(artists.hasNext()){
+            model.addAttribute("next", true);
+            model.addAttribute("nextPageNum", page + 1);
+        }
+        model.addAttribute("pageName", "Search Results");
+        return "search";
     }
 }

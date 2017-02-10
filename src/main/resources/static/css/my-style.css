@@ -9,8 +9,19 @@ h1:after {
     content: ".";
     font-size: 34px;
 }
-.search img {
+.post-media .search {
+    display: inline-block;
+    width: 250px;
     height: 250px;
+    overflow: hidden;
+    margin-right: -4px;
+    object-fit: cover;
+    object-position: center;
+}
+.search img {
+    display: block;
+    object-fit: cover;
+    object-position: center;
 }
 .summary{
     max-height: 393px;

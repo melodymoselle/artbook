@@ -44,7 +44,7 @@ public class GoogleCSEService {
     public List<Article> getArticlesByArtist(Artist artist) {
         List<Article> articles = new ArrayList<>();
         try {
-            Customsearch.Cse.List search = customsearch.cse().list(artist.getName().replace(" ", "+"));
+            Customsearch.Cse.List search = customsearch.cse().list("'"+artist.getName().replace(" ", "+")+"'");
             search.setCx(cx);
             search.setKey(key);
             Search results = search.execute();
@@ -59,8 +59,10 @@ public class GoogleCSEService {
                         article.setUrl(rs.getLink());
                         article.setTitle(rs.getTitle());
                         article.setSnippet(rs.getSnippet());
-                        if (rs.getPagemap().size() > 1) {
+                        if (rs.getPagemap().containsKey("cse_thumbnail")) {
                             article.setImgThumb(rs.getPagemap().get("cse_thumbnail").get(0).get("src").toString());
+                        }
+                        if (rs.getPagemap().containsKey("cse_image")) {
                             article.setImgLarge(rs.getPagemap().get("cse_image").get(0).get("src").toString());
                         }
                         article.setArtist(artist);

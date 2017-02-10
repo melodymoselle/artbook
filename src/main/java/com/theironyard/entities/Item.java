@@ -24,7 +24,7 @@ public class Item {
 
     @Column
     @JsonIgnore
-    private LocalDateTime updatedAt;
+    private LocalDateTime updatedAt = LocalDateTime.now();
 
     @ManyToOne(fetch = FetchType.EAGER)
     private Artist artist;

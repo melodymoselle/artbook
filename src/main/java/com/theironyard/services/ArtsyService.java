@@ -124,7 +124,8 @@ public class ArtsyService {
         List<Artist> similarArtists = new ArrayList<>();
         if (artistsNode != null && artistsNode.isArray()) {
             for (JsonNode artistNode : artistsNode) {
-                Artist similarArtist = artistRepo.findByArtsyArtistId(artistNode.get("id").toString());
+                String id = artistNode.get("id").asText();
+                Artist similarArtist = artistRepo.findByArtsyArtistId(id);
                 if (similarArtist == null) {
                     similarArtist = mapper.convertValue(artistNode, Artist.class);
                     similarArtist.setImgThumb(getImgThumb(artistNode));

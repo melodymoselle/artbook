@@ -89,8 +89,11 @@ public class AdminController {
             redAtt.addAttribute("message", "You do not have access for that action.");
             return "redirect:/error";
         }
-        Artist artist = artsy.getArtistByArtsyId(artsyArtistId);
-        artistRepo.save(artist);
+        Artist artist = artistRepo.findByArtsyArtistId(artsyArtistId);
+        if (artist == null) {
+            artist = artsy.getArtistByArtsyId(artsyArtistId);
+            artistRepo.save(artist);
+        }
 
         return "redirect:/artist?artistId=" + artist.getId();
     }

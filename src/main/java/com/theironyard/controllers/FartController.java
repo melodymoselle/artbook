@@ -148,8 +148,8 @@ public class FartController {
     public String getSearchResults(Model model, String q, @RequestParam(defaultValue = "0") int page){
         Page<Artist> artists = artistRepo.findByNameContainingIgnoreCase(new PageRequest(page, 9), q);
         for (Artist artist : artists){
-            List<Artwork> artworks = artworkRepo.findByArtist(new PageRequest(page, 3), artist).getContent();
-            artist.setItems(artworks);
+            List<Artwork> artworks = artworkRepo.findByArtistOrderByLikes(new PageRequest(page, 3), artist).getContent();
+            artist.setItemsWithList(artworks);
         }
 
         model.addAttribute("artists", artists);

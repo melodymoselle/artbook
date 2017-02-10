@@ -316,8 +316,7 @@ $(function () {
         // Item-4 Carousel
         $('.item4-carousel').owlCarousel({
             autoPlay: false,
-            stopOnHover: true,
-            loop: true,
+            rewind:true,
             items: 4,
             itemsDesktop: [1170, 3],
             itemsDesktopSmall: [1024, 2],
@@ -356,9 +355,15 @@ $(function () {
             responsive: true
         });
 
+        // $('.artwork-carousel').on('initialize.owl.carousel', function(event) {
+        //     if ($('.artwork-carousel .item').length < 2) {
+        //         this.settings.loop = false;
+        //         this.settings.items = 3;
+        //     }});
+
         // Artwork Carousel
         $('.artwork-carousel').owlCarousel({
-            loop: true,
+            rewind:true,
             lazyLoad: true,
             items: 3,
             responsive:{
@@ -377,7 +382,7 @@ $(function () {
             },
             nav: true,  // Show next and prev buttons
             navText: ["<i class='fa fa-angle-left'></i>", "<i class='fa fa-angle-right'></i>"],
-            dotsEach: 10
+            dotsEach: 10,
         });
 
         // Article Carousel
@@ -422,9 +427,7 @@ $(function () {
             nav: true,  // Show next and prev buttons
             navText: ["<i class='fa fa-angle-left'></i>", "<i class='fa fa-angle-right'></i>"]
         });
-
     };
-
 
 
     // ---------------------------------------------------------------------------------------------------------------------------->

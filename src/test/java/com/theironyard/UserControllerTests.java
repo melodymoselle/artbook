@@ -65,7 +65,7 @@ public class UserControllerTests {
                         .param("password", "testPassword")
         ).andExpect(status().is3xxRedirection()
         ).andExpect(flash().attribute("message", "That username is taken.")
-        ).andExpect(view().name("redirect:/"));
+        ).andExpect(view().name("redirect:/login"));
     }
 
     @Test

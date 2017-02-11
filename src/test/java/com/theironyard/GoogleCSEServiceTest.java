@@ -1,6 +1,7 @@
 package com.theironyard;
 
 import com.theironyard.entities.Artist;
+import com.theironyard.repositories.ArtistRepository;
 import com.theironyard.services.GoogleCSEService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,10 +16,15 @@ public class GoogleCSEServiceTest {
     @Autowired
     GoogleCSEService google;
 
+    @Autowired
+    ArtistRepository artistRepo;
+
+
     @Test
     public void testGetArticlesByArtist(){
         Artist artist = new Artist();
         artist.setName("SIMON DE VLIEGER");
+        artistRepo.save(artist);
 
         google.getArticlesByArtist(artist);
     }

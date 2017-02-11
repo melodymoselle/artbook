@@ -89,7 +89,8 @@ public class ArtsyService {
         }
         System.out.println(artworksNode);
         List<Artwork> artworks = new ArrayList<>();
-        if (artworksNode != null && artworksNode.isArray()) {
+        if (artworksNode != null && artworksNode.size()>0) {
+            artist.setPopulated(true);
             for(JsonNode artworkNode : artworksNode){
                 Artwork artwork = mapper.convertValue(artworkNode, Artwork.class);
                 artwork.setSize(artworkNode.findValue("in").findValue("text").toString());
@@ -146,20 +147,22 @@ public class ArtsyService {
      */
     public String getImgThumb(JsonNode artsyNode){
         String url = "";
-        List<String> imgVersions = mapper.convertValue(artsyNode.findValue("image_versions"), new TypeReference<List<String>>() {});
-        String imgBaseUrl = artsyNode.findValue("_links").findValue("image").findValue("href").toString();
-        if (imgVersions.contains("medium")) {
-            url = imgBaseUrl.replace("{image_version}", "medium");
-        } else if (imgVersions.contains("tall")) {
-            url = imgBaseUrl.replace("{image_version}", "tall");
-        } else if (imgVersions.contains("square")) {
-            url = imgBaseUrl.replace("{image_version}", "square");
-        } else if (imgVersions.contains("large")) {
-            url = imgBaseUrl.replace("{image_version}", "large");
-        } else if (imgVersions.contains("larger")) {
-            url = imgBaseUrl.replace("{image_version}", "larger");
-        } else {
-            url = ""; // img not found thumbnail ???
+        if (artsyNode.findValue("image_versions") != null){
+            List<String> imgVersions = mapper.convertValue(artsyNode.findValue("image_versions"), new TypeReference<List<String>>() {});
+            String imgBaseUrl = artsyNode.findValue("_links").findValue("image").findValue("href").toString();
+                if (imgVersions.contains("medium")) {
+                    url = imgBaseUrl.replace("{image_version}", "medium");
+                } else if (imgVersions.contains("tall")) {
+                    url = imgBaseUrl.replace("{image_version}", "tall");
+                } else if (imgVersions.contains("square")) {
+                    url = imgBaseUrl.replace("{image_version}", "square");
+                } else if (imgVersions.contains("large")) {
+                    url = imgBaseUrl.replace("{image_version}", "large");
+                } else if (imgVersions.contains("larger")) {
+                    url = imgBaseUrl.replace("{image_version}", "larger");
+                } else {
+                    url = ""; // img not found thumbnail ???
+                }
         }
         return url;
     }
@@ -172,20 +175,22 @@ public class ArtsyService {
      */
     public String getImgLarge(JsonNode artsyNode){
         String url = "";
-        List<String> imgVersions = mapper.convertValue(artsyNode.findValue("image_versions"), new TypeReference<List<String>>() {});
-        String imgBaseUrl = artsyNode.findValue("_links").findValue("image").findValue("href").toString();
-        if (imgVersions.contains("large")) {
-            url = imgBaseUrl.replace("{image_version}", "large");
-        } else if (imgVersions.contains("larger")) {
-            url = imgBaseUrl.replace("{image_version}", "larger");
-        } else if (imgVersions.contains("medium")) {
-            url = imgBaseUrl.replace("{image_version}", "medium");
-        } else if (imgVersions.contains("tall")) {
-            url = imgBaseUrl.replace("{image_version}", "tall");
-        } else if (imgVersions.contains("square")) {
-            url = imgBaseUrl.replace("{image_version}", "square");
-        } else {
-            url = ""; // img not found thumbnail ???
+        if (artsyNode.findValue("image_versions") != null){
+            List<String> imgVersions = mapper.convertValue(artsyNode.findValue("image_versions"), new TypeReference<List<String>>() {});
+            String imgBaseUrl = artsyNode.findValue("_links").findValue("image").findValue("href").toString();
+                if (imgVersions.contains("large")) {
+                    url = imgBaseUrl.replace("{image_version}", "large");
+                } else if (imgVersions.contains("larger")) {
+                    url = imgBaseUrl.replace("{image_version}", "larger");
+                } else if (imgVersions.contains("medium")) {
+                    url = imgBaseUrl.replace("{image_version}", "medium");
+                } else if (imgVersions.contains("tall")) {
+                    url = imgBaseUrl.replace("{image_version}", "tall");
+                } else if (imgVersions.contains("square")) {
+                    url = imgBaseUrl.replace("{image_version}", "square");
+                } else {
+                    url = ""; // img not found thumbnail ???
+                }
         }
         return url;
     }
@@ -198,10 +203,12 @@ public class ArtsyService {
      */
     public String getImgZoom(JsonNode artsyNode){
         String url = null;
-        List<String> imgVersions = mapper.convertValue(artsyNode.findValue("image_versions"), new TypeReference<List<String>>() {});
-        String imgBaseUrl = artsyNode.findValue("_links").findValue("image").findValue("href").toString();
-        if (imgVersions.contains("normalized")) {
-            url = imgBaseUrl.replace("{image_version}", "normalized");
+        if (artsyNode.findValue("image_versions") != null){
+            List<String> imgVersions = mapper.convertValue(artsyNode.findValue("image_versions"), new TypeReference<List<String>>() {});
+            String imgBaseUrl = artsyNode.findValue("_links").findValue("image").findValue("href").toString();
+                if (imgVersions.contains("normalized")) {
+                    url = imgBaseUrl.replace("{image_version}", "normalized");
+                }
         }
         return url;
     }

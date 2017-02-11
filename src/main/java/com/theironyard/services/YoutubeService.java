@@ -47,7 +47,7 @@ public class YoutubeService {
             YouTube.Search.List search = youtube.search().list("id,snippet");
 
             search.setKey(key);
-            search.setQ(artist.getName());
+            search.setQ("'"+artist.getName()+"'");
             search.setType("video");
 
             // To increase efficiency, only retrieve the fields that the application uses.

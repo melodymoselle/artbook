@@ -112,6 +112,7 @@ public class AdminController {
     }
 
     private Artist getSaveArtistData(Artist artist){
+        artist.setLoaded(true);
         String summary = wiki.getWikiIntro(artist);
         List<Artwork> artworks = artsy.getArtworksByArtist(artist);
         List<Artist> similarArtists = artsy.getSimilarToByArtist(artist);

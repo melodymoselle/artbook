@@ -62,7 +62,10 @@ public class Artwork extends Item{
     }
 
     public void setTitle(String title) {
-        this.title = title.substring(0, 254);
+        if (title.length() > 254) {
+            title = title.substring(0, 254);
+        }
+        this.title = title;
     }
 
     public String getCategory() {
@@ -70,7 +73,10 @@ public class Artwork extends Item{
     }
 
     public void setCategory(String category) {
-        this.category = category.substring(0, 254);
+        if (category.length() > 254){
+            category = category.substring(0, 254);
+        }
+        this.category = category;
     }
 
     public String getMedium() {
@@ -81,7 +87,10 @@ public class Artwork extends Item{
     }
 
     public void setMedium(String medium) {
-        this.medium = medium.substring(0, 254);
+        if (medium.length()>254) {
+            medium = medium.substring(0, 254);
+        }
+        this.medium = medium;
     }
 
     public String getDate() {

@@ -15,7 +15,7 @@ apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
 
 jar {
-	baseName = 'f-art'
+	baseName = 'artbook'
 	version = '0.0.1-SNAPSHOT'
 }
 
@@ -40,5 +40,5 @@ dependencies {
 }
 
 task stage{
-	dependsOn build
+	dependsOn assemble
 }

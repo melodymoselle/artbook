@@ -43,6 +43,16 @@ public class ArtbookController {
         return "redirect:/artworks";
     }
 
+    /**
+     * If no user is logged in, gets all artworks ordered by number of likes.
+     * If there is a user logged in, gets all artworks from the user's list of following artists.
+     * Adds list of artworks to the model.
+     *
+     * @param session Current HttpSession
+     * @param model Model to be passed to the view
+     * @param page Current page number for database paging
+     * @return model and 'artworks' view
+     */
     @RequestMapping(path = "/artworks", method = RequestMethod.GET)
     public String getArtworks(HttpSession session, Model model, @RequestParam(defaultValue = "0") int page){
         Page<Artwork> artworks = artworkRepo.findAllOrderByLikes(new PageRequest(page, 9));
@@ -70,6 +80,15 @@ public class ArtbookController {
         return "artworks";
     }
 
+    /**
+     * If no user, gets all artists ordered by number of followers. If there is a user,
+     * gets all the artists from the user's following. Adds list of artists to the model.
+     *
+     * @param session Current HttpSession
+     * @param model Model to be passed to the view
+     * @param page Current page number for database paging
+     * @return model and 'artists' view
+     */
     @RequestMapping(path = "/artists", method = RequestMethod.GET)
     public String getArtists(HttpSession session, Model model, @RequestParam(defaultValue = "0") int page){
         Page<Artist> artists = artistRepo.findAllOrderByFollowers(new PageRequest(page, 9));
@@ -94,6 +113,18 @@ public class ArtbookController {
         return "artists";
     }
 
+    /**
+     * Gets Artist with 'artistId' as 'id', and related Articles, similar Artists,
+     * Artworks, and videos. Adds to model. If user, and user is following, adds 'following'
+     * to model, so view will display following button. If user is admin, adds 'admin' to
+     * model, so view will display admin controls.
+     *
+     * @param session Current HttpSession
+     * @param model Model to be passed to the view
+     * @param artistId Id of artist to pull from DB
+     * @param page Current page number for database paging
+     * @return model and 'artists' view
+     */
     @RequestMapping(path = "/artist", method = RequestMethod.GET)
     public String getArtistPage(HttpSession session, Model model, int artistId, @RequestParam(defaultValue = "0") int page){
         Artist artist = artistRepo.findOne(artistId);
@@ -121,6 +152,15 @@ public class ArtbookController {
         return "artist";
     }
 
+    /**
+     * Gets Artwork with 'artworkId' as 'id'. Adds to model. If user, displays 'like' button.
+     * Is user 'likes' artwork, displays 'unlike' button. If user is admin, displays admin controls.
+     *
+     * @param session Current HttpSession
+     * @param model Model to be passed to the view
+     * @param artworkId Id of artwork to pull from DB
+     * @return model and 'artists' view
+     */
     @RequestMapping(path = "/artwork", method = RequestMethod.GET)
     public String getArtworkPage(HttpSession session, Model model, int artworkId){
         Artwork artwork = artworkRepo.findOne(artworkId);
@@ -144,6 +184,15 @@ public class ArtbookController {
         return "error";
     }
 
+    /**
+     * Gets search term from html form input and gets all artists with 'q'
+     * and adds to model.
+     *
+     * @param model Model to be passed to the view
+     * @param q search term from form input
+     * @param page Current page number for database paging
+     * @return model and 'search' view
+     */
     @RequestMapping(path = "/search", method = RequestMethod.GET)
     public String getSearchResults(Model model, String q, @RequestParam(defaultValue = "0") int page){
         Page<Artist> artists = artistRepo.findByNameContainingIgnoreCaseAndPopulated(new PageRequest(page, 9), q, true);

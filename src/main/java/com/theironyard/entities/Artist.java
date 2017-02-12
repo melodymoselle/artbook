@@ -80,8 +80,10 @@ public class Artist{
     public Artist() {
     }
 
+    //For Unit Testing only
     public Artist(String name) {
         this.name = name;
+        this.populated = true;
     }
 
     @Override
@@ -95,6 +97,20 @@ public class Artist{
                 ", location='" + location + '\'' +
                 ", nationality='" + nationality + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this){
+            return true;
+        }
+        if (!(obj instanceof Artist)){
+            return false;
+        }
+        Artist artist = (Artist) obj;
+
+        //Only testing one attribute for Unit Tests
+        return artist.getName().equals(this.name);
     }
 
     public int getId() {

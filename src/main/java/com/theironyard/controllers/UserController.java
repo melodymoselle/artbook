@@ -81,7 +81,7 @@ public class UserController {
      * @param model Model to be passed to the view
      * @param page Current page number for database paging
      * @param redAtt RedirectAttributes for invalid request
-     * @return 'discover' view
+     * @return model and 'discover' view
      */
     @RequestMapping(path = "/discover", method = RequestMethod.GET)
     public String getDiscoverPage(HttpSession session, Model model, @RequestParam(defaultValue = "0") int page, RedirectAttributes redAtt){

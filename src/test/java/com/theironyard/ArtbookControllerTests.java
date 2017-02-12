@@ -22,6 +22,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -73,6 +74,8 @@ public class ArtbookControllerTests {
         artist2.getItems().add(artwork2);
         user.getFollowing().add(artist1);
         artist1.getFollowedBy().add(user);
+        user.getLiked().add(artwork1);
+        artwork1.getLikedBy().add(user);
         artistRepo.save(artist1);
         artistRepo.save(artist2);
         artworkRepo.save(artwork1);
@@ -116,5 +119,77 @@ public class ArtbookControllerTests {
         ).andExpect(view().name("artists")
         ).andExpect(model().attribute("artists", hasItem(artist1))
         ).andExpect(model().attribute("artists", hasItem(artist2)));
+    }
+
+    @Test
+    public void testGetArtistsWithUser() throws Exception {
+        mockMvc.perform(
+                MockMvcRequestBuilders.get("/artists")
+                        .sessionAttr(UserController.SESSION_USER, USERNAME)
+        ).andExpect(status().is2xxSuccessful()
+        ).andExpect(view().name("artists")
+        ).andExpect(model().attribute("artists", hasItem(artist1))
+        ).andExpect(model().attribute("artists", not(hasItem(artist2))));
+    }
+
+    @Test
+    public void testGetArtistPageNoUser() throws Exception {
+        mockMvc.perform(
+                MockMvcRequestBuilders.get("/artist")
+                        .param("artistId", String.valueOf(artist1.getId()))
+        ).andExpect(status().is2xxSuccessful()
+        ).andExpect(view().name("artist")
+        ).andExpect(model().attribute("artist", is(artist1))
+        ).andExpect(model().attribute("artworks", hasItem(artwork1))
+        ).andExpect(model().attributeDoesNotExist("following")
+        ).andExpect(model().attributeDoesNotExist("admin"));
+    }
+
+    @Test
+    public void testGetArtistPageWithUser() throws Exception {
+        mockMvc.perform(
+                MockMvcRequestBuilders.get("/artist")
+                        .sessionAttr(UserController.SESSION_USER, USERNAME)
+                        .param("artistId", String.valueOf(artist1.getId()))
+        ).andExpect(status().is2xxSuccessful()
+        ).andExpect(view().name("artist")
+        ).andExpect(model().attribute("artist", is(artist1))
+        ).andExpect(model().attribute("artworks", hasItem(artwork1))
+        ).andExpect(model().attribute("following", is(true)));
+    }
+
+    @Test
+    public void testGetArtworkPageNoUser() throws Exception {
+        mockMvc.perform(
+                MockMvcRequestBuilders.get("/artwork")
+                        .param("artworkId", String.valueOf(artist1.getId()))
+        ).andExpect(status().is2xxSuccessful()
+        ).andExpect(view().name("artwork")
+        ).andExpect(model().attribute("artwork", is(artwork1))
+        ).andExpect(model().attributeDoesNotExist("liked")
+        ).andExpect(model().attributeDoesNotExist("admin"));
+    }
+
+    @Test
+    public void testGetArtworkPageWithUser() throws Exception {
+        mockMvc.perform(
+                MockMvcRequestBuilders.get("/artwork")
+                        .sessionAttr(UserController.SESSION_USER, USERNAME)
+                        .param("artworkId", String.valueOf(artist1.getId()))
+        ).andExpect(status().is2xxSuccessful()
+        ).andExpect(view().name("artwork")
+        ).andExpect(model().attribute("artwork", is(artwork1))
+        ).andExpect(model().attribute("liked", is(true)));
+    }
+
+    @Test
+    public void testSearch() throws Exception {
+        mockMvc.perform(
+                MockMvcRequestBuilders.get("/search")
+                        .param("q", "N")
+        ).andExpect(status().is2xxSuccessful()
+        ).andExpect(view().name("search")
+        ).andExpect(model().attribute("artists", hasItem(artist2))
+        ).andExpect(model().attribute("artists", not(hasItem(artist1))));
     }
 }

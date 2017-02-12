@@ -5,6 +5,7 @@ import org.hibernate.annotations.DiscriminatorOptions;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -30,7 +31,7 @@ public class Item {
     private Artist artist;
 
     @ManyToMany(mappedBy = "liked")
-    private Set<User> likedBy;
+    private Set<User> likedBy = new HashSet<>();
 
     public Item() {
     }

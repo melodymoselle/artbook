@@ -18,21 +18,21 @@ public class Artwork extends Item{
     @Lob
     @Type(type = "org.hibernate.type.TextType")
     @Column
-    private String title;
+    private String title = "";
 
     @Column
-    private String category;
+    private String category = "";
 
     @Lob
     @Type(type = "org.hibernate.type.TextType")
     @Column
-    private String medium;
+    private String medium = "";
 
     @Column
-    private String date;
+    private String date = "";
 
     @Column
-    private String size;
+    private String size = "";
 
     @Column
     private String imgThumb = "";

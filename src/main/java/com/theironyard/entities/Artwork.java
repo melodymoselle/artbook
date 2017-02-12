@@ -35,13 +35,13 @@ public class Artwork extends Item{
     private String size;
 
     @Column
-    private String imgThumb;
+    private String imgThumb = "";
 
     @Column
-    private String imgLarge;
+    private String imgLarge = "";
 
     @Column
-    private String imgZoom;
+    private String imgZoom = "";
 
     public Artwork() {
     }
@@ -150,5 +150,19 @@ public class Artwork extends Item{
                 ", imgLarge='" + imgLarge + '\'' +
                 ", imgZoom='" + imgZoom + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this){
+            return true;
+        }
+        if (!(obj instanceof Artwork)){
+            return false;
+        }
+        Artwork artwork = (Artwork) obj;
+
+        //Only testing one attribute for Unit Tests
+        return artwork.getTitle().equals(this.title);
     }
 }

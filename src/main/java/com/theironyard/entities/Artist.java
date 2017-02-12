@@ -57,13 +57,13 @@ public class Artist{
     @Lob
     @Type(type = "org.hibernate.type.TextType")
     @Column
-    private String summary;
+    private String summary = "";
 
     @Column
-    private String imgThumb;
+    private String imgThumb = "";
 
     @Column
-    private String imgLarge;
+    private String imgLarge = "";
 
     @OneToMany(mappedBy="artist")
     private Set<Item> items = new HashSet<>();
@@ -75,7 +75,7 @@ public class Artist{
     private Set<Artist> similarFrom = new HashSet<>();
 
     @ManyToMany(mappedBy = "following")
-    private Set<User> followedBy;
+    private Set<User> followedBy = new HashSet<>();
 
     public Artist() {
     }

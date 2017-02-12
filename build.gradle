@@ -27,7 +27,8 @@ repositories {
 }
 
 dependencies {
-	compile('org.springframework.boot:spring-boot-starter-data-jpa')
+    compile('org.mockito:mockito-all:1.10.19')
+    compile('org.springframework.boot:spring-boot-starter-data-jpa')
 	compile('org.springframework.boot:spring-boot-starter-mustache')
 	compile('org.springframework.boot:spring-boot-starter-web')
     compile('com.google.api-client:google-api-client:1.22.0')

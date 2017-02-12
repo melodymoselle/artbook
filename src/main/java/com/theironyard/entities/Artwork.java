@@ -46,6 +46,10 @@ public class Artwork extends Item{
     public Artwork() {
     }
 
+    public Artwork(String title) {
+        this.title = title;
+    }
+
     public String getArtsyArtworkId() {
         return artsyArtworkId;
     }

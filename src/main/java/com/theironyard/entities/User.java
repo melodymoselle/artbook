@@ -37,7 +37,7 @@ public class User{
     private Set<Artist> following = new HashSet<>();
 
     @ManyToMany
-    private Set<Item> liked;
+    private Set<Item> liked = new HashSet<>();
 
     public User() {
     }

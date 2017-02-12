@@ -68,16 +68,20 @@ public class Artist{
     @OneToMany(mappedBy="artist")
     private Set<Item> items = new HashSet<>();
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     private Set<Artist> similarTo = new HashSet<>();
 
-    @ManyToMany(mappedBy = "similarTo")
+    @ManyToMany(mappedBy = "similarTo", fetch = FetchType.EAGER)
     private Set<Artist> similarFrom = new HashSet<>();
 
     @ManyToMany(mappedBy = "following")
     private Set<User> followedBy;
 
     public Artist() {
+    }
+
+    public Artist(String name) {
+        this.name = name;
     }
 
     @Override

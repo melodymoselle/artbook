@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @Controller
@@ -41,7 +43,6 @@ public class UserController {
         return "login";
     }
 
-
     @RequestMapping(path = "/login", method = RequestMethod.POST)
     public String login(HttpSession session, LoginCommand command, RedirectAttributes redAtt) throws PasswordStorage.InvalidHashException, PasswordStorage.CannotPerformOperationException {
         User user = userRepo.findByUsername(command.getUsername());
@@ -58,7 +59,7 @@ public class UserController {
         User user = userRepo.findByUsername(command.getUsername());
         if (user != null){
             redAtt.addFlashAttribute("message", "That username is taken.");
-            return "redirect:/login";
+            return "redirect:/login#register";
         }
         user = new User(command.getUsername(), PasswordStorage.createHash(command.getPassword()));
         userRepo.save(user);
@@ -72,6 +73,16 @@ public class UserController {
         return "redirect:/";
     }
 
+    /**
+     * Gets 'user' from session. If 'user' is following 'artists' adds those artists to model.
+     * Else, adds all 'artists' ordered by 'followers' to the model.
+     *
+     * @param session Current HttpSession
+     * @param model Model to be passed to the view
+     * @param page Current page number for database paging
+     * @param redAtt RedirectAttributes for invalid request
+     * @return 'discover' view
+     */
     @RequestMapping(path = "/discover", method = RequestMethod.GET)
     public String getDiscoverPage(HttpSession session, Model model, @RequestParam(defaultValue = "0") int page, RedirectAttributes redAtt){
         if (session.getAttribute(SESSION_USER) == null){
@@ -84,14 +95,25 @@ public class UserController {
             model.addAttribute("admin", true);
         }
         Page<Artist> artists = artistRepo.findAllOrderByFollowers(new PageRequest(page, 9));
-        if (user.getFollowing().size() > 0) {
-            artists = artistRepo.findSimilarFromFollowing(new PageRequest(page, 9), user.getFollowing());
+        List<Artist> following = new ArrayList<>(user.getFollowing());
+        List<Artist> suggestions = new ArrayList<>();
+        if (following.size() > 0) {
+            suggestions = artistRepo.findSimilarFromFollowing(following);
         }
-        model.addAttribute("artists", artists);
+        model.addAttribute("artists", suggestions);
         model.addAttribute("pageName", "Discover");
         return "discover";
     }
 
+    /**
+     * Gets current 'user' from session and 'artist' from params. Adds 'artist' to 'user's
+     * following.
+     *
+     * @param session Current HttpSession
+     * @param artistId 'id' of current 'artist'
+     * @param redAtt RedirectAttributes for invalid request
+     * @return redirects back to same page
+     */
     @RequestMapping(path = "/follow", method = RequestMethod.GET)
     public String followArtist(HttpSession session, int artistId, RedirectAttributes redAtt){
         if (session.getAttribute(SESSION_USER) == null){
@@ -105,6 +127,15 @@ public class UserController {
         return "redirect:/artist?artistId="+artistId;
     }
 
+    /**
+     * Gets current 'user' from session and 'artist' from params. Removes 'artist' from 'user's
+     * following.
+     *
+     * @param session Current HttpSession
+     * @param artistId 'id' of current 'artist'
+     * @param redAtt RedirectAttributes for invalid request
+     * @return redirects back to same page
+     */
     @RequestMapping(path = "/unfollow", method = RequestMethod.GET)
     public String unfollowArtist(HttpSession session, int artistId, RedirectAttributes redAtt){
         if (session.getAttribute(SESSION_USER) == null){
@@ -118,6 +149,15 @@ public class UserController {
         return "redirect:/artist?artistId="+artistId;
     }
 
+    /**
+     * Gets current 'user' from session and 'item' from params. Adds 'item' to 'user's
+     * likes.
+     *
+     * @param session Current HttpSession
+     * @param artworkId 'id' of current 'item'
+     * @param redAtt RedirectAttributes for invalid request
+     * @return redirects back to same page
+     */
     @RequestMapping(path = "/like", method = RequestMethod.GET)
     public String likeArtwork(HttpSession session, int artworkId, RedirectAttributes redAtt){
         if (session.getAttribute(SESSION_USER) == null){
@@ -131,6 +171,15 @@ public class UserController {
         return "redirect:/artwork?artworkId="+artworkId;
     }
 
+    /**
+     * Gets current 'user' from session and 'item' from params. Removes 'item' from 'user's
+     * likes.
+     *
+     * @param session Current HttpSession
+     * @param artworkId 'id' of current 'item'
+     * @param redAtt RedirectAttributes for invalid request
+     * @return redirects back to same page
+     */
     @RequestMapping(path = "/unlike", method = RequestMethod.GET)
     public String unlikeArtwork(HttpSession session, int artworkId, RedirectAttributes redAtt){
         if (session.getAttribute(SESSION_USER) == null){

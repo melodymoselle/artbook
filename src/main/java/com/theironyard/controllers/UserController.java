@@ -95,12 +95,11 @@ public class UserController {
             model.addAttribute("admin", true);
         }
         Page<Artist> artists = artistRepo.findAllOrderByFollowers(new PageRequest(page, 9));
-        List<Artist> following = new ArrayList<>(user.getFollowing());
         List<Artist> suggestions = new ArrayList<>();
-        if (following.size() > 0) {
-            suggestions = artistRepo.findSimilarFromFollowing(following);
+        if (user.getFollowing().size() > 0) {
+            artists = artistRepo.findSimilarFromFollowing(new PageRequest(page, 9), user.getFollowing());
         }
-        model.addAttribute("artists", suggestions);
+        model.addAttribute("artists", artists);
         model.addAttribute("pageName", "Discover");
         return "discover";
     }

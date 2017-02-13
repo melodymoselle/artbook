@@ -26,7 +26,7 @@ import org.springframework.web.context.WebApplicationContext;
 import java.util.List;
 import java.util.Set;
 
-import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -149,7 +149,7 @@ public class UserControllerTests {
     }
 
     @Test
-    public void testGetDiscoverPage() throws Exception {
+    public void testGetDiscoverPageWithFollowing() throws Exception {
         artist1.getSimilarTo().add(artist2);
         artistRepo.save(artist1);
         artist2.getSimilarTo().add(artist1);
@@ -161,9 +161,19 @@ public class UserControllerTests {
                 MockMvcRequestBuilders.get("/discover")
                         .sessionAttr(UserController.SESSION_USER, USERNAME)
         ).andExpect(status().is2xxSuccessful()
-        ).andExpect(model().attribute("artists", hasItem(artist2))
+        ).andExpect(model().attribute("artists", containsInAnyOrder(artist2))
+        ).andExpect(model().attribute("artists", not(containsInAnyOrder(artist1)))
         ).andExpect(view().name("discover"));
+    }
 
+    @Test
+    public void testGetDiscoverPageNoFollowing() throws Exception {
+        mockMvc.perform(
+                MockMvcRequestBuilders.get("/discover")
+                        .sessionAttr(UserController.SESSION_USER, USERNAME)
+        ).andExpect(status().is2xxSuccessful()
+        ).andExpect(model().attribute("artists", containsInAnyOrder(artist2, artist1))
+        ).andExpect(view().name("discover"));
     }
 
     @Test

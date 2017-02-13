@@ -21,9 +21,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringRunner.class)
@@ -96,8 +94,7 @@ public class ArtbookControllerTests {
                 MockMvcRequestBuilders.get("/artworks")
         ).andExpect(status().is2xxSuccessful()
         ).andExpect(view().name("artworks")
-        ).andExpect(model().attribute("artworks", hasItem(artwork1))
-        ).andExpect(model().attribute("artworks", hasItem(artwork2)));
+        ).andExpect(model().attribute("artworks", containsInAnyOrder(artwork1, artwork2)));
     }
 
     @Test
@@ -107,8 +104,8 @@ public class ArtbookControllerTests {
                         .sessionAttr(UserController.SESSION_USER, USERNAME)
         ).andExpect(status().is2xxSuccessful()
         ).andExpect(view().name("artworks")
-        ).andExpect(model().attribute("artworks", hasItem(artwork1))
-        ).andExpect(model().attribute("artworks", not(hasItem(artwork2))));
+        ).andExpect(model().attribute("artworks", containsInAnyOrder(artwork1))
+        ).andExpect(model().attribute("artworks", not(containsInAnyOrder(artwork2))));
     }
 
     @Test
@@ -117,8 +114,7 @@ public class ArtbookControllerTests {
                 MockMvcRequestBuilders.get("/artists")
         ).andExpect(status().is2xxSuccessful()
         ).andExpect(view().name("artists")
-        ).andExpect(model().attribute("artists", hasItem(artist1))
-        ).andExpect(model().attribute("artists", hasItem(artist2)));
+        ).andExpect(model().attribute("artists", containsInAnyOrder(artist1, artist2)));
     }
 
     @Test
@@ -128,8 +124,8 @@ public class ArtbookControllerTests {
                         .sessionAttr(UserController.SESSION_USER, USERNAME)
         ).andExpect(status().is2xxSuccessful()
         ).andExpect(view().name("artists")
-        ).andExpect(model().attribute("artists", hasItem(artist1))
-        ).andExpect(model().attribute("artists", not(hasItem(artist2))));
+        ).andExpect(model().attribute("artists", containsInAnyOrder(artist1))
+        ).andExpect(model().attribute("artists", not(containsInAnyOrder(artist2))));
     }
 
     @Test
@@ -140,7 +136,7 @@ public class ArtbookControllerTests {
         ).andExpect(status().is2xxSuccessful()
         ).andExpect(view().name("artist")
         ).andExpect(model().attribute("artist", is(artist1))
-        ).andExpect(model().attribute("artworks", hasItem(artwork1))
+        ).andExpect(model().attribute("artworks", containsInAnyOrder(artwork1))
         ).andExpect(model().attributeDoesNotExist("following")
         ).andExpect(model().attributeDoesNotExist("admin"));
     }
@@ -154,7 +150,7 @@ public class ArtbookControllerTests {
         ).andExpect(status().is2xxSuccessful()
         ).andExpect(view().name("artist")
         ).andExpect(model().attribute("artist", is(artist1))
-        ).andExpect(model().attribute("artworks", hasItem(artwork1))
+        ).andExpect(model().attribute("artworks", containsInAnyOrder(artwork1))
         ).andExpect(model().attribute("following", is(true)));
     }
 
@@ -189,7 +185,7 @@ public class ArtbookControllerTests {
                         .param("q", "N")
         ).andExpect(status().is2xxSuccessful()
         ).andExpect(view().name("search")
-        ).andExpect(model().attribute("artists", hasItem(artist2))
-        ).andExpect(model().attribute("artists", not(hasItem(artist1))));
+        ).andExpect(model().attribute("artists", containsInAnyOrder(artist2))
+        ).andExpect(model().attribute("artists", not(containsInAnyOrder(artist1))));
     }
 }

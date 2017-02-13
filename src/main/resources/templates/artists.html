@@ -63,18 +63,7 @@
             </div>
         </div>
 
-        <!-- Pagination Nav -->
-        <div class="pagination-nav mt-60 mt-xs-30">
-            <ul>
-                {{#previous}}
-                <li><a href="/artists?page={{prevPageNum}}"><i class="fa fa-angle-left"></i></a></li>
-                {{/previous}}
-                {{#next}}
-                <li><a href="/artists?page={{nextPageNum}}"><i class="fa fa-angle-right"></i></a></li>
-                {{/next}}
-            </ul>
-        </div>
-        <!-- End Pagination Nav -->
+        {{> pagination}}
 
     </section>
     <!-- End Artists Section -->

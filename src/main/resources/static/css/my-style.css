@@ -74,13 +74,18 @@ h1:after {
 .article {
     margin-left: -25px;
 }
-.article-img-div {
-    height: 300px;
-}
-.article-img-div img{
-    max-height: 300px;
-}
 
+.article-thumb{
+    height: 300px;
+    padding:0;
+    overflow: hidden;
+}
+.article-thumb img{
+    display: block;
+    height: 300px;
+    width: auto;
+    overflow: hidden;
+}
 .ptb{
     padding-top: 50px;
     padding-bottom: 50px;

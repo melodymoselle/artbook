@@ -117,15 +117,26 @@
                     <div class="item article">
                         <div class="container">
                             <div class="row">
-                                <div class="col-md-2 mb-sm-30 article-img-div">
-                                    <img src="{{#imgLarge}}{{.}}{{/imgLarge}}" alt="" class="img-large pull-right"/>
+                                <div class="col-md-2 mb-sm-30 article-thumb">
+                                    <img src="{{#imgLarge}}{{.}}{{/imgLarge}}" alt="" class="pull-right"/>
                                 </div>
                                 <div class="col-md-4 mb-sm-30">
                                     <h4>{{title}}</h4>
                                     <div class="spacer-15"></div>
                                     <p>{{snippet}}</p>
                                     <div class="spacer-15"></div>
-                                    <a href="{{url}}" class="btn btn-md btn-black" target="_blank">Read Article</a>
+                                    <p>
+                                        <a href="{{url}}" class="btn btn-xs btn-black" target="_blank">Read Article</a>
+                                        <span class="btn btn-xs btn-black">{{likedBy.size}} Likes</span>
+                                        {{#currentUsername}}
+                                        {{#currentlyLiked}}
+                                        <p><a href="/unlike?itemId={{id}}" class="btn btn-xs btn-black">Unlike</a></p>
+                                        {{/currentlyLiked}}
+                                        {{^currentlyLiked}}
+                                        <p><a href="/like?itemId={{id}}" class="btn btn-xs btn-black">Like</a></p>
+                                        {{/currentlyLiked}}
+                                        {{/currentUsername}}
+                                    </p>
                                 </div>
                             </div>
                         </div>

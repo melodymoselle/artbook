@@ -391,7 +391,7 @@ $(function () {
             lazyLoad: true,
             items: 1,
             center:true,
-            margin: 10,
+            margin: 50,
             nav: true,  // Show next and prev buttons
             navText: ["<i class='fa fa-angle-left'></i>", "<i class='fa fa-angle-right'></i>"]
         });

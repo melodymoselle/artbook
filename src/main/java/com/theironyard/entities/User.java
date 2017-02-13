@@ -115,7 +115,7 @@ public class User{
         return this.following.contains(artist);
     }
 
-    public boolean isLiked(Artwork artwork){
-        return this.liked.contains(artwork);
+    public boolean isLiked(Item item){
+        return this.liked.contains(item);
     }
 }

@@ -47,10 +47,10 @@
                         <p><strong class="dark-color">Medium:</strong>{{#Medium}}{{.}}{{/Medium}}</p>
                         {{#currentUsername}}
                         {{#liked}}
-                        <p><a href="/unlike?artworkId={{id}}" class="btn btn-xs btn-black">Unlike</a></p>
+                        <p><a href="/unlike?itemId={{id}}" class="btn btn-xs btn-black">Unlike</a></p>
                         {{/liked}}
                         {{^liked}}
-                        <p><a href="/like?artworkId={{id}}" class="btn btn-xs btn-black">Like</a></p>
+                        <p><a href="/like?itemId={{id}}" class="btn btn-xs btn-black">Like</a></p>
                         {{/liked}}
                         {{/currentUsername}}
                     </div>

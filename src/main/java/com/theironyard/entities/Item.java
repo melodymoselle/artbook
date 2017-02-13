@@ -33,6 +33,9 @@ public class Item {
     @ManyToMany(mappedBy = "liked")
     private Set<User> likedBy = new HashSet<>();
 
+    @Transient
+    private boolean currentlyLiked = false;
+
     public Item() {
     }
 
@@ -74,5 +77,13 @@ public class Item {
 
     public void setLikedBy(Set<User> likedBy) {
         this.likedBy = likedBy;
+    }
+
+    public boolean isCurrentlyLiked() {
+        return currentlyLiked;
+    }
+
+    public void setCurrentlyLiked(boolean currentlyLiked) {
+        this.currentlyLiked = currentlyLiked;
     }
 }

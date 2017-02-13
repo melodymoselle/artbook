@@ -4,14 +4,17 @@ import com.theironyard.commands.LoginCommand;
 import com.theironyard.commands.RegisterCommand;
 import com.theironyard.entities.Artist;
 import com.theironyard.entities.Artwork;
+import com.theironyard.entities.Item;
 import com.theironyard.entities.User;
 import com.theironyard.repositories.ArtistRepository;
 import com.theironyard.repositories.ArtworkRepository;
+import com.theironyard.repositories.ItemRepository;
 import com.theironyard.repositories.UserRepository;
 import com.theironyard.utitilties.PasswordStorage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,7 +22,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -36,6 +42,9 @@ public class UserController {
 
     @Autowired
     ArtworkRepository artworkRepo;
+
+    @Autowired
+    ItemRepository itemRepo;
 
     @RequestMapping(path = "/login", method = RequestMethod.GET)
     public String getLogin( Model model){
@@ -153,21 +162,31 @@ public class UserController {
      * likes.
      *
      * @param session Current HttpSession
-     * @param artworkId 'id' of current 'item'
+     * @param itemId 'id' of current 'item'
      * @param redAtt RedirectAttributes for invalid request
      * @return redirects back to same page
      */
     @RequestMapping(path = "/like", method = RequestMethod.GET)
-    public String likeArtwork(HttpSession session, int artworkId, RedirectAttributes redAtt){
+    public String likeArtwork(HttpSession session, HttpServletRequest request, int itemId, RedirectAttributes redAtt){
         if (session.getAttribute(SESSION_USER) == null){
             redAtt.addAttribute("message", "You need to be signed for that action.");
             return "redirect:/error";
         }
         User user = userRepo.findByUsername(session.getAttribute(SESSION_USER).toString());
-        Artwork artwork = artworkRepo.findOne(artworkId);
-        user.getLiked().add(artwork);
+        Item item = itemRepo.findOne(itemId);
+        user.getLiked().add(item);
+        item.getLikedBy().add(user);
         userRepo.save(user);
-        return "redirect:/artwork?artworkId="+artworkId;
+        itemRepo.save(item);
+        String redirect;
+        try {
+            URI referrer = new URI(request.getHeader("referer"));
+            redirect = referrer.getPath() +"?"+ referrer.getQuery();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            redirect = "/";
+        }
+        return "redirect:"+redirect;
     }
 
     /**
@@ -180,15 +199,25 @@ public class UserController {
      * @return redirects back to same page
      */
     @RequestMapping(path = "/unlike", method = RequestMethod.GET)
-    public String unlikeArtwork(HttpSession session, int artworkId, RedirectAttributes redAtt){
+    public String unlikeArtwork(HttpSession session, HttpServletRequest request, int itemId, RedirectAttributes redAtt){
         if (session.getAttribute(SESSION_USER) == null){
             redAtt.addAttribute("message", "You need to be signed for that action.");
             return "redirect:/error";
         }
         User user = userRepo.findByUsername(session.getAttribute(SESSION_USER).toString());
-        Artwork artwork = artworkRepo.findOne(artworkId);
-        user.getLiked().remove(artwork);
+        Item item = itemRepo.findOne(itemId);
+        user.getLiked().remove(item);
+        item.getLikedBy().remove(user);
         userRepo.save(user);
-        return "redirect:/artwork?artworkId="+artworkId;
+        itemRepo.save(item);
+        String redirect;
+        try {
+            URI referrer = new URI(request.getHeader("referer"));
+            redirect = referrer.getPath() +"?"+ referrer.getQuery();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            redirect = "/";
+        }
+        return "redirect:"+redirect;
     }
 }

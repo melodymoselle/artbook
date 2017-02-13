@@ -41,5 +41,5 @@ dependencies {
 }
 
 task stage{
-	dependsOn assemble
+	dependsOn build
 }

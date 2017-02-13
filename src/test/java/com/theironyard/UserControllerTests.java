@@ -210,8 +210,9 @@ public class UserControllerTests {
     public void testLikeItem() throws Exception {
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/like")
+                        .header("referer", "redirect:/artwork?artworkId="+String.valueOf(artwork.getId()))
                         .sessionAttr(UserController.SESSION_USER, USERNAME)
-                        .param("artworkId", String.valueOf(artwork.getId()))
+                        .param("itemId", String.valueOf(artwork.getId()))
         ).andExpect(status().is3xxRedirection()
         ).andExpect(view().name("redirect:/artwork?artworkId="+String.valueOf(artwork.getId())));
 
@@ -227,8 +228,9 @@ public class UserControllerTests {
 
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/unlike")
+                        .header("referer", "redirect:/artwork?artworkId="+String.valueOf(artwork.getId()))
                         .sessionAttr(UserController.SESSION_USER, USERNAME)
-                        .param("artworkId", String.valueOf(artwork.getId()))
+                        .param("itemId", String.valueOf(artwork.getId()))
         ).andExpect(status().is3xxRedirection()
         ).andExpect(view().name("redirect:/artwork?artworkId="+String.valueOf(artwork.getId())));
 

@@ -76,6 +76,7 @@ public class ArtbookController {
             model.addAttribute("nextPageNum", page + 1);
         }
         model.addAttribute("artworks", artworks);
+        model.addAttribute("pagingStub", "artworks");
         model.addAttribute("pageName", "Artworks");
         return "artworks";
     }
@@ -109,6 +110,7 @@ public class ArtbookController {
             model.addAttribute("nextPageNum", page + 1);
         }
         model.addAttribute("artists", artists);
+        model.addAttribute("pagingStub", "artists");
         model.addAttribute("pageName", "Artists");
         return "artists";
     }
@@ -128,6 +130,11 @@ public class ArtbookController {
     @RequestMapping(path = "/artist", method = RequestMethod.GET)
     public String getArtistPage(HttpSession session, Model model, int artistId, @RequestParam(defaultValue = "0") int page){
         Artist artist = artistRepo.findOne(artistId);
+        List<Article> articles = articleRepo.findByArtist(artist);
+        List<Artist> similar = artistRepo.findSimilarAndPopulated(artist.getId());
+        List<Artwork> artworks = artworkRepo.findByArtist(artist);
+        List<Video> videos = videoRepo.findByArtist(artist);
+
         if (session.getAttribute(UserController.SESSION_USER) != null){
             User user = userRepo.findByUsername(session.getAttribute(UserController.SESSION_USER).toString());
             model.addAttribute(UserController.SESSION_USER, user.getUsername());
@@ -137,11 +144,18 @@ public class ArtbookController {
             if (user.isFollowing(artist)){
                 model.addAttribute("following", true);
             }
+            for (Article a : articles){
+                if (user.isLiked(a)){
+                    a.setCurrentlyLiked(true);
+                }
+            }
+            for (Video v : videos){
+                if (user.isLiked(v)){
+                    v.setCurrentlyLiked(true);
+                }
+            }
+
         }
-        List<Article> articles = articleRepo.findByArtist(artist);
-        List<Artist> similar = artistRepo.findSimilarAndPopulated(artist.getId());
-        List<Artwork> artworks = artworkRepo.findByArtist(artist);
-        List<Video> videos = videoRepo.findByArtist(artist);
         model.addAttribute("articles", articles);
         model.addAttribute("similar", similar);
         model.addAttribute("artworks", artworks);
@@ -210,6 +224,7 @@ public class ArtbookController {
             model.addAttribute("next", true);
             model.addAttribute("nextPageNum", page + 1);
         }
+        model.addAttribute("pagingStub", "search");
         model.addAttribute("pageName", "Search Results");
         return "search";
     }

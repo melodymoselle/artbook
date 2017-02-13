@@ -47,7 +47,7 @@
                             <!--<div class="owl-carousel item1-carousel nf-carousel-theme">-->
                                 {{#items}}
                                 <div class="search item">
-                                    <img src="{{imgThumb}}" alt="" />
+                                    {{#imgThumb}}<img src="{{.}}" alt="" />{{/imgThumb}}
                                 </div>
                                 {{/items}}
                             <!--</div>-->
@@ -57,14 +57,7 @@
                     <hr />
                     {{/artists}}
 
-                    <!-- Pagination Nav -->
-                    <div class="pagination-nav mt-60 mtb-xs-30">
-                        <ul>
-                            <li><a href="#"><i class="fa fa-angle-left"></i></a></li>
-                            <li><a href="#"><i class="fa fa-angle-right"></i></a></li>
-                        </ul>
-                    </div>
-                    <!-- End Pagination Nav -->
+                    {{> pagination}}
 
                 </div>
 

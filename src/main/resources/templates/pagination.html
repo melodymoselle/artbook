@@ -3,10 +3,10 @@
 <div class="pagination-nav mt-60 mt-xs-30">
     <ul>
         {{#previous}}
-        <li><a href="/artist?artistId={{artist.id}}&page={{prevPageNum}}"><i class="fa fa-angle-left"></i></a></li>
+        <li><a href="/{{#pagingStub}}{{.}}{{/pagingStub}}?page={{prevPageNum}}"><i class="fa fa-angle-left"></i></a></li>
         {{/previous}}
         {{#next}}
-        <li><a href="/artist?artistId={{artist.id}}&page={{nextPageNum}}"><i class="fa fa-angle-right"></i></a></li>
+        <li><a href="/{{#pagingStub}}{{.}}{{/pagingStub}}?page={{nextPageNum}}"><i class="fa fa-angle-right"></i></a></li>
         {{/next}}
     </ul>
 </div>

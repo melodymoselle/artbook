@@ -64,18 +64,7 @@
             </div>
         </div>
 
-        <!-- Pagination Nav -->
-        <div class="pagination-nav mt-60 mt-xs-30">
-            <ul>
-                {{#previous}}
-                <li><a href="/artworks?page={{prevPageNum}}"><i class="fa fa-angle-left"></i></a></li>
-                {{/previous}}
-                {{#next}}
-                <li><a href="/artworks?page={{nextPageNum}}"><i class="fa fa-angle-right"></i></a></li>
-                {{/next}}
-            </ul>
-        </div>
-        <!-- End Pagination Nav -->
+        {{> pagination}}
 
     </section>
     <!-- End Artworks Section -->

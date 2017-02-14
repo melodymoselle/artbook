@@ -39,31 +39,105 @@
             <div class="row">
                 <div class="col-md-10 col-md-offset-1">
                 <div class="tabs b-lrb-none">
-                        <ul>
-                            <!-- Tab Links -->
-                            <li><a href="#artists">Artists</a></li>
-                            <li><a href="#artworks">Artworks</a></li>
-                            <li><a href="#articles">Articles</a></li>
-                            <li><a href="#videos">Videos</a></li>
-                        </ul>
-                        <div class="ui-tab-content">
-                            <!-- Artist Section -->
-                            <div id="artists" class="plr-0">
-                                <p>Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel</p>
-                                <p>Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus.</p>
+                    <ul>
+                        <!-- Tab Links -->
+                        <li><a href="#items">All Items</a></li>
+                        <li><a href="#artworks">Artworks</a></li>
+                        <li><a href="#articles">Articles</a></li>
+                        <li><a href="#videos">Videos</a></li>
+                    </ul>
+                    <div class="ui-tab-content">
+
+                        <!-- All Items Tab -->
+                        <div id="items" class="plr-0">
+                            {{^items}}
+                            <p>No new items ... </p>
+                            {{/items}}
+                            {{#items}}
+                            <!-- Item -->
+                            <div class="row col-md-8 col-md-offset-2 blog-post-hr">
+                                <div class="col-xs-3">
+                                    <img src="{{imgThumb}}" />
+                                </div>
+                                <div class="col-xs-5">
+                                    <h4><a href="{{url}}">{{title}}</a></h4>
+                                    <p>{{snippet}}</p>
+                                </div>
                             </div>
-                            <!-- Artworks Section -->
-                            <div id="artworks" class="plr-0">
-                                <p>Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros.</p>
-                                <p>Tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel</p>
+                            <hr />
+                            <!-- End Item -->
+                            {{/items}}
+                        </div>
+
+                        <!-- Artworks Tab -->
+                        <div id="artworks" class="plr-0">
+                            {{^artworks}}
+                            <p>No new artworks ... </p>
+                            {{/artworks}}
+                            {{#artworks}}
+                            <div class="row container-masonry nf-col-3">
+
+                                <div class="nf-item spacing">
+                                    <div class="item-box">
+                                        <a href="/artwork?artworkId={{id}}">
+                                            <img alt="1" src="{{imgThumb}}" class="item-container">
+                                            <div class="item-mask">
+                                                <div class="item-caption">
+                                                    <h5 class="white">{{title}}</h5>
+                                                    <p class="white">{{artist.name}}</p>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
                             </div>
-                            <!-- Articles Section -->
-                            <div id="articles" class="plr-0">
-                                <p>Tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel</p>
+                            {{/artworks}}
+                        </div>
+
+                        <!-- Articles Tab -->
+                        <div id="articles" class="plr-0">
+                            <div class="row col-md-8 col-md-offset-2 blog-post-hr">
+                                {{^articles}}
+                                <p>No new articles ... </p>
+                                {{/articles}}
+                                {{#articles}}
+                                <div class="col-md-3">
+                                    <img src="{{imgThumb}}" class="latest article-thumb" />
+                                </div>
+                                <div class="col-md-5">
+                                    <div class="post-header">
+                                        <h5><a href="{{url}}">{{Title}}</a></h5>
+                                    </div>
+                                    <div class="post-entry">
+                                        <p>{{snippet}}</p>
+                                    </div>
+                                </div>
+                                {{/articles}}
                             </div>
-                            <!-- Videos Section -->
-                            <div id="videos" class="plr-0">
-                                <p>Tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel</p>
+                        </div>
+
+                        <!-- Videos Tab -->
+                        <div id="videos" class="plr-0">
+                            <div class="row col-md-8 col-md-offset-2 blog-post-hr">
+                                {{^videos}}
+                                <p>No new videos ... </p>
+                                {{/videos}}
+                                {{#videos}}
+                                <div class="col-md-4 col-sm-6 col-xs-12 nf-item spacing-grid">
+                                    <div class="blog-post">
+                                        <div class="post-media">
+                                            <iframe width="560" height="315" src="https://www.youtube.com/embed/{{videoID}}" frameborder="0" allowfullscreen></iframe>
+                                        </div>
+                                        <div class="post-meta"><span>by <a>{{channelTitle}}</a>,</span> <span>{{#date}}{{.}}{{/date}}</span></div>
+                                        <div class="post-header">
+                                            <h5><a href="{{url}}">{{Title}}</a></h5>
+                                        </div>
+                                        <div class="post-entry">
+                                            <p>{{snippet}}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                {{/videos}}
                             </div>
                         </div>
                     </div>

@@ -237,10 +237,10 @@ public class ArtbookController {
     @RequestMapping(path = "/latest", method = RequestMethod.GET)
     public String getLatestPage(HttpSession session, Model model, RedirectAttributes redAtt){
 
-        List<Item> items = itemRepo.findAllOrderByCreatedAtDesc();
-        List<Artwork> artworks = artworkRepo.findAllOrderByCreatedAtDesc();
-        List<Article> articles = articleRepo.findAllOrderByCreatedAtDesc();
-        List<Video> videos = videoRepo.findAllOrderByCreatedAtDesc();
+        List<Item> items = itemRepo.findAllByOrderByCreatedAtDesc();
+        List<Artwork> artworks = artworkRepo.findAllByOrderByCreatedAtDesc();
+        List<Article> articles = articleRepo.findAllByOrderByCreatedAtDesc();
+        List<Video> videos = videoRepo.findAllByOrderByCreatedAtDesc();
 
         if (session.getAttribute(UserController.SESSION_USER) != null){
             User user = userRepo.findByUsername(session.getAttribute(UserController.SESSION_USER).toString());

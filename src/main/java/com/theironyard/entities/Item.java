@@ -42,7 +42,8 @@ public class Item {
     @Column
     private String imgThumb = "";
 
-    @Column String url = "";
+    @Column
+    private String url = "";
 
     @Transient
     private boolean currentlyLiked = false;
@@ -51,6 +52,10 @@ public class Item {
     private boolean latest = false;
 
     public Item() {
+    }
+
+    public Item(String title) {
+        this.title = title;
     }
 
     public int getId() {

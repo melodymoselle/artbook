@@ -15,16 +15,9 @@ public class Artwork extends Item{
     @JsonProperty("id")
     private String artsyArtworkId;
 
-    @Lob
-    @Type(type = "org.hibernate.type.TextType")
-    @Column
-    private String title = "";
-
     @Column
     private String category = "";
 
-    @Lob
-    @Type(type = "org.hibernate.type.TextType")
     @Column
     private String medium = "";
 
@@ -35,22 +28,16 @@ public class Artwork extends Item{
     private String size = "";
 
     @Column
-    private String imgThumb = "";
-
-    @Column
     private String imgLarge = "";
 
     @Column
     private String imgZoom = "";
 
-    @Column
-    private String url;
-
     public Artwork() {
     }
 
-    public Artwork(String title) {
-        this.title = title;
+    public Artwork(String title){
+        super(title);
     }
 
     public String getArtsyArtworkId() {
@@ -61,19 +48,6 @@ public class Artwork extends Item{
         this.artsyArtworkId = artsyArtworkId;
     }
 
-    public String getTitle() {
-        if (title.length() > 30){
-            return title.substring(0, 30) + "...";
-        }
-        return title;
-    }
-
-    public void setTitle(String title) {
-        if (title.length() > 254) {
-            title = title.substring(0, 254);
-        }
-        this.title = title;
-    }
 
     public String getCategory() {
         return category;
@@ -116,14 +90,6 @@ public class Artwork extends Item{
         this.size = size;
     }
 
-    public String getImgThumb() {
-        return imgThumb;
-    }
-
-    public void setImgThumb(String imgThumb) {
-        this.imgThumb = imgThumb;
-    }
-
     public String getImgLarge() {
         return imgLarge;
     }
@@ -141,21 +107,18 @@ public class Artwork extends Item{
     }
 
     public void setUrl() {
-        this.url = "/artwork?artworkId="+this.getId();
+        super.setUrl("/artwork?artworkId="+this.getId());
     }
 
     @Override
     public String toString() {
         return "Artwork{" +
                 "artsyArtworkId='" + artsyArtworkId + '\'' +
-                ", title='" + title + '\'' +
+                ", title='" + this.getTitle() + '\'' +
                 ", category='" + category + '\'' +
                 ", medium='" + medium + '\'' +
                 ", date='" + date + '\'' +
                 ", size='" + size + '\'' +
-                ", imgThumb='" + imgThumb + '\'' +
-                ", imgLarge='" + imgLarge + '\'' +
-                ", imgZoom='" + imgZoom + '\'' +
                 '}';
     }
 
@@ -170,6 +133,6 @@ public class Artwork extends Item{
         Artwork artwork = (Artwork) obj;
 
         //Only testing one attribute for Unit Tests
-        return artwork.getTitle().equals(this.title);
+        return artwork.getTitle().equals(this.getTitle());
     }
 }

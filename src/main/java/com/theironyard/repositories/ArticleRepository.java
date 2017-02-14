@@ -1,8 +1,6 @@
 package com.theironyard.repositories;
 
-import com.theironyard.entities.Article;
-import com.theironyard.entities.Artist;
-import com.theironyard.entities.Item;
+import com.theironyard.entities.*;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -15,7 +13,8 @@ public interface ArticleRepository extends JpaRepository<Article, Integer> {
     Article findByGoogleCacheId(String cacheId);
     List<Article> findByArtist(Artist artist);
     Article findByArtistAndUrl(Artist artist, String url);
-    List<Article> findAllOrderByCreatedAtDesc();
+    List<Article> findAllByOrderByCreatedAtDesc();
+    List<Article> findAllByLikedBy(User user);
 
 
     @Query("SELECT distinct c FROM Article c LEFT JOIN c.artist a WHERE a IN :following AND c.createdAt > :prevLogin")

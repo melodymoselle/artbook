@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 @Service
 public class GoogleCSEService {
-    private static final long NUMBER_OF_RESULTS_RETURNED = 20;
 
     @Value("${google.cse_id}")
     private String cx;
@@ -49,7 +48,6 @@ public class GoogleCSEService {
             search.setCx(cx);
             search.setKey(key);
             search.setExactTerms(searchTerm);
-            search.setNum(NUMBER_OF_RESULTS_RETURNED);
             Search results = search.execute();
             List<Result> items = results.getItems();
 

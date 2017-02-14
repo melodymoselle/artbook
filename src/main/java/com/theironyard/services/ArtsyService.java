@@ -87,18 +87,19 @@ public class ArtsyService {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println(artworksNode);
         List<Artwork> artworks = new ArrayList<>();
         if (artworksNode != null && artworksNode.size()>0) {
             artist.setPopulated(true);
             for(JsonNode artworkNode : artworksNode){
-                Artwork artwork = mapper.convertValue(artworkNode, Artwork.class);
-                artwork.setSize(artworkNode.findValue("in").findValue("text").toString());
-                artwork.setImgThumb(getImgThumb(artworkNode));
-                artwork.setImgLarge(getImgLarge(artworkNode));
-                artwork.setImgZoom(getImgZoom(artworkNode));
-                artwork.setArtist(artist);
-                System.out.println(artwork);
+                Artwork artwork = artworkRepo.findByArtsyArtworkId(artworkNode.findValue("id").asText());
+                if (artwork == null) {
+                    artwork = mapper.convertValue(artworkNode, Artwork.class);
+                    artwork.setSize(artworkNode.findValue("in").findValue("text").asText());
+                    artwork.setImgThumb(getImgThumb(artworkNode));
+                    artwork.setImgLarge(getImgLarge(artworkNode));
+                    artwork.setImgZoom(getImgZoom(artworkNode));
+                    artwork.setArtist(artist);
+                }
                 artworks.add(artwork);
             }
         }

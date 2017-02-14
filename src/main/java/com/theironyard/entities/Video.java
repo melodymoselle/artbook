@@ -10,12 +10,6 @@ public class Video extends Item{
     @Column
     private String channelTitle;
     @Column
-    private String title;
-    @Column
-    private String snippet;
-    @Column
-    private String imgThumb;
-    @Column
     private String url;
 
     public Video() {
@@ -38,36 +32,7 @@ public class Video extends Item{
         this.channelTitle = channelTitle;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     @Override
-    public String getSnippet() {
-        return snippet;
-    }
-
-    @Override
-    public void setSnippet(String snippet) {
-        this.snippet = snippet;
-    }
-
-    public String getImgThumb() {
-        return imgThumb;
-    }
-
-    public void setImgThumb(String imgThumb) {
-        this.imgThumb = imgThumb;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
     public void setUrl(String videoId) {
         this.url = "https://www.youtube.com/watch?v=" + url;
     }

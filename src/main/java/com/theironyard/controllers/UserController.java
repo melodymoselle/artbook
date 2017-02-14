@@ -235,8 +235,25 @@ public class UserController {
     }
 
     @RequestMapping(path = "/collection", method = RequestMethod.GET)
-    public String getCollectionPage(Model model){
+    public String getCollectionPage(HttpSession session, Model model, RedirectAttributes redAtt){
+        if (session.getAttribute(SESSION_USER) == null){
+            redAtt.addAttribute("message", "You need to be signed for that action.");
+            return "redirect:/error";
+        }
+        User user = userRepo.findByUsername(session.getAttribute(SESSION_USER).toString());
+        model.addAttribute(UserController.SESSION_USER, user.getUsername());
+        if (user.getPrivileges() == User.Rights.ADMINISTRATOR) {
+            model.addAttribute("admin", true);
+        }
+        List<Item> items = itemRepo.findAllByLikedBy(user);
+        List<Artwork> artworks = artworkRepo.findAllByLikedBy(user);
+        List<Article> articles = articleRepo.findAllByLikedBy(user);
+        List<Video> videos = videoRepo.findAllByLikedBy(user);
 
+        model.addAttribute("items", items);
+        model.addAttribute("artworks", artworks);
+        model.addAttribute("articles", articles);
+        model.addAttribute("videos", videos);
         model.addAttribute("pageName", "My Collection");
         return "collection";
     }

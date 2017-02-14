@@ -158,7 +158,7 @@ public class ArtbookControllerTests {
     public void testGetArtworkPageNoUser() throws Exception {
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/artwork")
-                        .param("artworkId", String.valueOf(artist1.getId()))
+                        .param("artworkId", String.valueOf(artwork1.getId()))
         ).andExpect(status().is2xxSuccessful()
         ).andExpect(view().name("artwork")
         ).andExpect(model().attribute("artwork", is(artwork1))
@@ -171,7 +171,7 @@ public class ArtbookControllerTests {
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/artwork")
                         .sessionAttr(UserController.SESSION_USER, USERNAME)
-                        .param("artworkId", String.valueOf(artist1.getId()))
+                        .param("artworkId", String.valueOf(artwork1.getId()))
         ).andExpect(status().is2xxSuccessful()
         ).andExpect(view().name("artwork")
         ).andExpect(model().attribute("artwork", is(artwork1))

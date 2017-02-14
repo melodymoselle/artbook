@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface VideoRepository extends JpaRepository<Video, Integer> {
     List<Video> findByArtist(Artist artist);
+    Video findByVideoId(String videoId);
 }

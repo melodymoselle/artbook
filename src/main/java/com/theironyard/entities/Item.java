@@ -34,7 +34,10 @@ public class Item {
     private Set<User> likedBy = new HashSet<>();
 
     @Transient
-    private boolean currentlyLiked = false;
+    private boolean liked = false;
+
+    @Transient
+    private boolean latest = false;
 
     public Item() {
     }
@@ -79,11 +82,19 @@ public class Item {
         this.likedBy = likedBy;
     }
 
-    public boolean isCurrentlyLiked() {
-        return currentlyLiked;
+    public boolean isLiked() {
+        return liked;
     }
 
-    public void setCurrentlyLiked(boolean currentlyLiked) {
-        this.currentlyLiked = currentlyLiked;
+    public void setLiked(boolean liked) {
+        this.liked = liked;
+    }
+
+    public boolean isLatest() {
+        return latest;
+    }
+
+    public void setLatest(boolean latest) {
+        this.latest = latest;
     }
 }

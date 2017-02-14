@@ -146,12 +146,12 @@ public class ArtbookController {
             }
             for (Article a : articles){
                 if (user.isLiked(a)){
-                    a.setCurrentlyLiked(true);
+                    a.setLiked(true);
                 }
             }
             for (Video v : videos){
                 if (user.isLiked(v)){
-                    v.setCurrentlyLiked(true);
+                    v.setLiked(true);
                 }
             }
 

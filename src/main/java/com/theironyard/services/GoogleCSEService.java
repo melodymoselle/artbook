@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 @Service
 public class GoogleCSEService {
-    private static final long NUMBER_OF_RESULTS_RETURNED = 10;
 
     @Value("${google.cse_id}")
     private String cx;

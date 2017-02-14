@@ -11,6 +11,8 @@ import com.google.api.services.youtube.model.SearchResult;
 import com.google.api.services.youtube.model.Thumbnail;
 import com.theironyard.entities.Artist;
 import com.theironyard.entities.Video;
+import com.theironyard.repositories.VideoRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import com.google.api.services.youtube.YouTube;
@@ -26,6 +28,9 @@ public class YoutubeService {
 
     @Value("${google.youtube.key}")
     private String key;
+
+    @Autowired
+    VideoRepository videoRepo;
 
     private static YouTube youtube;
 
@@ -63,17 +68,18 @@ public class YoutubeService {
                 while (iteratorSearchResults.hasNext()) {
 
                     SearchResult singleVideo = iteratorSearchResults.next();
-                    ResourceId rId = singleVideo.getId();
 
                     Thumbnail thumbnail = singleVideo.getSnippet().getThumbnails().getDefault();
-                    Video video = new Video();
-
-                    video.setVideoId(singleVideo.getId().getVideoId());
-                    video.setChannelTitle(singleVideo.getSnippet().getChannelTitle());
-                    video.setTitle(singleVideo.getSnippet().getTitle());
-                    video.setDescription(singleVideo.getSnippet().getDescription());
-                    video.setThumbnail(thumbnail.getUrl());
-                    video.setArtist(artist);
+                    Video video = videoRepo.findByVideoId(singleVideo.getId().getVideoId());
+                    if (video == null) {
+                        video = new Video();
+                        video.setVideoId(singleVideo.getId().getVideoId());
+                        video.setChannelTitle(singleVideo.getSnippet().getChannelTitle());
+                        video.setTitle(singleVideo.getSnippet().getTitle());
+                        video.setDescription(singleVideo.getSnippet().getDescription());
+                        video.setThumbnail(thumbnail.getUrl());
+                        video.setArtist(artist);
+                    }
                     videos.add(video);
                 }
             }

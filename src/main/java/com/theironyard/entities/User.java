@@ -17,8 +17,11 @@ public class User{
     @Column(nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
-    @Column
-    private LocalDateTime updatedAt;
+    @Column(nullable = false)
+    private LocalDateTime prevLogin = LocalDateTime.now();
+
+    @Column(nullable = false)
+    private LocalDateTime currLogin = LocalDateTime.now();
 
     @Column(nullable = false, unique = true)
     private String username;
@@ -63,12 +66,20 @@ public class User{
         this.createdAt = createdAt;
     }
 
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
+    public LocalDateTime getPrevLogin() {
+        return prevLogin;
     }
 
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
+    public void setPrevLogin(LocalDateTime prevLogin) {
+        this.prevLogin = prevLogin;
+    }
+
+    public LocalDateTime getCurrLogin() {
+        return currLogin;
+    }
+
+    public void setCurrLogin(LocalDateTime currLogin) {
+        this.currLogin = currLogin;
     }
 
     public String getUsername() {

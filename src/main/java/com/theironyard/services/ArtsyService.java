@@ -149,7 +149,7 @@ public class ArtsyService {
         String url = "";
         if (artsyNode.findValue("image_versions") != null){
             List<String> imgVersions = mapper.convertValue(artsyNode.findValue("image_versions"), new TypeReference<List<String>>() {});
-            String imgBaseUrl = artsyNode.findValue("_links").findValue("image").findValue("href").toString();
+            String imgBaseUrl = artsyNode.findValue("_links").findValue("image").findValue("href").asText();
                 if (imgVersions.contains("medium")) {
                     url = imgBaseUrl.replace("{image_version}", "medium");
                 } else if (imgVersions.contains("tall")) {
@@ -177,7 +177,7 @@ public class ArtsyService {
         String url = "";
         if (artsyNode.findValue("image_versions") != null){
             List<String> imgVersions = mapper.convertValue(artsyNode.findValue("image_versions"), new TypeReference<List<String>>() {});
-            String imgBaseUrl = artsyNode.findValue("_links").findValue("image").findValue("href").toString();
+            String imgBaseUrl = artsyNode.findValue("_links").findValue("image").findValue("href").asText();
                 if (imgVersions.contains("large")) {
                     url = imgBaseUrl.replace("{image_version}", "large");
                 } else if (imgVersions.contains("larger")) {
@@ -205,7 +205,7 @@ public class ArtsyService {
         String url = null;
         if (artsyNode.findValue("image_versions") != null){
             List<String> imgVersions = mapper.convertValue(artsyNode.findValue("image_versions"), new TypeReference<List<String>>() {});
-            String imgBaseUrl = artsyNode.findValue("_links").findValue("image").findValue("href").toString();
+            String imgBaseUrl = artsyNode.findValue("_links").findValue("image").findValue("href").asText();
                 if (imgVersions.contains("normalized")) {
                     url = imgBaseUrl.replace("{image_version}", "normalized");
                 }

@@ -33,7 +33,7 @@ public class Artist{
 
     @Column
     @JsonIgnore
-    private LocalDateTime updatedAt;
+    private LocalDateTime updatedAt = LocalDateTime.now();
 
     @Column(unique = true)
     @JsonProperty("id")

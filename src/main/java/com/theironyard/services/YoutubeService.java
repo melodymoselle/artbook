@@ -71,8 +71,8 @@ public class YoutubeService {
                     video.setVideoId(singleVideo.getId().getVideoId());
                     video.setChannelTitle(singleVideo.getSnippet().getChannelTitle());
                     video.setTitle(singleVideo.getSnippet().getTitle());
-                    video.setDescription(singleVideo.getSnippet().getDescription());
-                    video.setThumbnail(thumbnail.getUrl());
+                    video.setSnippet(singleVideo.getSnippet().getDescription());
+                    video.setImgThumb(thumbnail.getUrl());
                     video.setArtist(artist);
                     videos.add(video);
                 }

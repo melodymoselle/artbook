@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Controller
@@ -137,6 +138,24 @@ public class AdminController {
 
         return "redirect:/artist?artistId=" + artist.getId();
     }
+
+    @RequestMapping(path = "/update-artist", method = RequestMethod.GET)
+    public String updateArtist(HttpSession session, int artistId, RedirectAttributes redAtt){
+        String message = validateUser(session);
+        if (message != null){
+            redAtt.addAttribute("message", message);
+            return "redirect:/error";
+        }
+        Artist artist = artistRepo.findOne(artistId);
+        List<Article> articles = google.getArticlesByArtist(artist);
+        List<Video> videos = youtube.getYoutubeVideos(artist);
+        artist.getItems().addAll(articles);
+        artist.getItems().addAll(videos);
+        artist.setUpdatedAt(LocalDateTime.now());
+
+        return "redirect:/artist?artistId=" + artist.getId();
+    }
+
 
     /**
      * Calls APIs with artist object and adds related data objects to artist. Unsaved.

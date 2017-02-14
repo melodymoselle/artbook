@@ -2,15 +2,10 @@ package com.theironyard.controllers;
 
 import com.theironyard.commands.LoginCommand;
 import com.theironyard.commands.RegisterCommand;
-import com.theironyard.entities.Artist;
-import com.theironyard.entities.Artwork;
-import com.theironyard.entities.Item;
-import com.theironyard.entities.User;
-import com.theironyard.repositories.ArtistRepository;
-import com.theironyard.repositories.ArtworkRepository;
-import com.theironyard.repositories.ItemRepository;
-import com.theironyard.repositories.UserRepository;
+import com.theironyard.entities.*;
+import com.theironyard.repositories.*;
 import com.theironyard.utitilties.PasswordStorage;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -26,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -44,6 +40,12 @@ public class UserController {
     ArtworkRepository artworkRepo;
 
     @Autowired
+    ArticleRepository articleRepo;
+
+    @Autowired
+    VideoRepository videoRepo;
+
+    @Autowired
     ItemRepository itemRepo;
 
     @RequestMapping(path = "/login", method = RequestMethod.GET)
@@ -59,6 +61,8 @@ public class UserController {
             redAtt.addFlashAttribute("message", "Invalid Username/Password");
             return "redirect:/login";
         }
+        user.setPrevLogin(user.getCurrLogin());
+        user.setCurrLogin(LocalDateTime.now());
         session.setAttribute(SESSION_USER, user.getUsername());
         return "redirect:/";
     }
@@ -108,7 +112,16 @@ public class UserController {
         if (user.getFollowing().size() > 0) {
             artists = artistRepo.findSimilarFromFollowing(new PageRequest(page, 9), user.getFollowing());
         }
+        if(artists.hasPrevious()){
+            model.addAttribute("previous", true);
+            model.addAttribute("prevPageNum", page - 1);
+        }
+        if(artists.hasNext()){
+            model.addAttribute("next", true);
+            model.addAttribute("nextPageNum", page + 1);
+        }
         model.addAttribute("artists", artists);
+        model.addAttribute("pagingStub", "discover");
         model.addAttribute("pageName", "Discover");
         return "discover";
     }
@@ -194,7 +207,7 @@ public class UserController {
      * likes.
      *
      * @param session Current HttpSession
-     * @param artworkId 'id' of current 'item'
+     * @param itemId 'id' of current 'item'
      * @param redAtt RedirectAttributes for invalid request
      * @return redirects back to same page
      */
@@ -219,5 +232,12 @@ public class UserController {
             redirect = "/";
         }
         return "redirect:"+redirect;
+    }
+
+    @RequestMapping(path = "/collection", method = RequestMethod.GET)
+    public String getCollectionPage(Model model){
+
+        model.addAttribute("pageName", "My Collection");
+        return "collection";
     }
 }

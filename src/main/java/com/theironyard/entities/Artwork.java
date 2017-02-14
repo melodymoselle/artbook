@@ -43,6 +43,9 @@ public class Artwork extends Item{
     @Column
     private String imgZoom = "";
 
+    @Column
+    private String url;
+
     public Artwork() {
     }
 
@@ -135,6 +138,10 @@ public class Artwork extends Item{
 
     public void setImgZoom(String imgZoom) {
         this.imgZoom = imgZoom;
+    }
+
+    public void setUrl() {
+        this.url = "/artwork?artworkId="+this.getId();
     }
 
     @Override

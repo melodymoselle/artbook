@@ -33,8 +33,22 @@ public class Item {
     @ManyToMany(mappedBy = "liked")
     private Set<User> likedBy = new HashSet<>();
 
+    @Column
+    private String title = "";
+
+    @Column
+    private String snippet = "";
+
+    @Column
+    private String imgThumb = "";
+
+    @Column String url = "";
+
     @Transient
     private boolean currentlyLiked = false;
+
+    @Transient
+    private boolean latest = false;
 
     public Item() {
     }
@@ -85,5 +99,54 @@ public class Item {
 
     public void setCurrentlyLiked(boolean currentlyLiked) {
         this.currentlyLiked = currentlyLiked;
+    }
+
+    public Object isLatest() {
+        return latest;
+    }
+
+    public void setLatest(boolean latest) {
+        this.latest = latest;
+    }
+
+    public String getTitle() {
+        if (title.length() > 30){
+            return title.substring(0, 30) + "...";
+        }
+        return title;
+    }
+
+    public void setTitle(String title) {
+        if (title.length()>254) {
+            title = title.substring(0, 254);
+        }
+        this.title = title;
+    }
+
+    public String getSnippet() {
+        return snippet;
+    }
+
+    public void setSnippet(String snippet) {
+        if (snippet.length()>254) {
+            snippet = snippet.substring(0, 254);
+        }
+        this.snippet = snippet;
+    }
+
+    public String getImgThumb() {
+        return imgThumb;
+    }
+
+    public void setImgThumb(String imgThumb) {
+        this.imgThumb = imgThumb;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 }

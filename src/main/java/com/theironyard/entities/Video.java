@@ -12,9 +12,9 @@ public class Video extends Item{
     @Column
     private String title;
     @Column
-    private String description;
+    private String snippet;
     @Column
-    private String thumbnail;
+    private String imgThumb;
     @Column
     private String url;
 
@@ -46,20 +46,22 @@ public class Video extends Item{
         this.title = title;
     }
 
-    public String getDescription() {
-        return description;
+    @Override
+    public String getSnippet() {
+        return snippet;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    @Override
+    public void setSnippet(String snippet) {
+        this.snippet = snippet;
     }
 
-    public String getThumbnail() {
-        return thumbnail;
+    public String getImgThumb() {
+        return imgThumb;
     }
 
-    public void setThumbnail(String thumbnail) {
-        this.thumbnail = thumbnail;
+    public void setImgThumb(String imgThumb) {
+        this.imgThumb = imgThumb;
     }
 
     public String getUrl() {

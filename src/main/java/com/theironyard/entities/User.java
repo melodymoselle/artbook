@@ -18,7 +18,10 @@ public class User{
     private LocalDateTime createdAt = LocalDateTime.now();
 
     @Column
-    private LocalDateTime updatedAt;
+    private LocalDateTime prevLogin = LocalDateTime.now();
+
+    @Column
+    private LocalDateTime currLogin = LocalDateTime.now();
 
     @Column(nullable = false, unique = true)
     private String username;
@@ -33,10 +36,10 @@ public class User{
         SUBSCRIBER, ADMINISTRATOR
     }
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     private Set<Artist> following = new HashSet<>();
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.PERSIST)
     private Set<Item> liked = new HashSet<>();
 
     public User() {
@@ -63,12 +66,20 @@ public class User{
         this.createdAt = createdAt;
     }
 
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
+    public LocalDateTime getPrevLogin() {
+        return prevLogin;
     }
 
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
+    public void setPrevLogin(LocalDateTime prevLogin) {
+        this.prevLogin = prevLogin;
+    }
+
+    public LocalDateTime getCurrLogin() {
+        return currLogin;
+    }
+
+    public void setCurrLogin(LocalDateTime currLogin) {
+        this.currLogin = currLogin;
     }
 
     public String getUsername() {

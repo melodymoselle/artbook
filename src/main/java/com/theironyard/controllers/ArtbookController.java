@@ -1,5 +1,6 @@
 package com.theironyard.controllers;
 
+import com.sun.org.apache.xpath.internal.operations.Mod;
 import com.theironyard.entities.*;
 import com.theironyard.repositories.*;
 import com.theironyard.services.ArtsyService;
@@ -37,6 +38,9 @@ public class ArtbookController {
 
     @Autowired
     VideoRepository videoRepo;
+
+    @Autowired
+    ItemRepository itemRepo;
 
     @RequestMapping(path = "/", method = RequestMethod.GET)
     public String forward(){
@@ -194,7 +198,8 @@ public class ArtbookController {
     }
 
     @RequestMapping(path = "/error" , method = RequestMethod.GET)
-    public String getErrorPage(){
+    public String getErrorPage(Model model, String message){
+        model.addAttribute("message", message);
         return "error";
     }
 
@@ -227,5 +232,33 @@ public class ArtbookController {
         model.addAttribute("pagingStub", "search");
         model.addAttribute("pageName", "Search Results");
         return "search";
+    }
+
+    @RequestMapping(path = "/latest", method = RequestMethod.GET)
+    public String getLatestPage(HttpSession session, Model model, RedirectAttributes redAtt){
+
+        List<Item> items = itemRepo.findAllOrderByCreatedAtDesc();
+        List<Artwork> artworks = artworkRepo.findAllOrderByCreatedAtDesc();
+        List<Article> articles = articleRepo.findAllOrderByCreatedAtDesc();
+        List<Video> videos = videoRepo.findAllOrderByCreatedAtDesc();
+
+        if (session.getAttribute(UserController.SESSION_USER) != null){
+            User user = userRepo.findByUsername(session.getAttribute(UserController.SESSION_USER).toString());
+            model.addAttribute(UserController.SESSION_USER, user.getUsername());
+            if (user.getPrivileges() == User.Rights.ADMINISTRATOR) {
+                model.addAttribute("admin", true);
+            }
+            items = itemRepo.findItemsFromFollowing(user.getFollowing(), user.getPrevLogin());
+            artworks = artworkRepo.findLatestFromFollowing(user.getFollowing(), user.getPrevLogin());
+            articles = articleRepo.findLatestFromFollowing(user.getFollowing(), user.getPrevLogin());
+            videos = videoRepo.findLatestFromFollowing(user.getFollowing(), user.getPrevLogin());
+        }
+
+        model.addAttribute("items", items);
+        model.addAttribute("artworks", artworks);
+        model.addAttribute("articles", articles);
+        model.addAttribute("videos", videos);
+        model.addAttribute("pageName", "Latest");
+        return "latest";
     }
 }

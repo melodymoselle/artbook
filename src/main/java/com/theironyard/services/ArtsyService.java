@@ -28,10 +28,10 @@ public class ArtsyService {
     private static final String BASE_URL = "https://api.artsy.net/api";
     private static final String HEAD_AUTH = "X-Xapp-Token";
 
-    @Value("${artsy.client_id}")
+    @Value("${artsy_client_id}")
     private String id;
 
-    @Value("${artsy.client_secret}")
+    @Value("${artsy_client_secret}")
     private String secret;
 
     private Token token;

@@ -19,10 +19,10 @@ import java.util.List;
 @Service
 public class GoogleCSEService {
 
-    @Value("${google.cse_id}")
+    @Value("${google_cse_id}")
     private String cx;
 
-    @Value("${google.api_key}")
+    @Value("${google_api_key}")
     private String key;
 
     @Autowired

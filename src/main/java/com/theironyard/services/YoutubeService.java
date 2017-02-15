@@ -24,7 +24,7 @@ import java.util.List;
 public class YoutubeService {
     private static final long NUMBER_OF_VIDEOS_RETURNED = 10;
 
-    @Value("${google.youtube.key}")
+    @Value("${google_youtube_key}")
     private String key;
 
     private static YouTube youtube;

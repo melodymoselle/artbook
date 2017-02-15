@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 @Service
 public class GoogleCSEService {
-    private static final long NUMBER_OF_RESULTS_RETURNED = 10;
 
     @Value("${google.cse_id}")
     private String cx;
@@ -61,10 +60,10 @@ public class GoogleCSEService {
                         article.setUrl(rs.getLink());
                         article.setTitle(rs.getTitle());
                         article.setSnippet(rs.getSnippet());
-                        if (rs.getPagemap().containsKey("cse_thumbnail")) {
+                        if (rs.getPagemap()!= null && rs.getPagemap().containsKey("cse_thumbnail")) {
                             article.setImgThumb(rs.getPagemap().get("cse_thumbnail").get(0).get("src").toString());
                         }
-                        if (rs.getPagemap().containsKey("cse_image")) {
+                        if (rs.getPagemap()!= null && rs.getPagemap().containsKey("cse_image")) {
                             article.setImgLarge(rs.getPagemap().get("cse_image").get(0).get("src").toString());
                         }
                         article.setArtist(artist);

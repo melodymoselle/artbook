@@ -254,6 +254,9 @@ public class Artist{
     }
 
     public void setSummary(String summary) {
+        if (summary.length()>820){
+            summary = summary.substring(0, 820);
+        }
         this.summary = summary;
     }
 

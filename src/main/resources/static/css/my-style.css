@@ -1,3 +1,4 @@
+
 h1 {
     font-size: 26px;
     letter-spacing: 4px;
@@ -25,7 +26,7 @@ h1:after {
 }
 .summary{
     max-height: 393px;
-    overflow: scroll;
+    overflow: hidden;
 }
 .header {
     background-color: rgba(255, 255, 255, 0.95);
@@ -77,14 +78,14 @@ h1:after {
 
 .article-thumb{
     height: 300px;
+    width: 200px;
     padding:0;
     overflow: hidden;
 }
 .article-thumb img{
     display: block;
     height: 300px;
-    width: auto;
-    overflow: hidden;
+    object-fit: cover;
 }
 .ptb{
     padding-top: 50px;

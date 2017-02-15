@@ -1,4 +1,8 @@
-
+.artwork-carousel .imgThumb {
+    display: block;
+    object-fit: contain;
+    height: 233px;
+}
 h1 {
     font-size: 26px;
     letter-spacing: 4px;
@@ -51,9 +55,6 @@ h1:after {
     overflow: hidden;
 }
 
-.item-box {
-    height: 233px;
-}
 
 #logout {
     color: #ffffff;

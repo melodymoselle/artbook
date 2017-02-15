@@ -40,14 +40,14 @@
             {{^currentUsername}}
             <h4>Popular right now ...</h4>
             {{/currentUsername}}
-            <div class="row container-grid nf-col-3">
+            <div class="row container-masonry nf-col-3">
                 {{^artists}}
                 <div class="col-lg-3 center-block">
                     <p>You aren't following any artists. Go to the <a href="/discover">Discover</a> page to find some artists to follow.</p>
                 </div>
                 {{/artists}}
                 {{#artists}}
-                <div class="nf-item branding coffee spacing">
+                <div class="nf-item spacing">
                     <div class="item-box">
                         <a href="/artist?artistId={{id}}">
                             <img alt="1" src="{{imgLarge}}" class="item-container img-thumb">

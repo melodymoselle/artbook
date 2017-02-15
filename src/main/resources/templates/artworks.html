@@ -40,21 +40,23 @@
             {{^currentUsername}}
             <h4>Popular right now ...</h4>
             {{/currentUsername}}
-            <div class="row container-grid nf-col-3">
+            <!-- End work Filter -->
+            <div class="row container-masonry nf-col-3">
+
                 {{^artworks}}
                 <div class="col-lg-3 center-block">
                     <p>You aren't following any artists. Go to the <a href="/discover">Discover</a> page to find some artists to follow.</p>
                 </div>
                 {{/artworks}}
                 {{#artworks}}
-                <div class="nf-item branding coffee spacing">
+                <div class="nf-item spacing">
                     <div class="item-box">
                         <a href="/artwork?artworkId={{id}}">
-                            <img alt="1" src="{{imgLarge}}" class="item-container img-thumb">
+                            <img alt="1" src="{{imgLarge}}" class="item-container">
                             <div class="item-mask">
                                 <div class="item-caption">
                                     <h5 class="white">{{title}}</h5>
-                                    <p class="white">{{#artist}}{{name}}{{/artist}}</p>
+                                    <p class="white">{{artist.name}}</p>
                                 </div>
                             </div>
                         </a>

@@ -40,7 +40,7 @@ public class ArtbookController {
 
     @RequestMapping(path = "/", method = RequestMethod.GET)
     public String forward(){
-        return "redirect:/artworks";
+        return "redirect:/artists";
     }
 
     /**
@@ -64,7 +64,7 @@ public class ArtbookController {
             }
             Set artists = user.getFollowing();
             if (artists.size() > 0) {
-                artworks = artworkRepo.findArtworksByFollowing(new PageRequest(page, 9), artists);
+                artworks = artworkRepo.findByLikedBy(new PageRequest(page, 9), user);
             }
         }
         if(artworks.hasPrevious()){

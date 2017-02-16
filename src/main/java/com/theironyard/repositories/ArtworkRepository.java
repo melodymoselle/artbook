@@ -17,6 +17,7 @@ public interface ArtworkRepository extends JpaRepository<Artwork, Integer> {
     List<Artwork> findByArtist(Artist artist);
     Page<Artwork> findByArtist(Pageable pageable, Artist artist);
     List<Artwork> findByLikedBy(User user);
+    Page<Artwork> findByLikedBy(Pageable pageable, User user);
 
     @Query("SELECT a  FROM Artwork a LEFT JOIN a.likedBy l WHERE a.artist = ?1 GROUP BY a.id ORDER BY count(l) DESC")
     Page<Artwork> findByArtistOrderByLikes(Pageable pageable, Artist artist);

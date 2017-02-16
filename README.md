@@ -21,9 +21,9 @@ open. And you can find suggestions based on artists in your collection.
     * Work begins
     
 ## Meta
-
 Melody Moselle - melodymoselle@gmail.com
 
 [https://github.com/melodymoselle/](https://github.com/melodymoselle/)
 
-
+[travis-image]: https://travis-ci.org/melodymoselle/artbook.svg?branch=master
+[travis-url]: https://travis-ci.org/melodymoselle/artbook

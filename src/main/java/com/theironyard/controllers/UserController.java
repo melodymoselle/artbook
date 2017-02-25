@@ -108,6 +108,14 @@ public class UserController {
         if (user.getFollowing().size() > 0) {
             artists = artistRepo.findSimilarFromFollowing(new PageRequest(page, 9), user.getFollowing());
         }
+        if(artists.hasPrevious()){
+            model.addAttribute("previous", true);
+            model.addAttribute("prevPageNum", page - 1);
+        }
+        if(artists.hasNext()){
+            model.addAttribute("next", true);
+            model.addAttribute("nextPageNum", page + 1);
+        }
         model.addAttribute("artists", artists);
         model.addAttribute("pageName", "Discover");
         return "discover";
@@ -194,7 +202,7 @@ public class UserController {
      * likes.
      *
      * @param session Current HttpSession
-     * @param artworkId 'id' of current 'item'
+     * @param itemId 'id' of current 'item'
      * @param redAtt RedirectAttributes for invalid request
      * @return redirects back to same page
      */

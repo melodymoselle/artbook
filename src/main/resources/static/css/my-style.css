@@ -1,3 +1,11 @@
+#demo {
+    position: fixed;
+    z-index: 25;
+    float: right;
+
+
+}
+
 .artwork-carousel .imgThumb {
     display: block;
     object-fit: contain;

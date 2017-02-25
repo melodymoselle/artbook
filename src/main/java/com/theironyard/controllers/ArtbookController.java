@@ -208,7 +208,14 @@ public class ArtbookController {
      * @return model and 'search' view
      */
     @RequestMapping(path = "/search", method = RequestMethod.GET)
-    public String getSearchResults(Model model, String q, @RequestParam(defaultValue = "0") int page){
+    public String getSearchResults(HttpSession session, Model model, String q, @RequestParam(defaultValue = "0") int page){
+        if (session.getAttribute(UserController.SESSION_USER) != null){
+            User user = userRepo.findByUsername(session.getAttribute(UserController.SESSION_USER).toString());
+            model.addAttribute(UserController.SESSION_USER, user.getUsername());
+            if (user.getPrivileges() == User.Rights.ADMINISTRATOR) {
+                model.addAttribute("admin", true);
+            }
+        }
         Page<Artist> artists = artistRepo.findByNameContainingIgnoreCaseAndPopulated(new PageRequest(page, 9), q, true);
         for (Artist artist : artists){
             List<Artwork> artworks = artworkRepo.findByArtistOrderByLikes(new PageRequest(page, 3), artist).getContent();

@@ -13,6 +13,8 @@ open. And you can find suggestions based on artists in your collection.
 * Scheduling API calls to automatically update artist data
 * Browsing artists by name
 * Page of recently added items from a user's followed artists
+* Manually entering new artists and artworks
+* Upcoming shows for a user's followed artists
 
 ## Release History
 * 0.1.0

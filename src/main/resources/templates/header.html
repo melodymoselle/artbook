@@ -2,6 +2,9 @@
 <header id="header" class="header header-light">
     <div class="container header-inner">
 
+        {{^currentUsername}}
+        <div id="demo"><p>To view a demo account login with Username: 'demo' & Password: 'demo'</p></div>
+        {{/currentUsername}}
         <!-- Logo -->
         <div class="logo">
                 <h1>{{#pageName}}{{.}}{{/pageName}}</h1>
@@ -41,3 +44,4 @@
     </div>
 </header>
 <!-- End Header -->
+<div class="spacer-60"></div>

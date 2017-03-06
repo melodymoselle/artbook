@@ -1,6 +1,5 @@
 package com.theironyard.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.DiscriminatorOptions;
 
 import javax.persistence.*;
@@ -16,15 +15,12 @@ import java.util.Set;
 public class Item {
     @Id
     @GeneratedValue
-    @JsonIgnore
     private int id;
 
     @Column(nullable = false)
-    @JsonIgnore
     private LocalDateTime createdAt = LocalDateTime.now();
 
     @Column
-    @JsonIgnore
     private LocalDateTime updatedAt = LocalDateTime.now();
 
     @ManyToOne(fetch = FetchType.EAGER)

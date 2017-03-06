@@ -13,7 +13,6 @@ import java.util.Set;
 
 public interface ArtistRepository extends JpaRepository<Artist, Integer> {
     Artist findByArtsyArtistId(String artsyArtistId);
-    List<Artist> findByLoadedAndPopulated(boolean loaded, boolean populated);
     List<Artist> findByFollowedBy(User user);
     Page<Artist> findAll(Pageable pageable);
     Page<Artist> findByFollowedBy(Pageable pageable, User user);
@@ -32,6 +31,4 @@ public interface ArtistRepository extends JpaRepository<Artist, Integer> {
 
     Page<Artist> findByNameContainingIgnoreCaseAndPopulated(Pageable pageable, String searchTerm, boolean populated);
 
-    @Query("SELECT a FROM Artist a WHERE a.name LIKE '%?1%' AND a.populated = TRUE")
-    Page<Artist> searchForArtist(Pageable pageable, String searchTerm);
 }

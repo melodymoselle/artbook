@@ -56,7 +56,7 @@ public class GoogleCSEService {
                     Article article = articleRepo.findByArtistAndUrl(artist, rs.getLink());
                     if (article == null) {
                         article = new Article();
-                        article.setGoogleCacheId(rs.getCacheId());
+//                        article.setGoogleCacheId(rs.getCacheId());
                         article.setUrl(rs.getLink());
                         article.setTitle(rs.getTitle());
                         article.setSnippet(rs.getSnippet());

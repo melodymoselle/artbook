@@ -5,8 +5,8 @@ import javax.persistence.*;
 @Entity
 @DiscriminatorValue("article")
 public class Article extends Item{
-    @Column
-    private String googleCacheId;
+//    @Column
+//    private String googleCacheId;
     @Column
     private String url;
     @Column
@@ -21,13 +21,51 @@ public class Article extends Item{
     public Article() {
     }
 
-    public String getGoogleCacheId() {
-        return googleCacheId;
+    public static class Builder {
+        // Required parameters
+        private String url;
+        private String title;
+        private String snippet;
+        // Optional parameters
+        private String imgThumb = "";
+        private String imgLarge = "";
+
+        public Builder url(String val){
+            url = val; return this;
+        }
+        public Builder title(String val){
+            title = val; return this;
+        }
+        public Builder snippet(String val){
+            snippet = val; return this;
+        }
+        public Builder imgThumb(String val){
+            imgThumb = val; return this;
+        }
+        public Builder imgLarge(String val){
+            imgLarge = val; return this;
+        }
+
+        public Article build(){
+            return new Article(this);
+        }
     }
 
-    public void setGoogleCacheId(String googleCacheId) {
-        this.googleCacheId = googleCacheId;
+    private Article(Builder builder){
+        url = builder.url;
+        title = builder.title;
+        snippet = builder.snippet;
+        imgThumb = builder.imgThumb;
+        imgLarge = builder.imgLarge;
     }
+
+//    public String getGoogleCacheId() {
+//        return googleCacheId;
+//    }
+//
+//    public void setGoogleCacheId(String googleCacheId) {
+//        this.googleCacheId = googleCacheId;
+//    }
 
     public String getTitle() {
         return title;
@@ -68,4 +106,5 @@ public class Article extends Item{
     public void setImgLarge(String imgLarge) {
         this.imgLarge = imgLarge;
     }
+
 }

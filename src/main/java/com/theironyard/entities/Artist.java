@@ -3,6 +3,7 @@ package com.theironyard.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
@@ -78,6 +79,70 @@ public class Artist{
     public Artist() {
     }
 
+    public static class Builder {
+        // Required parameters
+        private String name;
+        // Optional parameters
+        private String artsyArtistId = "";
+        private String birthday = "";
+        private String hometown = "";
+        private String location = "";
+        private String nationality = "";
+        private String summary = "";
+        private String imgThumb = "";
+        private String imgLarge = "";
+
+        public Builder(String val){
+            name = val;
+        }
+        public Builder artsyArtistId(String val){
+            artsyArtistId = val;
+            return this;
+        }
+        public Builder birthday(String val){
+            birthday = val;
+            return this;
+        }
+        public Builder hometown(String val){
+            hometown = val;
+            return this;
+        }
+        public Builder location(String val){
+            location = val;
+            return this;
+        }
+        public Builder nationality(String val){
+            nationality = val;
+            return this;
+        }
+        public Builder summary(String val){
+            summary = val;
+            return this;
+        }
+        public Builder imgThumb(String val){
+            imgThumb = val;
+            return this;
+        }
+        public Builder imgLarge(String val){
+            imgLarge = val;
+            return this;
+        }
+        public Artist build(){
+            return new Artist(this);
+        }
+    }
+
+    private Artist(Builder builder){
+        name = builder.name;
+        artsyArtistId = builder.artsyArtistId;
+        birthday = builder.birthday;
+        hometown = builder.hometown;
+        location = builder.location;
+        nationality = builder.nationality;
+        summary = builder.summary;
+        imgThumb = builder.imgThumb;
+        imgLarge = builder.imgLarge;
+    }
     //For Unit Testing only
     public Artist(String name) {
         this.name = name;
@@ -105,10 +170,20 @@ public class Artist{
         if (!(obj instanceof Artist)){
             return false;
         }
-        Artist artist = (Artist) obj;
+        Artist o = (Artist) obj;
 
-        //Only testing one attribute for Unit Tests
-        return artist.getName().equals(this.name);
+        return Objects.equals(artsyArtistId, o.artsyArtistId) &&
+                Objects.equals(name, o.name) &&
+                Objects.equals(birthday, o.birthday) &&
+                Objects.equals(hometown, o.hometown) &&
+                Objects.equals(location, o.location) &&
+                Objects.equals(nationality, o.nationality) &&
+                Objects.equals(summary, o.summary);
+    }
+
+    @Override
+    public int hashCode(){
+        return Objects.hash(artsyArtistId, name, birthday, hometown, location, nationality, summary);
     }
 
     public int getId() {
